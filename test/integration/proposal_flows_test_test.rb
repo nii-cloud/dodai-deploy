@@ -63,21 +63,20 @@ class ProposalFlowsTestTest < ActionDispatch::IntegrationTest
     software = Software.find_by_name software_name 
     node_configs = {}
     software.components.each_with_index do |component, index|
-      node_configs[index.to_s] = {:component_id => component.id, :node_id => node.id, :state => "init"}
+      node_configs[index.to_s] = {:component_name => component.name, :node_name => node.name}
     end
 
     software_config_default = software.software_config_defaults[0]
 
     software_configs = {}
-    software_configs["0"] = {:software_id => software.id, :software_config_default_id => software_config_default.id, :content => software_config_default.content} 
+    software_configs["0"] = {:path => software_config_default.path, :content => software_config_default.content} 
 
     proposal_name = "nova-test"
     proposal = {}
     proposal[:name] = proposal_name
-    proposal[:software_id] = software.id
+    proposal[:software_desc] = software.desc
     proposal[:node_configs_attributes] = node_configs
     proposal[:software_configs_attributes] = software_configs 
-    puts JSON.pretty_generate(proposal)
 
     post "/proposals.json", :proposal => proposal
 

@@ -202,10 +202,10 @@ class ProposalsController < ApplicationController
     @proposal.state = "waiting"
     @proposal.save
 
-    waiting_job = WaitingJob.new
-    waiting_job.proposal = @proposal
-    waiting_job.operation = operation
-    waiting_job.save
+    waiting_proposal = WaitingProposal.new
+    waiting_proposal.proposal = @proposal
+    waiting_proposal.operation = operation
+    waiting_proposal.save
 
     mq = MessageQueueClient.new
     mq.publish({:operation => operation, :params => {:proposal_id => proposal_id}})

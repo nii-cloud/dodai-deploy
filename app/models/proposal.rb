@@ -36,7 +36,7 @@ class Proposal < ActiveRecord::Base
   has_many :config_items, :dependent => :destroy
   accepts_nested_attributes_for :config_items
 
-  has_one :waiting_job, :dependent => :destroy
+  has_one :waiting_proposal, :dependent => :destroy
 
   def as_json(options = {})
     super(:include => {:software => {}, 

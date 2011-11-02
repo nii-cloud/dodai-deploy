@@ -1,0 +1,19 @@
+<h1>Listing waiting proposals</h1>
+
+<table>
+  <tr>
+    <th>Proposal</th>
+    <th>Operation</th>
+    <th>Updated At</th>
+    <th>Created At</th>
+  </tr>
+
+<% @waiting_proposals.each do |waiting_proposal| %>
+  <tr>
+    <td><%= waiting_proposal.proposal.name %></td>
+    <td><%= waiting_proposal.operation %></td>
+    <td><%= waiting_proposal.updated_at %></td>
+    <td><%= waiting_proposal.created_at %></td>
+  </tr>
+<% end %>
+</table>

@@ -140,7 +140,7 @@ ActiveRecord::Schema.define(:version => 20111027025254) do
     t.datetime "updated_at"
   end
 
-  create_table "waiting_jobs", :force => true do |t|
+  create_table "waiting_proposals", :force => true do |t|
     t.integer  "proposal_id"
     t.string   "operation"
     t.datetime "created_at"
