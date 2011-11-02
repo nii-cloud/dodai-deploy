@@ -5,8 +5,8 @@ class Operations
       @proposal.state = "#{name}ing"
       @proposal.save
 
-      waiting_job = WaitingJob.find_by_proposal_id @proposal.id
-      waiting_job.destroy 
+      waiting_proposal = WaitingProposal.find_by_proposal_id @proposal.id
+      waiting_proposal.destroy 
 
       puts "Start #{name}[proposal - #{@proposal.id}]"
 

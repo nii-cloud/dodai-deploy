@@ -21,7 +21,7 @@ Deployment::Application.routes.draw do
   resources :node_configs
   match "node_configs/:node_name/puppet" => "node_configs#puppet", :as => :puppet_node_configs, :via => :get, :constraints => { :node_name => /[^\/]+/ }
 
-  resources :logs, :waiting_jobs
+  resources :logs, :waiting_proposals
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
