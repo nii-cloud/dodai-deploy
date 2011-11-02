@@ -46,6 +46,7 @@ The "$home" in the following sections is the path of the home directory of the d
 ### Download the Deployment Tool
 Execute the following commands on deployment server and all the nodes.
 
+    sudo apt-get install git -y
     git clone https://github.com/nii-cloud/dodai.git
 
 ### Set up deployment server
