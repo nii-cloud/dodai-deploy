@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+nova:
+  software: nova
+  component: nova_api 
+
+glance:
+  software: glance
+  component: glance
+
+swift:
+  software: swift
+  component: swift_proxy
+
+hadoop:
+  software: hadoop
+  component: name_node 

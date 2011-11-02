@@ -1,0 +1,19 @@
+<h1>Listing waiting jobs</h1>
+
+<table>
+  <tr>
+    <th>Proposal</th>
+    <th>Operation</th>
+    <th>Updated At</th>
+    <th>Created At</th>
+  </tr>
+
+<% @waiting_jobs.each do |waiting_job| %>
+  <tr>
+    <td><%= waiting_job.proposal.name %></td>
+    <td><%= waiting_job.operation %></td>
+    <td><%= waiting_job.updated_at %></td>
+    <td><%= waiting_job.created_at %></td>
+  </tr>
+<% end %>
+</table>

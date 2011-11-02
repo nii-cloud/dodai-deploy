@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Deployment</title>
+  <%= stylesheet_link_tag :all %>
+  <%= stylesheet_link_tag "layout-default-latest" %>
+  <%= stylesheet_link_tag "smoothness/jquery-ui-1.8.16.custom" %>
+  <%= stylesheet_link_tag "application" %>
+  <%= javascript_include_tag :defaults %>
+  <%= javascript_include_tag "jquery_ujs" %>
+  <%= javascript_include_tag 'jquery.layout-latest' %>
+  <%= javascript_include_tag 'jquery.timer' %>
+  <%= javascript_include_tag 'jquery-ui-1.8.16.custom.min' %>
+  <%= javascript_include_tag_if_exists "#{params[:controller]}" %>
+  <%= javascript_include_tag_if_exists "#{params[:controller]}/#{params[:action]}" %>
+  <%= csrf_meta_tag %>
+</head>
+<body>
+
+<div class="ui-layout-center">
+  <%= yield %>
+</div>
+
+<div class="ui-layout-west">
+  <%= render(:file => "layouts/_menu") %>
+</div>
+
+</body>
+</html>

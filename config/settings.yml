@@ -1,0 +1,10 @@
+puppet:
+  etc: /etc/puppet
+mcollective:
+  timeout: 3600
+  discovery_timeout: 5
+activemq:
+  user: deploy
+  password: deploy
+  host: localhost
+  port: 6163

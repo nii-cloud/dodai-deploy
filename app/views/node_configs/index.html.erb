@@ -1,0 +1,27 @@
+<h1>Listing node configs</h1>
+
+<table>
+  <tr>
+    <th>Proposal</th>
+    <th>Node</th>
+    <th>Software</th>
+    <th>Component</th>
+    <th>State</th>
+    <th>Updated At</th>
+    <th>Created At</th>
+  </tr>
+
+<% @node_configs.each do |node_config| %>
+  <tr>
+    <td><%= node_config.proposal.name %></td>
+    <td><%= node_config.node.name %></td>
+    <td><%= node_config.component.software.desc %></td>
+    <td><%= node_config.component.name %></td>
+    <td><%= node_config.state %></td>
+    <td><%= node_config.updated_at %></td>
+    <td><%= node_config.created_at %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />

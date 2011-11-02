@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+nova:
+  name: nova 
+  desc: openstack nova diablo
+
+glance:
+  name: glance
+  desc: openstack glance diablo
+
+swift:
+  name: swift
+  desc: openstack swift diablo
+
+hadoop:
+  name: hadoop
+  desc: hadoop 0.20.2

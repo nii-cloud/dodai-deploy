@@ -1,0 +1,42 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+network_ip_range:
+  software: nova
+  name: network_ip_range
+  value: "10.0.0.0/24"
+
+libvirt_type:
+  software: nova
+  name: libvirt_type
+  value: kvm
+
+glance_host:
+  software: nova
+  name: glance_host
+  value: localhost
+
+swift_proxy_host:
+  software: glance
+  name: swift_proxy_host
+  value: localhost
+
+storage_path:
+  software: swift 
+  name: storage_path
+  value: /srv/node
+
+storage_dev:
+  software: swift
+  name: storage_dev
+  value: sdb1
+
+ring_builder_replicas:
+  software: swift
+  name: ring_builder_replicas
+  value: 1
+
+super_admin_key:
+  software: swift
+  name: super_admin_key
+  value: swauth
+

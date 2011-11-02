@@ -1,0 +1,64 @@
+<h1>Rest APIs</h1>
+
+<div id="accordion">
+<h3><a href="#">Software</a></h3>
+<div>
+<h4>Listing softwares</h4>
+<%= raw rest_api_table "list_softwares", "/softwares.json" %>
+
+<h4>Showing a software</h4>
+<%= raw rest_api_table "show_software", "/softwares/:id.json", "get", ["id"] %>
+</div>
+
+<h3><a href="#">Component</a></h3>
+<div>
+<h4>Listing components</h4>
+<%= raw rest_api_table "list_components", "/components.json" %>
+
+<h4>Showing a component</h4>
+<%= raw rest_api_table "show_component", "/components/:id.json", "get", ["id"] %>
+</div>
+
+<h3><a href="#">Node</a></h3>
+<div>
+<h4>Listing node candidates</h4>
+<%= raw rest_api_table "list_node_candidates", "/node_candidates.json" %>
+
+<h4>Listing nodes</h4>
+<%= raw rest_api_table "list_nodes", "/nodes.json" %>
+
+<h4>Creating a node</h4>
+<%= raw rest_api_table "create_node", "/nodes.json", "post", ["node[name]"] %>
+
+<h4>Destroying a node</h4>
+<%= raw rest_api_table "destroy_node", "/nodes/:id.json", "delete", ["id"] %>
+</div>
+
+<h3><a href="#">Proposal</a></h3>
+<div>
+<h4>Listing proposals</h4>
+<%= raw rest_api_table "list_proposals", "/proposals.json" %>
+
+<h4>Showing a proposal</h4>
+<%= raw rest_api_table "show_proposal", "/proposals/:id.json", "get", ["id"] %>
+
+<h4>Creating a proposal</h4>
+<table><tr>
+<th>software</th>
+<td><%= select_tag "software_sel", options_from_collection_for_select(Software.all.sort{|a,b| a.desc <=> b.desc}, :id, :desc) %></td>
+</tr></table><br/>
+<%= raw rest_api_table "create_proposal", "/proposals.json", "post", ["proposal[name]"] %>
+
+<h4>Destroying a proposal</h4>
+<%= raw rest_api_table "destroy_proposal", "/proposals/:id.json", "delete", ["id"] %>
+
+<h4>Installing a proposal</h4>
+<%= raw rest_api_table "install_proposal", "/proposals/:id/install.json", "get", ["id"] %>
+
+<h4>Uninstalling a proposal</h4>
+<%= raw rest_api_table "uninstall_proposal", "/proposals/:id/uninstall.json", "get", ["id"] %>
+
+<h4>Testing a proposal</h4>
+<%= raw rest_api_table "test_proposal", "/proposals/:id/test.json", "get", ["id"] %>
+</div>
+</div>

@@ -1,0 +1,21 @@
+<%= form_for(@node) do |node_form| %>
+  <% if @node.errors.any? %>
+  <div id="errorExplanation">
+    <h2><%= pluralize(@node.errors.count, "error") %> prohibited this node from being saved:</h2>
+    <ul>
+    <% @node.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+  <% end %>
+
+  <table><tr>
+    <th><%= node_form.label :name %></th>
+    <td><%= node_form.select :name, @names.collect{|name| [name, name]}%></td>
+  </tr></table> 
+
+  <div class="actions">
+    <%= node_form.submit %>
+  </div>
+<% end %>

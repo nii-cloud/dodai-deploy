@@ -1,0 +1,99 @@
+<%= form_for(@proposal) do |proposal_form| %>
+  <% if @proposal.errors.any? %>
+  <div id="errorExplanation">
+    <h2><%= pluralize(@proposal.errors.count, "error") %> prohibited this proposal from being saved:</h2>
+    <ul>
+    <% @proposal.errors.full_messages.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+    </ul>
+  </div>
+  <% end %>
+
+  <table><tr> 
+    <th><%= proposal_form.label :name %></th>
+    <td><%= proposal_form.text_field :name %></td>
+  </tr><tr>
+    <th><%= proposal_form.label :software %></th>
+    <td><%= proposal_form.collection_select :software_id, Software.all.sort{|a, b| a.desc <=> b.desc}, :id, :desc %></td>
+  </tr></table>
+
+  <% if proposal_form.object.config_items.size != 0 %>
+  <h2>Config items</h2>
+  <% end %>
+
+  <table>
+  <%= proposal_form.fields_for :config_items do |field| %>
+    <tr>
+			<th><%= field.label :config_item, field.object.config_item_default.name %>
+          <%= field.hidden_field :config_item_default_id, :value => field.object.config_item_default_id %></th>
+			<td><%= field.text_field :value %></td>
+		</tr>
+  <% end %>
+  </table>
+
+
+  <h2>Node configs</h2>
+
+  <% prev_component_name = ""%>
+  <table>
+  <%= proposal_form.fields_for :node_configs do |field| %>
+    <% if prev_component_name != "" && prev_component_name != field.object.component.name %>
+    </table></td>
+    <td><input type="button" class="add_btn" value="add"/></td>
+    <% end %>
+    <% if prev_component_name != field.object.component.name %>
+    <tr><th><%= field.label :component, field.object.component.name unless prev_component_name == field.object.component.name %></th>
+    <td><table class="node_config_table">
+    <% end %>
+        <tr class="node_config_tr"><td>
+          <%= field.hidden_field :component_id, :value => field.object.component.id %>
+          <%= field.hidden_field :state, :value => field.object.state %>
+          <%= field.collection_select :node_id, Node.all, :id, :name %>
+          <input type="button" class="delete_btn" value="delete">
+        </td></tr>
+    <% prev_component_name = field.object.component.name%>
+  <% end %>
+    </table></td>
+    <td><input type="button" class="add_btn" value="add"/></td>
+    </tr>
+  </table>
+
+  <% if proposal_form.object.component_configs.size != 0 %>
+  <h2>Component configs</h2>
+  <% end %>
+
+  <table>
+  <% prev_component_name = "" %>
+  <%= proposal_form.fields_for :component_configs do |field| %>
+  <% unless prev_component_name == field.object.component.name %>
+  <tr><th colspan=2 class="component_th"><%= prev_component_name = field.object.component.name %></th></tr> 
+  <% end %>
+  <tr>
+    <th><%= field.label :component, field.object.component_config_default.path %>
+    <%= field.hidden_field :component_id, :value => field.object.component.id %></th>
+    <%= field.hidden_field :component_config_default_id, :value => field.object.component_config_default.id %></th>
+    <td><%= field.text_area :content, :cols => "80", :rows => "#{line_number(field.object.content) + 1}" %></td>
+  </tr>
+  <% end %>
+  </table>
+
+  <% if proposal_form.object.software_configs.size != 0 %>
+  <h2>Software configs</h2>
+  <% end %>
+
+  <table>
+  <%= proposal_form.fields_for :software_configs do |field| %>
+  <tr>
+    <th><%= field.label :software, field.object.software_config_default.path %>
+    <%= field.hidden_field :software_id, :value => field.object.software.id %></th>
+    <%= field.hidden_field :software_config_default_id, :value => field.object.software_config_default.id %></th>
+    <td><%= field.text_area :content, :cols => "80", :rows => "#{line_number(field.object.content) + 1}" %></td>
+  </tr>
+  <% end %>
+  </table>
+
+  <div class="actions">
+    <%= proposal_form.submit %>
+  </div>
+<% end %>

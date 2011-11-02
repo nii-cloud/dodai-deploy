@@ -1,0 +1,28 @@
+<h1>Listing logs</h1>
+
+<table>
+  <tr>
+    <th>Proposal</th>
+    <th>Node name</th>
+    <th>Operation</th>
+    <th>Content</th>
+    <th>Updated At</th>
+    <th>Created At</th>
+  </tr>
+
+<% @logs.each do |log| %>
+  <tr>
+    <td><%= log.proposal.name %></td>
+    <td><%= log.node.name %></td>
+    <td><%= log.operation %></td>
+    <td>
+      <% split_into_lines(log.content).each do |line| %>
+        <%= line %> <br/>
+      <% end %>
+    </td>
+    <td><%= log.updated_at %></td>
+    <td><%= log.created_at %></td>
+  </tr>
+<% end %>
+</table>
+

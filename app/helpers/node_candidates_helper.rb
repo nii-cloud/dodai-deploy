@@ -1,0 +1,2 @@
+module NodeCandidatesHelper
+end

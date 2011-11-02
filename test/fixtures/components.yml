@@ -1,0 +1,65 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+glance:
+  name: glance 
+  software: glance 
+
+nova_api:
+  name: nova_api
+  software: nova
+
+nova_compute:
+  name: nova_compute
+  software: nova
+
+nova_network:
+  name: nova_network
+  software: nova
+
+nova_scheduler:
+  name: nova_scheduler
+  software: nova
+
+nova_volume:
+  name: nova_volume
+  software: nova
+
+nova_objectstore:
+  name: nova_objectstore
+  software: nova
+
+rabbitmq:
+  name: rabbitmq
+  software: nova
+
+mysql:
+  name: mysql
+  software: nova
+
+swift_proxy:
+  name: swift_proxy
+  software: swift
+
+swift_storage:
+  name: swift_storage
+  software: swift
+
+name_node:
+  name: name_node
+  software: hadoop
+
+secondary_name_node:
+  name: secondary_name_node
+  software: hadoop
+
+data_node:
+  name: data_node
+  software: hadoop
+
+job_tracker:
+  name: job_tracker
+  software: hadoop
+
+task_tracker:
+  name: task_tracker
+  software: hadoop
