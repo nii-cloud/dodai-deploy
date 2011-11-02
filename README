@@ -1,7 +1,7 @@
 Welcome to the **Dodai project**
 
 ## Introduction
-The Dodai is the software management tool. Now the tool supports openstack diablo(nova, glance, swift) and hadoop 0.20.2.
+The dodai is the software management tool. Now the tool supports openstack diablo(nova, glance, swift) and hadoop 0.20.2.
 
 ## Features
 * Manages installation, uninstallation and testing of a software.
@@ -13,7 +13,7 @@ The Dodai is the software management tool. Now the tool supports openstack diabl
 
 ## Glossary
 **Deployment server**
-The server where deployment tool is installed.
+The server where dodai is installed.
 
 **Node**
 The machine which will be the target to install on.
@@ -41,7 +41,7 @@ The configuration which defines content of a configuration file and will be appl
 
 ## Installation
 
-The "$home" in the following sections is the path of the home directory of the deployment tool.
+The "$home" in the following sections is the path of the home directory of the dodai.
 
 ### OSes supported
 The following OSes are supported.
@@ -49,7 +49,7 @@ The following OSes are supported.
 * ubuntu 10.10
 * ubuntu 11.04
 
-### Download the Deployment Tool
+### Download dodai 
 Execute the following commands on deployment server and all the nodes.
 
     sudo apt-get install git -y
