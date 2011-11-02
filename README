@@ -43,6 +43,12 @@ The configuration which defines content of a configuration file and will be appl
 
 The "$home" in the following sections is the path of the home directory of the deployment tool.
 
+### OSes supported
+The following OSes are supported.
+
+* ubuntu 10.10
+* ubuntu 11.04
+
 ### Download the Deployment Tool
 Execute the following commands on deployment server and all the nodes.
 
