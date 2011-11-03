@@ -1,7 +1,7 @@
 Welcome to the **Dodai project**
 
 ## Introduction
-The dodai is the software management tool. Now the tool supports openstack diablo(nova, glance, swift) and hadoop 0.20.2.
+The dodai is a software management tool. Now the tool supports openstack diablo(nova, glance, swift) and hadoop 0.20.2.
 
 ## Features
 * Manages installation, uninstallation and testing of a software.
@@ -48,6 +48,7 @@ The following OSes are supported.
 
 * ubuntu 10.10
 * ubuntu 11.04
+* ubuntu 11.10
 
 ### Download dodai 
 Execute the following commands on deployment server and all the nodes.
