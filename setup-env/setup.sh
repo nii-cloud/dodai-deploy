@@ -83,6 +83,13 @@ function install_deployment_app {
   apt-get -y install ruby-dev libsqlite3-dev
   bundle install
 
+  lsb_release -r | grep 11.10
+  if [ $? = 0  ]; then
+    echo "Change /var/lib/gems/1.8/specifications/json-1.6.1.gemspec date format for ubuntu 11.10"
+    sed -i -e 's/ 00:00:00.000000000Z//g' /var/lib/gems/1.8/specifications/json-1.6.1.gemspec
+    bundle install
+  fi
+  
   cp $gem_dir/bin/rails /usr/bin/
   cp $gem_dir/bin/rake /usr/bin/
 
