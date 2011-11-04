@@ -4,12 +4,12 @@ Welcome to the **Dodai project**
 The dodai is a software management tool. Now the tool supports openstack diablo(nova, glance, swift) and hadoop 0.20.2.
 
 ## Features
-* Manages installation, uninstallation and testing of a software.
-* Supports openstack diablo and hadoop 0.20.2
-* Supports target machines in different network segments.
-* Provides web UI to facilitate user operations.
-* Provides rest API to make integration to other tools possible.
-* Supports parallel installation of components of a software.
+* Manage installation, uninstallation and testing of a software.
+* Support openstack diablo and hadoop 0.20.2
+* Support target machines in different network segments.
+* Provide web UI to facilitate user operations.
+* Provide rest API to make integration to other tools possible.
+* Support parallel installation of components of a software.
 
 ## Glossary
 **Deployment server**
@@ -55,6 +55,7 @@ Execute the following commands on deployment server and all the nodes.
 
     sudo apt-get install git -y
     git clone https://github.com/nii-cloud/dodai.git
+    git checkout 1.0   #only used to get dodai 1.0
 
 ### Set up deployment server
 Execute the following commands on deployment server to install necessary softwares and modify settings of them.
@@ -94,7 +95,7 @@ For example,
 
     sudo $home/setup-env/setup-storage-for-swift.sh loopback /srv/node sdb1 4
 
-### Starting servers
+### Start servers
 Execute the following command on the deployment server to start the web server and job server.
 
     cd $home
