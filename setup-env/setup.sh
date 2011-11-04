@@ -55,9 +55,9 @@ function install_puppet_server {
   #download kvm image
   target_file="/etc/puppet/files/nova/image_kvm.tgz"
   if [ ! -e $target_file ]; then
-		image="ttylinux-uec-amd64-12.1_2.6.35-22_1.tar.gz"
-		wget http://smoser.brickies.net/ubuntu/ttylinux-uec/$image
-		mv $image $target_file 
+    image="ttylinux-uec-amd64-12.1_2.6.35-22_1.tar.gz"
+    wget http://smoser.brickies.net/ubuntu/ttylinux-uec/$image
+    mv $image $target_file 
   fi
 
   version="0.20.2"
@@ -74,10 +74,16 @@ function install_puppet_server {
 function install_deployment_app {
   cd ..
 
-  gem install bundle
-
   gem_dir=`gem environment gemdir`
 
+  lsb_release -r | grep 10.04
+  if [ $? = 0 ]; then
+    gem install rubygems-update
+    $gem_dir/bin/update_rubygems
+    gem_dir=`gem environment gemdir`
+  fi
+
+  gem install bundle
   cp $gem_dir/bin/bundle /usr/bin/
 
   apt-get -y install ruby-dev libsqlite3-dev
@@ -89,7 +95,7 @@ function install_deployment_app {
     sed -i -e 's/ 00:00:00.000000000Z//g' /var/lib/gems/1.8/specifications/json-1.6.1.gemspec
     bundle install
   fi
-  
+
   cp $gem_dir/bin/rails /usr/bin/
   cp $gem_dir/bin/rake /usr/bin/
 
