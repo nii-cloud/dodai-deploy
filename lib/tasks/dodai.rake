@@ -1,3 +1,8 @@
+namespace :dodai do
+  desc 'Add copyright header'
+  task :copyright do
+
+    copyright = <<EOF
 #
 # Copyright 2011 National Institute of Informatics.
 #
@@ -13,17 +18,22 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-class NodeCandidatesController < ApplicationController
-  def index
-    respond_to do |format| 
-      format.json { 
-        candidates = []
-        names = McUtils.find_hosts - Node.all.map(&:name)
-        names.each {|name|
-          candidates << {:name => name, :ip_address => IPSocket.getaddress(name)}
-        }
-        render :json => JSON.pretty_generate(candidates.as_json)  
-      }
+EOF
+
+    Dir.glob("**/*") do |path|
+      if path =~ /.*\.rb/
+        f = open path
+        content = f.read
+        f.close
+        unless content.strip =~ /^#/
+          f = File.open path, "w"
+          f.write copyright + content
+          f.close
+
+          puts path
+        end
+      end
     end
   end
 end
+ 
