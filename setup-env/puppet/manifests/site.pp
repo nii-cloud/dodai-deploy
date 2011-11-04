@@ -14,12 +14,10 @@
  *    License for the specific language governing permissions and limitations
  *    under the License.
  */
-$work_dir = "/tmp"
 
 Exec {
-    path => "/usr/bin:/bin:/usr/sbin:/sbin:$work_dir:/usr/local/bin",
-		logoutput => true,
-    cwd => "$work_dir"
+    path => "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+		logoutput => true
 }
 
 File {
