@@ -55,7 +55,7 @@ Execute the following commands on deployment server and all the nodes.
 
     sudo apt-get install git -y
     git clone https://github.com/nii-cloud/dodai.git
-    git checkout 1.0   #only used to get dodai 1.0
+    cd dodai; git checkout 1.0   #only used to get dodai 1.0
 
 ### Set up deployment server
 Execute the following commands on deployment server to install necessary softwares and modify settings of them.
