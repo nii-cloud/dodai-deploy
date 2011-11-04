@@ -124,3 +124,7 @@ During the testing of nova, an instance will be started. After the test, you can
     . env/novarc
     euca-describe-instances
     ssh -i mykey.priv 10.0.0.3
+
+### Nova depends on glance in default settings.
+
+Because in /etc/nova/nova.conf the value of setting "image_service" is "nova.image.glance.GlanceImageService", glance should be installed before using nova.
