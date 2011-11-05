@@ -1,7 +1,7 @@
-Welcome to the **Dodai project**
+Welcome to the **dodai-deploy project**
 
 ## Introduction
-The Dodai is a software management tool. It supports OpenStack Diablo(Nova, Glance, Swift) and hadoop 0.20.2.
+The dodai-deploy is a software management tool. It supports OpenStack Diablo(Nova, Glance, Swift) and hadoop 0.20.2.
 
 ## Features
 * Manage installation, uninstallation and testing of a software.
@@ -13,7 +13,7 @@ The Dodai is a software management tool. It supports OpenStack Diablo(Nova, Glan
 
 ## Glossary
 **Deployment server**
-The server in which Dodai is installed.
+The server in which dodai-deploy is installed.
 
 **Node**
 The machine that is the target of installation.
@@ -41,7 +41,7 @@ A configuration that describes the content of a configuration file for only one 
 
 ## Installation
 
-The "$home" in the following sections is the path of the home directory of the dodai.
+The "$home" in the following sections is the path of the home directory of the dodai-deploy.
 
 ### OSes supported
 The following OSes are supported.
@@ -50,12 +50,12 @@ The following OSes are supported.
 * ubuntu 11.04
 * ubuntu 11.10
 
-### Download dodai 
+### Download dodai-deploy 
 Execute the following commands on the deployment server and all the nodes.
 
     sudo apt-get install git -y
-    git clone https://github.com/nii-cloud/dodai.git
-    cd dodai; git checkout 1.0   #only used to get dodai 1.0
+    git clone https://github.com/nii-cloud/dodai-deploy.git
+    cd dodai-deploy; git checkout 1.0   #only used to get dodai-deploy 1.0
 
 ### Set up the deployment server
 Execute the following commands on deployment server to install necessary softwares and modify their settings.
