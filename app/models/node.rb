@@ -14,7 +14,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 class Node < ActiveRecord::Base
-  validates :name,  :presence => true, :uniqueness => true
+  validates_presence_of :name, :ip
+  validates_uniqueness_of :name, :ip
+  validates_inclusion_of :state, :in => %w(available)
 
   belongs_to :proposal
 

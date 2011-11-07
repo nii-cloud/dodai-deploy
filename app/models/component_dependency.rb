@@ -14,6 +14,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 class ComponentDependency < ActiveRecord::Base
+  validates_presence_of :source_component, :dest_component, :software, :operation
+  validates_uniqueness_of :source_component_id, :scope => [:software_id, :dest_component_id, :operation]
+
   belongs_to :source_component, :class_name => "Component", :foreign_key => "source_component_id"
   belongs_to :dest_component, :class_name => "Component", :foreign_key => "dest_component_id"
   belongs_to :software

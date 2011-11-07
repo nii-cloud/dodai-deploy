@@ -14,5 +14,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 class WaitingProposal < ActiveRecord::Base
+  validates_presence_of :proposal, :operation
+  validates_uniqueness_of :operation, :scope => [:proposal_id]
+  validates_inclusion_of :operation, :in => %w(install uninstall test)
+
   belongs_to :proposal
 end

@@ -19,17 +19,14 @@ class ComponentDependencyTest < ActiveSupport::TestCase
   # Replace this with your real tests.
   # called before every single test
   def setup
-    @cd = ComponentDependency.new(:operation => 'install', :software => Software.find_by_name("nova"))
+    @cd = ComponentDependency.new(:operation => 'install', :software => Software.find_by_name("nova"), 
+                                  :source_component => Component.find_by_name("nova_compute"),
+                                  :dest_component => Component.find_by_name("mysql"))
   end
 
   # called after every single test
   def teardown
     @cd = nil
-  end
-
-  test "should not save ComponentDependency without operation" do
-    @cd.operation = nil
-    assert !@cd.save
   end
 
   test "should not save ComponentDependency without software" do

@@ -19,7 +19,7 @@ class NodeTest < ActiveSupport::TestCase
   # Replace this with your real tests.
   # called before every single test
   def setup
-    @node = Node.new(:name => 'test', :ip => '0.0.0.0', :state => 'init')
+    @node = Node.new(:name => 'test', :ip => '0.0.0.0', :state => 'available')
   end
 
   # called after every single test

@@ -19,7 +19,7 @@ class ComponentConfigDefaultTest < ActiveSupport::TestCase
   # Replace this with your real tests.
   # called before every single test
   def setup
-    @ccd = ComponentConfigDefault.new(:path => Dir.pwd, :content => 'contents', :component => Component.find_by_name("ubuntu"))
+    @ccd = ComponentConfigDefault.new(:path => Dir.pwd, :content => 'contents', :component => Component.find_by_name("nova_compute"))
   end
 
   # called after every single test

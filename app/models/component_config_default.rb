@@ -14,5 +14,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 class ComponentConfigDefault < ActiveRecord::Base
+  validates_presence_of :path, :content, :component
+  validates_uniqueness_of :path, :scope => [:component_id]
+
   belongs_to :component
 end

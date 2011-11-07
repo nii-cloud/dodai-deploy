@@ -14,6 +14,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 class ComponentConfig < ActiveRecord::Base
+  validates_presence_of :proposal, :component, :component_config_default, :content
+  validates_uniqueness_of :component_config_default_id, :scope => [:proposal_id]
+
   belongs_to :proposal
   belongs_to :component
   belongs_to :component_config_default

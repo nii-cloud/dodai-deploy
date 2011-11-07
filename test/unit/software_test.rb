@@ -37,6 +37,20 @@ class SoftwareTest < ActiveSupport::TestCase
     assert !@software.save
   end
 
+  test "should not save software with the same name" do
+    assert @software.save
+    new_soft = Software.new(@software)
+    new_soft.desc = "desc1"
+    assert !new_soft.save
+  end
+
+  test "should not save software with the same desc" do
+    assert @software.save
+    new_soft = Software.new(@software)
+    new_soft.name = "name1"
+    assert !new_soft.save
+  end
+
   test "should be success saved software" do
     assert @software.save
   end

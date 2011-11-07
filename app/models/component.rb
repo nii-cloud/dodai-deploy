@@ -14,6 +14,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 class Component < ActiveRecord::Base
+  validates_presence_of :software, :name
+  validates_uniqueness_of :name, :scope => [:software_id]
+
   belongs_to :software
 
   has_many :component_config_defaults

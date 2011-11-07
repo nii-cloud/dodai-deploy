@@ -14,6 +14,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 class TestComponent < ActiveRecord::Base
+  validates_presence_of :software, :component
+  validates_uniqueness_of :component_id, :scope => [:software_id]
+
   belongs_to :software
   belongs_to :component
 end

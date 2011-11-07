@@ -14,6 +14,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 class Log < ActiveRecord::Base
+  validates_presence_of :proposal, :node, :content, :operation
+  validates_inclusion_of :operation, :in => %w(install uninstall test)
+
   belongs_to :proposal
   belongs_to :node
 end

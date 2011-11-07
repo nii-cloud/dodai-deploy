@@ -14,7 +14,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 class Proposal < ActiveRecord::Base
-  validates :name,  :presence => true, :uniqueness => true
+  validates_presence_of :name, :software, :state
+  validates_uniqueness_of :name
+  validates_inclusion_of :state, :in => ["init", "installed", "tested", "install failed", "test failed"]
 
   belongs_to :software
   has_many :node_configs, :dependent => :destroy, :finder_sql =>

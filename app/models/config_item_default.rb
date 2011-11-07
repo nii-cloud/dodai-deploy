@@ -14,5 +14,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 class ConfigItemDefault < ActiveRecord::Base
+  validates_presence_of :name, :value, :software
+  validates_uniqueness_of :name, :scope => [:software_id]
+
   belongs_to :software
 end

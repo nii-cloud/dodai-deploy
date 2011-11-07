@@ -37,11 +37,6 @@ class ProposalTest < ActiveSupport::TestCase
     assert !@proposal.save
   end
 
-  test "should not save proposal without state" do
-    @proposal.state = nil
-    assert !@proposal.save
-  end
-
   test "should be success saved proposal" do
     assert @proposal.save
   end

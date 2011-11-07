@@ -14,6 +14,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 class Software < ActiveRecord::Base
+  validates_uniqueness_of :name, :desc
+  validates_presence_of :name, :desc
+
   has_many :components
   accepts_nested_attributes_for :components
 

@@ -19,7 +19,7 @@ class TestComponentTest < ActiveSupport::TestCase
   # Replace this with your real tests.
   # called before every single test
   def setup
-    @tc = TestComponent.new(:software => Software.find_by_name("nova"), :component => Component.find_by_name("ubuntu"))
+    @tc = TestComponent.new(:software => Software.find_by_name("nova"), :component => Component.find_by_name("nova_compute"))
   end
 
   # called after every single test
