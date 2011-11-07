@@ -18,13 +18,42 @@ require 'test_helper'
 
 
 class LogTest < ActiveSupport::TestCase
-
   # Replace this with your real tests.
+  # called before every single test
+  def setup
+    @proposal = Proposal.new(:name => 'test', :software => Software.find_by_name("nova"), :state => 'init')
+    @node = Node.new(:name => 'test', :ip => '0.0.0.0', :state => 'init')
 
-  test "the truth" do
+    @log = Log.new(:content => 'log', :operation => 'install', :proposal => @proposal, :node => @node)
+  end
 
-    assert true
+  # called after every single test
+  def teardown
+    @log = nil
+  end
 
+  test "should not save log without content" do
+    @log.content = nil
+    assert !@log.save
+  end
+
+  test "should not save log without operation" do
+    @log.operation = nil
+    assert !@log.save
+  end
+
+  test "should not save log without proposal" do
+    @log.proposal = nil
+    assert !@log.save
+  end
+
+  test "should not save log without node" do
+    @log.node = nil
+    assert !@log.save
+  end
+
+  test "should be success saved log" do
+    assert @log.save
   end
 
 end

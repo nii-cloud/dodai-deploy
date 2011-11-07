@@ -17,8 +17,33 @@ require 'test_helper'
 
 class ProposalTest < ActiveSupport::TestCase
   # Replace this with your real tests.
-  test "should not save proposal without name" do
-    proposal = Proposal.new
-    assert !proposal.save
+  # called before every single test
+  def setup
+    @proposal = Proposal.new(:name => 'test', :software => Software.find_by_name("nova"), :state => 'init')
   end
+
+  # called after every single test
+  def teardown
+    @proposal = nil
+  end
+
+  test "should not save proposal without name" do
+    @proposal.name = nil 
+    assert !@proposal.save
+  end
+
+  test "should not save proposal without software" do
+    @proposal.software = nil
+    assert !@proposal.save
+  end
+
+  test "should not save proposal without state" do
+    @proposal.state = nil
+    assert !@proposal.save
+  end
+
+  test "should be success saved proposal" do
+    assert @proposal.save
+  end
+
 end

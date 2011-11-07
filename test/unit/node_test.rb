@@ -17,7 +17,33 @@ require 'test_helper'
 
 class NodeTest < ActiveSupport::TestCase
   # Replace this with your real tests.
-  test "the truth" do
-    assert true
+  # called before every single test
+  def setup
+    @node = Node.new(:name => 'test', :ip => '0.0.0.0', :state => 'init')
   end
+
+  # called after every single test
+  def teardown
+    @node = nil
+  end
+
+  test "should not save node without name" do
+    @node.name = nil
+    assert !@node.save
+  end
+
+  test "should not save node without ip" do
+    @node.ip = nil
+    assert !@node.save
+  end
+
+  test "should not save node without state" do
+    @node.state = nil
+    assert !@node.save
+  end
+
+  test "should be success saved node" do
+    assert @node.save
+  end
+
 end

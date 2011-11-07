@@ -17,7 +17,36 @@ require 'test_helper'
 
 class ConfigItemTest < ActiveSupport::TestCase
   # Replace this with your real tests.
-  test "the truth" do
-    assert true
+  # called before every single test
+  def setup
+    @cid = ConfigItemDefault.new(:software => Software.find_by_name("nova"), :name => 'test', :value => 'values')
+    @proposal = Proposal.new(:name => 'test', :software => Software.find_by_name("nova"), :state => 'init')
+
+    @ci = ConfigItem.new(:config_item_default => @cid, :proposal => @proposal, :value => 'values')
   end
+
+  # called after every single test
+  def teardown
+    @ci = nil
+  end
+
+  test "should not save ConfigItem without config_item_default" do
+    @ci.config_item_default = nil
+    assert !@ci.save
+  end
+
+  test "should not save ConfigItem without proposal" do
+    @ci.proposal = nil
+    assert !@ci.save
+  end
+
+  test "should not save ConfigItem without value" do
+    @ci.value = nil
+    assert !@ci.save
+  end
+
+  test "should be success saved ConfigItem" do
+    assert @ci.save
+  end
+
 end

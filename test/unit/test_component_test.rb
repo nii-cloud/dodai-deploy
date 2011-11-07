@@ -17,7 +17,28 @@ require 'test_helper'
 
 class TestComponentTest < ActiveSupport::TestCase
   # Replace this with your real tests.
-  test "the truth" do
-    assert true
+  # called before every single test
+  def setup
+    @tc = TestComponent.new(:software => Software.find_by_name("nova"), :component => Component.find_by_name("ubuntu"))
   end
+
+  # called after every single test
+  def teardown
+    @tc = nil
+  end
+
+  test "should not save TestComponent without software" do
+    @tc.software = nil
+    assert !@tc.save
+  end
+
+  test "should not save TestComponent without component" do
+    @tc.component = nil
+    assert !@tc.save
+  end
+
+  test "should be success saved TestComponent" do
+    assert @tc.save
+  end
+
 end

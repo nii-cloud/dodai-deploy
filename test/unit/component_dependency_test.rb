@@ -17,7 +17,28 @@ require 'test_helper'
 
 class ComponentDependencyTest < ActiveSupport::TestCase
   # Replace this with your real tests.
-  test "the truth" do
-    assert true
+  # called before every single test
+  def setup
+    @cd = ComponentDependency.new(:operation => 'install', :software => Software.find_by_name("nova"))
   end
+
+  # called after every single test
+  def teardown
+    @cd = nil
+  end
+
+  test "should not save ComponentDependency without operation" do
+    @cd.operation = nil
+    assert !@cd.save
+  end
+
+  test "should not save ComponentDependency without software" do
+    @cd.software = nil
+    assert !@cd.save
+  end
+
+  test "should be success saved ComponentDependency" do
+    assert @cd.save
+  end
+
 end

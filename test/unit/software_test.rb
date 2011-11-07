@@ -17,7 +17,28 @@ require 'test_helper'
 
 class SoftwareTest < ActiveSupport::TestCase
   # Replace this with your real tests.
-  test "the truth" do
-    assert true
+  # called before every single test
+  def setup
+    @software = Software.new(:name => 'test', :desc => 'desc')
   end
+
+  # called after every single test
+  def teardown
+    @software = nil
+  end
+
+  test "should not save software without name" do
+    @software.name = nil
+    assert !@software.save
+  end
+
+  test "should not save software without desc" do
+    @software.desc = nil
+    assert !@software.save
+  end
+
+  test "should be success saved software" do
+    assert @software.save
+  end
+
 end

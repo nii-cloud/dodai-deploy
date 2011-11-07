@@ -17,7 +17,35 @@ require 'test_helper'
 
 class SoftwareConfigDefaultTest < ActiveSupport::TestCase
   # Replace this with your real tests.
-  test "the truth" do
-    assert true
+  # called before every single test
+  def setup
+    @scd = SoftwareConfigDefault.new(:path => Dir.pwd, :content => 'contents', :software => Software.find_by_name("nova"))
   end
+
+  # called after every single test
+  def teardown
+    @scd = nil
+  end
+
+
+  test "should not save SoftwareConfigDefault without path" do
+    @scd.path = nil
+    assert !@scd.save
+  end
+
+  test "should not save SoftwareConfigDefault without content" do
+    @scd.content = nil
+    assert !@scd.save
+  end
+
+  test "should not save SoftwareConfigDefault without software" do
+    @scd.software = nil
+    assert !@scd.save
+  end
+
+  test "should be success saved SoftwareConfigDefault" do
+    assert @scd.save
+  end
+
 end
+

@@ -17,7 +17,42 @@ require 'test_helper'
 
 class ComponentConfigTest < ActiveSupport::TestCase
   # Replace this with your real tests.
-  test "the truth" do
-    assert true
+  # called before every single test
+  def setup
+    @proposal = Proposal.new(:name => 'test', :software => Software.find_by_name("nova"), :state => 'init')
+    @component = Component.new(:name => 'component', :software => Software.find_by_name("nova"))
+    @ccd = ComponentConfigDefault.new(:path => Dir.pwd, :content => 'contents', :component => @component)
+
+    @cc = ComponentConfig.new(:proposal => @proposal, :component => @component, :component_config_default => @ccd, :content => 'contents')
   end
+
+  # called after every single test
+  def teardown
+    @cc = nil
+  end
+
+  test "should not save ComponentConfig without proposal" do
+    @cc.proposal = nil
+    assert !@cc.save
+  end
+
+  test "should not save ComponentConfig without component" do
+    @cc.component = nil
+    assert !@cc.save
+  end
+
+  test "should not save ComponentConfig without component_config_default" do
+    @cc.component_config_default = nil
+    assert !@cc.save
+  end
+
+  test "should not save ComponentConfig without content" do
+    @cc.component_config_default = nil
+    assert !@cc.save
+  end
+
+  test "should be success saved ComponentConfig" do
+    assert @cc.save
+  end
+
 end

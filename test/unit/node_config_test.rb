@@ -17,7 +17,42 @@ require 'test_helper'
 
 class NodeConfigTest < ActiveSupport::TestCase
   # Replace this with your real tests.
-  test "the truth" do
-    assert true
+  # called before every single test
+  def setup
+    @proposal = Proposal.new(:name => 'test', :software => Software.find_by_name("nova"), :state => 'init')
+    @node = Node.new(:name => 'node', :ip => '0.0.0.0', :state => 'init')
+    @component = Component.new(:name => 'component', :software => Software.find_by_name("nova"))
+
+    @nc = NodeConfig.new(:proposal => @proposal, :node => @node, :component => @component, :state => 'init')
   end
+
+  # called after every single test
+  def teardown
+    @nc = nil
+  end
+
+  test "should not save NodeConfig without proposal" do
+    @nc.proposal = nil
+    assert !@nc.save
+  end
+
+  test "should not save NodeConfig without node" do
+    @nc.node = nil
+    assert !@nc.save
+  end
+
+  test "should not save NodeConfig without component" do
+    @nc.component = nil
+    assert !@nc.save
+  end
+
+  test "should not save NodeConfig without state" do
+    @nc.state = nil
+    assert !@nc.save
+  end
+
+  test "should be success saved NodeConfig" do
+    assert @nc.save
+  end
+
 end
