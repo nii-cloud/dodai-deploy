@@ -1,0 +1,16 @@
+#!/bin/bash
+
+home=`dirname $0`
+cd $home/..
+
+function screen_it {
+  NL=`echo -ne '\015'`
+  screen -S dodai -X screen -t $1
+  screen -S dodai -p $1 -X stuff "$2$NL"
+}
+
+screen -d -m -S dodai -t dodai
+screen_it rails "sudo rails s"
+screen_it job-server "sudo sh -c 'script/job-server stop; script/job-server start; tail -f log/job_server.log'"
+
+screen -x dodai
