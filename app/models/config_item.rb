@@ -14,8 +14,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 class ConfigItem < ActiveRecord::Base
-  validates_presence_of :proposal, :config_item_default, :value
-  validates_uniqueness_of :config_item_default_id, :scope => [:proposal_id] 
+  validates_presence_of :config_item_default, :value
 
   belongs_to :config_item_default
   belongs_to :proposal

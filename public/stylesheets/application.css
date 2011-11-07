@@ -71,3 +71,7 @@ h1, h2, h4 {
 .rest_api_table, .rest_api_table table, .rest_api_table textarea {
   width: 100%;
 }
+
+#errorExplanation {
+  color: red;
+}

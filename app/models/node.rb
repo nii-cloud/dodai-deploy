@@ -18,7 +18,7 @@ class Node < ActiveRecord::Base
   validates_uniqueness_of :name, :ip
   validates_inclusion_of :state, :in => %w(available)
 
-  belongs_to :proposal
+  belongs_to :proposal, :dependent => :destroy
 
   has_many :node_configs, :dependent => :destroy
   accepts_nested_attributes_for :node_configs

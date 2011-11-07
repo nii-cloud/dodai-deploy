@@ -14,8 +14,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 class SoftwareConfig < ActiveRecord::Base
-  validates_presence_of :content, :proposal, :software, :software_config_default
-  validates_uniqueness_of :software_config_default_id, :scope => [:proposal_id]
+  validates_presence_of :content, :software, :software_config_default
 
   belongs_to :proposal
   belongs_to :software

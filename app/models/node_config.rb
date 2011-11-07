@@ -14,8 +14,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 class NodeConfig < ActiveRecord::Base
-  validates_presence_of :proposal, :node, :component, :state
-  validates_uniqueness_of :component_id, :scope => [:proposal_id, :node_id]
+  validates_presence_of :node, :component, :state
   validates_inclusion_of :state, :in => %w(init installed failed) 
 
   belongs_to :proposal
