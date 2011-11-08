@@ -139,6 +139,9 @@ function install_mcollective_server {
 
 function install_puppet_client {
   apt-get -y install puppet
+
+  #rm ec2 facter
+  rm -f /usr/lib/ruby/1.8/facter/ec2.rb
 }
 
 function install_openstack_repository {
