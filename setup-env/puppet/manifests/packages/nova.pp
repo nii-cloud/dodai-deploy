@@ -299,7 +299,7 @@ class nova_network::install {
     }
 
     package {
-        ["radvd", "dnsmasq"]:
+        ["radvd", "dnsmasq", "iptables"]:
             ensure => present
     }
 

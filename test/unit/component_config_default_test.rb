@@ -41,16 +41,10 @@ class ComponentConfigDefaultTest < ActiveSupport::TestCase
     assert !@ccd.save
   end
 
-  test "should not save ComponentConfigDefault duplicated unique keys" do
+  test "should not save ComponentConfigDefault with the same path and component" do
     @ccd.save
     lccd = ComponentConfigDefault.new(:path => Dir.pwd, :content => 'contents', :component => Component.find_by_name("nova_compute"))
     assert !lccd.save
-  end
-
-  test "should save ComponentConfigDefault duplicated component_id" do
-    @ccd.save
-    lccd = ComponentConfigDefault.new(:path => '/', :content => 'contents', :component => Component.find_by_name("nova_compute"))
-    assert lccd.save
   end
 
   test "should be success saved ComponentConfigDefault" do
