@@ -16,5 +16,6 @@ swift-init account-replicator stop
 swift-init account-auditor stop
 
 rm -rf $storage_path/$storage_dev/*
+rm -rf /etc/swift/*
 
 exit 0

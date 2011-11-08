@@ -135,6 +135,9 @@ function install_mcollective_server {
   echo "hostname: $hostname" >> /etc/mcollective/facts.yaml
 
   service mcollective restart
+
+  apt-get install sysv-rc-conf -y
+  sysv-rc-conf mcollective on
 }
 
 function install_puppet_client {
