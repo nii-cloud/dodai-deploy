@@ -52,6 +52,14 @@ class LogTest < ActiveSupport::TestCase
     assert !@log.save
   end
 
+  test "should be success saved log with correct operation" do
+    operations = ["install", "uninstall", "test"]
+    operations.each{|ope|
+      @log.operation = ope
+      assert @log.save
+    }
+  end
+
   test "should be success saved log" do
     assert @log.save
   end

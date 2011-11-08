@@ -24,9 +24,7 @@ class SoftwareConfigDefaultTest < ActiveSupport::TestCase
 
   # called after every single test
   def teardown
-    @scd = nil
   end
-
 
   test "should not save SoftwareConfigDefault without path" do
     @scd.path = nil
@@ -41,6 +39,18 @@ class SoftwareConfigDefaultTest < ActiveSupport::TestCase
   test "should not save SoftwareConfigDefault without software" do
     @scd.software = nil
     assert !@scd.save
+  end
+
+  test "should not save SoftwareConfigDefault duplicated unique keys" do
+    @scd.save
+    lscd = SoftwareConfigDefault.new(:path => Dir.pwd, :content => 'contents', :software => Software.find_by_name("nova"))
+    assert !lscd.save
+  end
+
+  test "should be success saved SoftwareConfigDefault duplicated software_id" do
+    @scd.save
+    lscd = SoftwareConfigDefault.new(:path => '/', :content => 'contents', :software => Software.find_by_name("nova"))
+    assert lscd.save
   end
 
   test "should be success saved SoftwareConfigDefault" do

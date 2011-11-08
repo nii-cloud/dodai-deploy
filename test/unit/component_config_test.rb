@@ -30,11 +30,6 @@ class ComponentConfigTest < ActiveSupport::TestCase
   def teardown
   end
 
-  test "should not save ComponentConfig without proposal" do
-    @cc.proposal = nil
-    assert !@cc.save
-  end
-
   test "should not save ComponentConfig without component" do
     @cc.component = nil
     assert !@cc.save

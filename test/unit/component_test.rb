@@ -24,10 +24,9 @@ class ComponentTest < ActiveSupport::TestCase
 
   # called after every single test
   def teardown
-    @component = nil
   end
 
-  test "should not save component without state" do
+  test "should not save component without name" do
     @component.name = nil
     assert !@component.save
   end
@@ -35,6 +34,24 @@ class ComponentTest < ActiveSupport::TestCase
   test "should not save component without software" do
     @component.software = nil
     assert !@component.save
+  end
+
+  test "should not save component duplicated unique keys" do
+    @component.save
+    lcomp = Component.new(:name => 'test', :software => Software.find_by_name("nova"))
+    assert !lcomp.save
+  end
+
+  test "should be success saved component duplicated software_id" do
+    @component.save
+    lcomp = Component.new(:name => 'test2', :software => Software.find_by_name("nova"))
+    assert lcomp.save
+  end
+
+  test "should be success saved component duplicated name" do
+    @component.save
+    lcomp = Component.new(:name => 'test', :software => Software.find_by_name("glance"))
+    assert lcomp.save
   end
 
   test "should be success saved component" do

@@ -27,16 +27,10 @@ class ConfigItemTest < ActiveSupport::TestCase
 
   # called after every single test
   def teardown
-    @ci = nil
   end
 
   test "should not save ConfigItem without config_item_default" do
     @ci.config_item_default = nil
-    assert !@ci.save
-  end
-
-  test "should not save ConfigItem without proposal" do
-    @ci.proposal = nil
     assert !@ci.save
   end
 

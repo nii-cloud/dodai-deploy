@@ -37,6 +37,26 @@ class ProposalTest < ActiveSupport::TestCase
     assert !@proposal.save
   end
 
+  test "should not save proposal without state" do
+    @proposal.state = nil
+    assert !@proposal.save
+  end
+
+  test "should not save proposal duplicated name" do
+    @proposal.save
+    lprop = Proposal.new(:name => 'test', :software => Software.find_by_name("nova"), :state => 'init')
+    assert !lprop.save
+  end
+
+  test "should be success saved proposal with correct state" do
+    states = ["init", "installed", "tested", "installed", "test failed", "waiting", "installing", 
+               "uninstalling",  "testing"]
+    states.each{|st|
+      @proposal.state = st
+      assert @proposal.save
+    }
+  end
+
   test "should be success saved proposal" do
     assert @proposal.save
   end

@@ -42,6 +42,24 @@ class ConfigItemDefaultTest < ActiveSupport::TestCase
     assert !@cid.value
   end
 
+  test "should not save ConfigItemDefault duplicated unique keys" do
+    @cid.save
+    lcid = ConfigItemDefault.new(:software => Software.find_by_name("nova"), :name => 'test', :value => 'localhost')
+    assert !lcid.save
+  end
+
+  test "should be success saved ConfigItemDefault duplicated software_id" do
+    @cid.value = nil
+    lcid = ConfigItemDefault.new(:software => Software.find_by_name("nova"), :name => 'test2', :value => 'localhost')
+    assert lcid.save
+  end
+
+  test "should be success saved ConfigItemDefault duplicated name" do
+    @cid.value = nil
+    lcid = ConfigItemDefault.new(:software => Software.find_by_name("glance"), :name => 'test', :value => 'localhost')
+    assert lcid.save
+  end
+
   test "should be success saved ConfigItemDefault" do
     assert @cid.save
   end

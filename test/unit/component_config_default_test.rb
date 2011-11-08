@@ -24,7 +24,6 @@ class ComponentConfigDefaultTest < ActiveSupport::TestCase
 
   # called after every single test
   def teardown
-    @ccd = nil
   end
 
   test "should not save ComponentConfigDefault without path" do
@@ -40,6 +39,18 @@ class ComponentConfigDefaultTest < ActiveSupport::TestCase
   test "should not save ComponentConfigDefault without component" do
     @ccd.component = nil
     assert !@ccd.save
+  end
+
+  test "should not save ComponentConfigDefault duplicated unique keys" do
+    @ccd.save
+    lccd = ComponentConfigDefault.new(:path => Dir.pwd, :content => 'contents', :component => Component.find_by_name("nova_compute"))
+    assert !lccd.save
+  end
+
+  test "should save ComponentConfigDefault duplicated component_id" do
+    @ccd.save
+    lccd = ComponentConfigDefault.new(:path => '/', :content => 'contents', :component => Component.find_by_name("nova_compute"))
+    assert lccd.save
   end
 
   test "should be success saved ComponentConfigDefault" do

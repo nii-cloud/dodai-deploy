@@ -26,7 +26,6 @@ class SoftwareConfigTest < ActiveSupport::TestCase
 
   # called after every single test
   def teardown
-    @sc = nil
   end
 
   test "should not save SoftwareConfig without software_config_default" do
@@ -36,11 +35,6 @@ class SoftwareConfigTest < ActiveSupport::TestCase
 
   test "should not save SoftwareConfig without software" do
     @sc.software = nil
-    assert !@sc.save
-  end
-
-  test "should not save SoftwareConfig without proposal" do
-    @sc.proposal = nil
     assert !@sc.save
   end
 

@@ -28,12 +28,6 @@ class NodeConfigTest < ActiveSupport::TestCase
 
   # called after every single test
   def teardown
-    @nc = nil
-  end
-
-  test "should not save NodeConfig without proposal" do
-    @nc.proposal = nil
-    assert !@nc.save
   end
 
   test "should not save NodeConfig without node" do
@@ -49,6 +43,14 @@ class NodeConfigTest < ActiveSupport::TestCase
   test "should not save NodeConfig without state" do
     @nc.state = nil
     assert !@nc.save
+  end
+
+  test "should be success saved NodeConfig with correct operation" do
+    states = ["init", "installed", "failed"]
+    states.each{|st|
+      @nc.state = st
+      assert @nc.save
+    }
   end
 
   test "should be success saved NodeConfig" do

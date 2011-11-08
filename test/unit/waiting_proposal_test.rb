@@ -25,7 +25,6 @@ class WaitingProposalTest < ActiveSupport::TestCase
 
   # called after every single test
   def teardown
-    @wp = nil
   end
 
   test "should not save WaitingProposal without proposal" do
@@ -36,6 +35,33 @@ class WaitingProposalTest < ActiveSupport::TestCase
   test "should not save WaitingProposal without operation" do
     @wp.operation = nil
     assert !@wp.save
+  end
+
+  test "should not save WaitingProposal duplicated unique keys" do
+    @wp.save
+    lwp = WaitingProposal.new(:proposal => @proposal, :operation => 'install')
+    assert !lwp.save
+  end
+
+  test "should be success saved WaitingProposal duplicate proposal_id" do
+    @wp.save
+    lwp = WaitingProposal.new(:proposal => @proposal, :operation => 'uninstall')
+    assert lwp.save
+  end
+
+  test "should be success saved WaitingProposal duplicate operation" do
+    @wp.save
+    lproposal = Proposal.new(:name => 'test2', :software => Software.find_by_name("glance"), :state => 'init')
+    lwp = WaitingProposal.new(:proposal => lproposal, :operation => 'uninstall')
+    assert lwp.save
+  end
+
+  test "should be success saved WaitingProposal with correct operation" do
+    operations = ['install', 'uninstall', 'test']
+    operations.each{|ope|
+      @wp.operation = ope
+      assert @wp.save
+    }
   end
 
   test "should be success saved WaitingProposal" do

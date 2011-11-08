@@ -24,7 +24,6 @@ class NodeTest < ActiveSupport::TestCase
 
   # called after every single test
   def teardown
-    @node = nil
   end
 
   test "should not save node without name" do
@@ -37,9 +36,21 @@ class NodeTest < ActiveSupport::TestCase
     assert !@node.save
   end
 
-  test "should not save node without state" do
-    @node.state = nil
+  test "should not save node with incorrect state" do
+    @node.state = 'enable'
     assert !@node.save
+  end
+
+  test "should not save node dupulicated name" do
+    @node.save
+    lnode = Node.new(:name => 'test', :ip => '0.0.0.1', :state => 'available')
+    assert !lnode.save
+  end
+
+  test "should not save node dupulicated ip" do
+    @node.save
+    lnode = Node.new(:name => 'test2', :ip => '0.0.0.0', :state => 'available')
+    assert !lnode.save
   end
 
   test "should be success saved node" do

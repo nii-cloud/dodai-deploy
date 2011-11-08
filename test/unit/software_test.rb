@@ -24,7 +24,6 @@ class SoftwareTest < ActiveSupport::TestCase
 
   # called after every single test
   def teardown
-    @software = nil
   end
 
   test "should not save software without name" do
@@ -39,15 +38,13 @@ class SoftwareTest < ActiveSupport::TestCase
 
   test "should not save software with the same name" do
     assert @software.save
-    new_soft = Software.new(@software)
-    new_soft.desc = "desc1"
+    new_soft = Software.new(:name => 'test', :desc => 'desc1')
     assert !new_soft.save
   end
 
   test "should not save software with the same desc" do
     assert @software.save
-    new_soft = Software.new(@software)
-    new_soft.name = "name1"
+    new_soft = Software.new(:name => 'test2', :desc => 'desc')
     assert !new_soft.save
   end
 
