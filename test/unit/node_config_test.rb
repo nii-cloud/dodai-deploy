@@ -19,11 +19,11 @@ class NodeConfigTest < ActiveSupport::TestCase
   # Replace this with your real tests.
   # called before every single test
   def setup
-    @proposal = Proposal.new(:name => 'test', :software => Software.find_by_name("nova"), :state => 'init')
-    @node = Node.new(:name => 'node', :ip => '0.0.0.0', :state => 'init')
-    @component = Component.new(:name => 'component', :software => Software.find_by_name("nova"))
+    proposal = Proposal.new(:name => 'test', :software => Software.find_by_name("nova"), :state => 'init')
+    node = Node.new(:name => 'node', :ip => '0.0.0.0', :state => 'init')
+    component = Component.new(:name => 'component', :software => Software.find_by_name("nova"))
 
-    @nc = NodeConfig.new(:proposal => @proposal, :node => @node, :component => @component, :state => 'init')
+    @nc = NodeConfig.new(:proposal => proposal, :node => node, :component => component, :state => 'init')
   end
 
   # called after every single test
@@ -45,7 +45,7 @@ class NodeConfigTest < ActiveSupport::TestCase
     assert !@nc.save
   end
 
-  test "should be success saved NodeConfig with correct operation" do
+  test "should save NodeConfig with correct operations" do
     states = ["init", "installed", "failed"]
     states.each{|st|
       @nc.state = st
@@ -53,7 +53,7 @@ class NodeConfigTest < ActiveSupport::TestCase
     }
   end
 
-  test "should be success saved NodeConfig" do
+  test "should save NodeConfig" do
     assert @nc.save
   end
 

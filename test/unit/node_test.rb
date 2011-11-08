@@ -19,7 +19,7 @@ class NodeTest < ActiveSupport::TestCase
   # Replace this with your real tests.
   # called before every single test
   def setup
-    @node = Node.new(:name => 'test', :ip => '0.0.0.0', :state => 'available')
+    @@node = Node.new(:name => 'test', :ip => '0.0.0.0', :state => 'available')
   end
 
   # called after every single test
@@ -27,34 +27,34 @@ class NodeTest < ActiveSupport::TestCase
   end
 
   test "should not save node without name" do
-    @node.name = nil
-    assert !@node.save
+    @@node.name = nil
+    assert !@@node.save
   end
 
   test "should not save node without ip" do
-    @node.ip = nil
-    assert !@node.save
+    @@node.ip = nil
+    assert !@@node.save
   end
 
   test "should not save node with incorrect state" do
-    @node.state = 'enable'
-    assert !@node.save
+    @@node.state = 'enable'
+    assert !@@node.save
   end
 
-  test "should not save node dupulicated name" do
-    @node.save
-    lnode = Node.new(:name => 'test', :ip => '0.0.0.1', :state => 'available')
-    assert !lnode.save
+  test "should not save node with the same name" do
+    @@node.save
+    node_new = Node.new(:name => 'test', :ip => '0.0.0.1', :state => 'available')
+    assert !node_new.save
   end
 
-  test "should not save node dupulicated ip" do
-    @node.save
+  test "should not save node with the same ip" do
+    @@node.save
     lnode = Node.new(:name => 'test2', :ip => '0.0.0.0', :state => 'available')
     assert !lnode.save
   end
 
-  test "should be success saved node" do
-    assert @node.save
+  test "should save node" do
+    assert @@node.save
   end
 
 end

@@ -19,11 +19,11 @@ class ComponentConfigTest < ActiveSupport::TestCase
   # Replace this with your real tests.
   # called before every single test
   def setup
-    @proposal = Proposal.new(:name => 'test', :software => Software.find_by_name("nova"), :state => 'init')
-    @component = Component.find_by_name("nova_compute")
-    @ccd = ComponentConfigDefault.find_by_path("/etc/nova/nova-compute.conf")
+    proposal = Proposal.new(:name => 'test', :software => Software.find_by_name("nova"), :state => 'init')
+    component = Component.find_by_name("nova_compute")
+    ccd = ComponentConfigDefault.find_by_path("/etc/nova/nova-compute.conf")
 
-    @cc = ComponentConfig.new(:proposal => @proposal, :component => @component, :component_config_default => @ccd, :content => 'contents')
+    @cc = ComponentConfig.new(:proposal => proposal, :component => component, :component_config_default => ccd, :content => 'contents')
   end
 
   # called after every single test
@@ -45,7 +45,7 @@ class ComponentConfigTest < ActiveSupport::TestCase
     assert !@cc.save
   end
 
-  test "should be success saved ComponentConfig" do
+  test "should save ComponentConfig" do
     assert @cc.save
   end
 

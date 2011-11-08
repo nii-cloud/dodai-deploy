@@ -48,7 +48,7 @@ class SoftwareTest < ActiveSupport::TestCase
     assert !new_soft.save
   end
 
-  test "should be success saved software" do
+  test "should save software" do
     assert @software.save
   end
 

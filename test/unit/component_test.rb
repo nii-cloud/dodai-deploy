@@ -36,25 +36,13 @@ class ComponentTest < ActiveSupport::TestCase
     assert !@component.save
   end
 
-  test "should not save component duplicated unique keys" do
+  test "should not save component with the same name and software_id" do
     @component.save
-    lcomp = Component.new(:name => 'test', :software => Software.find_by_name("nova"))
-    assert !lcomp.save
+    component_new = Component.new(:name => 'test', :software => Software.find_by_name("nova"))
+    assert !component_new.save
   end
 
-  test "should be success saved component duplicated software_id" do
-    @component.save
-    lcomp = Component.new(:name => 'test2', :software => Software.find_by_name("nova"))
-    assert lcomp.save
-  end
-
-  test "should be success saved component duplicated name" do
-    @component.save
-    lcomp = Component.new(:name => 'test', :software => Software.find_by_name("glance"))
-    assert lcomp.save
-  end
-
-  test "should be success saved component" do
+  test "should save component" do
     assert @component.save
   end
 

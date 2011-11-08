@@ -48,39 +48,15 @@ class ComponentDependencyTest < ActiveSupport::TestCase
     assert !@cd.save
   end
 
-  test "should not save ComponentDependency duplicated unique keys" do
+  test "should not save ComponentDependency with the same operation, software, source_component and dest_component" do
     @cd.save
-    lcd = ComponentDependency.new(:operation => 'install', :software => Software.find_by_name("nova"),
-                                  :source_component => Component.find_by_name("nova_compute"),
-                                  :dest_component => Component.find_by_name("mysql"))
-    assert !lcd.save
+    cd_new = ComponentDependency.new(:operation => 'install', :software => Software.find_by_name("nova"),
+                                     :source_component => Component.find_by_name("nova_compute"),
+                                     :dest_component => Component.find_by_name("mysql"))
+    assert !cd_new.save
   end
 
-  test "should be success saved ComponentDependency of not duplicate operation" do
-    @cd.save
-    lcd = ComponentDependency.new(:operation => 'uninstall', :software => Software.find_by_name("nova"),
-                                  :source_component => Component.find_by_name("nova_compute"),
-                                  :dest_component => Component.find_by_name("mysql"))
-    assert lcd.save
-  end
-
-  test "should be success saved ComponentDependency of not duplicate software_id" do
-    @cd.save
-    lcd = ComponentDependency.new(:operation => 'install', :software => Software.find_by_name("glance"),
-                                  :source_component => Component.find_by_name("nova_compute"),
-                                  :dest_component => Component.find_by_name("mysql"))
-    assert lcd.save
-  end
-
-  test "should be success saved ComponentDependency of not duplicate source_component" do
-    @cd.save
-    lcd = ComponentDependency.new(:operation => 'install', :software => Software.find_by_name("glance"),
-                                  :source_component => Component.find_by_name("nova_network"),
-                                  :dest_component => Component.find_by_name("mysql"))
-    assert lcd.save
-  end
-
-  test "should be success saved ComponentDependency" do
+  test "should save ComponentDependency" do
     assert @cd.save
   end
 

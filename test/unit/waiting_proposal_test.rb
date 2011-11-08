@@ -19,8 +19,8 @@ class WaitingProposalTest < ActiveSupport::TestCase
   # Replace this with your real tests.
   # called before every single test
   def setup
-    @proposal = Proposal.new(:name => 'test', :software => Software.find_by_name("nova"), :state => 'init')
-    @wp = WaitingProposal.new(:proposal => @proposal, :operation => 'install')
+    proposal = Proposal.new(:name => 'test', :software => Software.find_by_name("nova"), :state => 'init')
+    @wp = WaitingProposal.new(:proposal => proposal, :operation => 'install')
   end
 
   # called after every single test
@@ -37,26 +37,13 @@ class WaitingProposalTest < ActiveSupport::TestCase
     assert !@wp.save
   end
 
-  test "should not save WaitingProposal duplicated unique keys" do
+  test "should not save WaitingProposal with the operation and proposal_id" do
     @wp.save
-    lwp = WaitingProposal.new(:proposal => @proposal, :operation => 'install')
-    assert !lwp.save
+    wp_new = WaitingProposal.new(:proposal => @proposal, :operation => 'install')
+    assert !wp_new.save
   end
 
-  test "should be success saved WaitingProposal duplicate proposal_id" do
-    @wp.save
-    lwp = WaitingProposal.new(:proposal => @proposal, :operation => 'uninstall')
-    assert lwp.save
-  end
-
-  test "should be success saved WaitingProposal duplicate operation" do
-    @wp.save
-    lproposal = Proposal.new(:name => 'test2', :software => Software.find_by_name("glance"), :state => 'init')
-    lwp = WaitingProposal.new(:proposal => lproposal, :operation => 'uninstall')
-    assert lwp.save
-  end
-
-  test "should be success saved WaitingProposal with correct operation" do
+  test "should save WaitingProposal with correct operations" do
     operations = ['install', 'uninstall', 'test']
     operations.each{|ope|
       @wp.operation = ope
@@ -64,7 +51,7 @@ class WaitingProposalTest < ActiveSupport::TestCase
     }
   end
 
-  test "should be success saved WaitingProposal" do
+  test "should save WaitingProposal" do
     assert @wp.save
   end
 

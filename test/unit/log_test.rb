@@ -21,15 +21,14 @@ class LogTest < ActiveSupport::TestCase
   # Replace this with your real tests.
   # called before every single test
   def setup
-    @proposal = Proposal.new(:name => 'test', :software => Software.find_by_name("nova"), :state => 'init')
-    @node = Node.new(:name => 'test', :ip => '0.0.0.0', :state => 'init')
+    proposal = Proposal.new(:name => 'test', :software => Software.find_by_name("nova"), :state => 'init')
+    node = Node.new(:name => 'test', :ip => '0.0.0.0', :state => 'init')
 
-    @log = Log.new(:content => 'log', :operation => 'install', :proposal => @proposal, :node => @node)
+    @log = Log.new(:content => 'log', :operation => 'install', :proposal => proposal, :node => node)
   end
 
   # called after every single test
   def teardown
-    @log = nil
   end
 
   test "should not save log without content" do
@@ -52,7 +51,7 @@ class LogTest < ActiveSupport::TestCase
     assert !@log.save
   end
 
-  test "should be success saved log with correct operation" do
+  test "should save log with correct operations" do
     operations = ["install", "uninstall", "test"]
     operations.each{|ope|
       @log.operation = ope
@@ -60,7 +59,7 @@ class LogTest < ActiveSupport::TestCase
     }
   end
 
-  test "should be success saved log" do
+  test "should save log" do
     assert @log.save
   end
 

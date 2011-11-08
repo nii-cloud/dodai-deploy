@@ -41,19 +41,13 @@ class SoftwareConfigDefaultTest < ActiveSupport::TestCase
     assert !@scd.save
   end
 
-  test "should not save SoftwareConfigDefault duplicated unique keys" do
+  test "should not save SoftwareConfigDefault with the same path and software_id" do
     @scd.save
-    lscd = SoftwareConfigDefault.new(:path => Dir.pwd, :content => 'contents', :software => Software.find_by_name("nova"))
-    assert !lscd.save
+    scd_new = SoftwareConfigDefault.new(:path => Dir.pwd, :content => 'contents', :software => Software.find_by_name("nova"))
+    assert !scd_new.save
   end
 
-  test "should be success saved SoftwareConfigDefault duplicated software_id" do
-    @scd.save
-    lscd = SoftwareConfigDefault.new(:path => '/', :content => 'contents', :software => Software.find_by_name("nova"))
-    assert lscd.save
-  end
-
-  test "should be success saved SoftwareConfigDefault" do
+  test "should save SoftwareConfigDefault" do
     assert @scd.save
   end
 

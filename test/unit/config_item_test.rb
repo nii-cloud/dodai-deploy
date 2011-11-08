@@ -19,10 +19,10 @@ class ConfigItemTest < ActiveSupport::TestCase
   # Replace this with your real tests.
   # called before every single test
   def setup
-    @cid = ConfigItemDefault.new(:software => Software.find_by_name("nova"), :name => 'test', :value => 'values')
-    @proposal = Proposal.new(:name => 'test', :software => Software.find_by_name("nova"), :state => 'init')
+    cid = ConfigItemDefault.new(:software => Software.find_by_name("nova"), :name => 'test', :value => 'values')
+    proposal = Proposal.new(:name => 'test', :software => Software.find_by_name("nova"), :state => 'init')
 
-    @ci = ConfigItem.new(:config_item_default => @cid, :proposal => @proposal, :value => 'values')
+    @ci = ConfigItem.new(:config_item_default => cid, :proposal => proposal, :value => 'values')
   end
 
   # called after every single test
@@ -39,7 +39,7 @@ class ConfigItemTest < ActiveSupport::TestCase
     assert !@ci.save
   end
 
-  test "should be success saved ConfigItem" do
+  test "should save ConfigItem" do
     assert @ci.save
   end
 

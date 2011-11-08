@@ -19,9 +19,9 @@ class SoftwareConfigTest < ActiveSupport::TestCase
   # Replace this with your real tests.
   # called before every single test
   def setup
-    @proposal = Proposal.new(:name => 'test', :software => Software.find_by_name("nova"), :state => 'init')
-    @scd = SoftwareConfigDefault.new(:path => Dir.pwd, :content => 'contents', :software => Software.find_by_name("nova"))
-    @sc = SoftwareConfig.new(:software_config_default => @scd, :software => Software.find_by_name("nova"), :proposal => @proposal, :content => 'contents') 
+    proposal = Proposal.new(:name => 'test', :software => Software.find_by_name("nova"), :state => 'init')
+    scd = SoftwareConfigDefault.new(:path => Dir.pwd, :content => 'contents', :software => Software.find_by_name("nova"))
+    @sc = SoftwareConfig.new(:software_config_default => scd, :software => Software.find_by_name("nova"), :proposal => proposal, :content => 'contents') 
   end
 
   # called after every single test
@@ -43,7 +43,7 @@ class SoftwareConfigTest < ActiveSupport::TestCase
     assert !@sc.save
   end
 
-  test "should be success saved SoftwareConfig" do
+  test "should save SoftwareConfig" do
     assert @sc.save
   end
 

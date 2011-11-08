@@ -43,11 +43,11 @@ class ComponentConfigDefaultTest < ActiveSupport::TestCase
 
   test "should not save ComponentConfigDefault with the same path and component" do
     @ccd.save
-    lccd = ComponentConfigDefault.new(:path => Dir.pwd, :content => 'contents', :component => Component.find_by_name("nova_compute"))
-    assert !lccd.save
+    ccd_new = ComponentConfigDefault.new(:path => Dir.pwd, :content => 'contents', :component => Component.find_by_name("nova_compute"))
+    assert !ccd_new.save
   end
 
-  test "should be success saved ComponentConfigDefault" do
+  test "should save ComponentConfigDefault" do
     assert @ccd.save
   end
 

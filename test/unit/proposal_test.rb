@@ -24,7 +24,6 @@ class ProposalTest < ActiveSupport::TestCase
 
   # called after every single test
   def teardown
-    @proposal = nil
   end
 
   test "should not save proposal without name" do
@@ -42,13 +41,13 @@ class ProposalTest < ActiveSupport::TestCase
     assert !@proposal.save
   end
 
-  test "should not save proposal duplicated name" do
+  test "should not save proposal with the same name" do
     @proposal.save
-    lprop = Proposal.new(:name => 'test', :software => Software.find_by_name("nova"), :state => 'init')
-    assert !lprop.save
+    prop_new = Proposal.new(:name => 'test', :software => Software.find_by_name("nova"), :state => 'init')
+    assert !prop_new.save
   end
 
-  test "should be success saved proposal with correct state" do
+  test "should save proposal with correct states" do
     states = ["init", "installed", "tested", "installed", "test failed", "waiting", "installing", 
                "uninstalling",  "testing"]
     states.each{|st|
@@ -57,7 +56,7 @@ class ProposalTest < ActiveSupport::TestCase
     }
   end
 
-  test "should be success saved proposal" do
+  test "should save proposal" do
     assert @proposal.save
   end
 
