@@ -310,6 +310,11 @@ class nova_network::install {
     }
 
     include bridge
+
+    exec {
+        "stop nova-network; start nova-network":
+            require => [Package["nova-network", iptables, radvd, "bridge-utils"], Service[dnsmasq]]
+    }
 }
 
 class nova_network::uninstall {
