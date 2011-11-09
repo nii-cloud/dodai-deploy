@@ -16,9 +16,10 @@
 class Proposal < ActiveRecord::Base
   validates_presence_of :name, :software, :state
   validates_uniqueness_of :name
-  validates_inclusion_of :state, :in => ["init", "installed", "tested", "install failed", 
-                                         "test failed", "waiting", "installing", "uninstalling", 
-                                         "testing"]
+  validates_inclusion_of :state, :in => ["init", "installed", "tested", 
+                                         "install failed", "uninstall failed", "test failed", 
+                                         "installing", "uninstalling", "testing",
+                                         "waiting"]
 
   belongs_to :software
   has_many :node_configs, :dependent => :destroy, :finder_sql =>

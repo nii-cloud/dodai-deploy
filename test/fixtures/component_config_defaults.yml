@@ -54,6 +54,12 @@ swift_storage_rsyncd:
     pid file = /var/run/rsyncd.pid
     address = 0.0.0.0
     
+    [ring]
+    max connections = 2
+    path = /etc/swift
+    read only = false
+    lock file = /var/lock/ring.lock
+
     [account]
     max connections = 2
     path = /srv/node 
@@ -108,10 +114,10 @@ swift_storage_container:
     
     [container-replicator]
     
+    [container-updater]
+
     [container-auditor]
     
-    [container-reaper]
-
 swift_storage_object:
   path: /etc/swift/object-server.conf
   component: swift_storage

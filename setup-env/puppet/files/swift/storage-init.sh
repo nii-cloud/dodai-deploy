@@ -1,11 +1,12 @@
 #!/bin/bash
 
-output=`ps aux`
-echo $output | grep swift-account
+swift-init account-server status
 if [ $? = 0 ]; then
     echo "swift-account was installed."
     exit 0
 fi
+
+rsync [$1]::ring/*.gz /etc/swift
 
 chown -R swift:swift /srv/node
 

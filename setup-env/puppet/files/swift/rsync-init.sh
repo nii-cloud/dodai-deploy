@@ -1,7 +1,6 @@
 #!/bin/bash
 
-output=`ps aux`
-echo $output | grep rsync 
+service rsync status | grep running
 if [ $? = 0 ]; then
     echo "rsync was installed."
     exit 0

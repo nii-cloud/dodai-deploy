@@ -87,7 +87,7 @@ class swift_proxy::install {
     }
 
     exec {
-        "/tmp/swift/proxy-init.sh $storage_dev $ring_builder_replicas $super_admin_key 2>&1":
+        "/tmp/swift/proxy-init.sh $storage_dev $ring_builder_replicas 2>&1":
             require => File["/tmp/swift/proxy-init.sh", "/tmp/swift/storage-servers", "/tmp/swift/python-swauth.deb"]
     }
 }
@@ -112,16 +112,13 @@ class swift_proxy::uninstall {
 }
 
 class swift_proxy::test {
-    include swift_common
-
     file {
        "/tmp/swift/test.sh":
-           source => "puppet:///$swift_files_rel_dir/test.sh",
-           require => File["/tmp/swift"]
+           source => "puppet:///$swift_files_rel_dir/test.sh"
     }
 
     exec {
-        "/tmp/swift/test.sh 2>&1":
+        "/tmp/swift/test.sh $super_admin_key 2>&1":
             require => File["/tmp/swift/test.sh"]
     }
 
@@ -169,13 +166,12 @@ class swift_storage::install {
     }
 
     exec {
-        "/tmp/swift/rsync-init.sh":
-            require => File["/tmp/swift/rsync-init.sh"]
-    }
+        "/tmp/swift/rsync-init.sh 2>&1":
+            alias => "rsync-init",
+            require => File["/tmp/swift/rsync-init.sh"];
 
-    exec {
-        "/tmp/swift/storage-init.sh $storage_dev $ring_builder_replicas 2>&1":
-            require => File["/tmp/swift/storage-init.sh"]
+        "/tmp/swift/storage-init.sh $swift_proxy 2>&1":
+            require => [File["/tmp/swift/storage-init.sh"], Exec["rsync-init"]]
     }
 }
 

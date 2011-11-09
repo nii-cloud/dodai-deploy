@@ -1,8 +1,12 @@
 #!/bin/bash
 
+key=$1
 account="system"
 username="root"
 password="testpass"
+
+swauth-prep -K $key -A https://127.0.0.1:8080/auth/
+swauth-add-user -K $key -A https://127.0.0.1:8080/auth/ -a $account $username $password
 
 cd /tmp/swift
 
