@@ -1,0 +1,14 @@
+#!/bin/bash
+
+current_dir=`dirname $0`
+cd $current_dir/..
+
+#stop rails server
+echo "Stop rails server."
+kill `cat tmp/pids/server.pid`
+echo "Rails server is stopped."
+
+#stop job server
+echo "Stop job server."
+script/job-server stop
+echo "Job server is stopped."
