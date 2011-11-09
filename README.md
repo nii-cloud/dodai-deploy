@@ -98,9 +98,12 @@ For example,
 ### Start servers
 Execute the following command on the deployment server to start the web server and job server.
 
-    cd $home
-    sudo RAILS_ENV=production rails s -d
-    sudo RAILS_ENV=production script/job-server start
+    sudo $home/script/start-servers production
+
+### Stop servers
+Execute the following command on the deployment server to stop the web server and job server.
+
+    sudo $home/script/stop-servers
 
 ## Using web UI
 In the page http://$deployment_server:3000/, you can find guidance and do step by step.
