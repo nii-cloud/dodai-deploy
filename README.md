@@ -1,43 +1,43 @@
 Welcome to the **Dodai project**
 
 ## Introduction
-The dodai is a software management tool. Now the tool supports openstack diablo(nova, glance, swift) and hadoop 0.20.2.
+The Dodai is a software management tool. It supports OpenStack Diablo(Nova, Glance, Swift) and hadoop 0.20.2.
 
 ## Features
 * Manage installation, uninstallation and testing of a software.
-* Support openstack diablo and hadoop 0.20.2
+* Support OpenStack Diablo and hadoop 0.20.2
 * Support target machines in different network segments.
 * Provide web UI to facilitate user operations.
-* Provide rest API to make integration to other tools possible.
-* Support parallel installation of components of a software.
+* Provide REST API to make it possible to integrate it with other tools.
+* Support parallel installation of software components.
 
 ## Glossary
 **Deployment server**
-The server where dodai is installed.
+The server in which Dodai is installed.
 
 **Node**
-The machine which will be the target to install on.
+The machine that is the target of installation.
 
 **Software**
-Nova, glance, swift and etc.
+Nova, Glance, Swift etc.
 
 **Component**
-The part of software, such as nova-compute, swift-proxy.
+Part of software, such as nova-compute or swift-proxy.
 
 **Proposal**
-The definition of the software configurations.
+The set of the kinds of configurations which describe how to install a software. The configurations include "Node config", "Config item", "Software config", "Component config".
 
 **Node config**
-The configuration which defines component will be installed on a node.
+A configuration that describes which component to be installed on a node.
 
 **Config item**
-The variable which can be used in the content of software config and component config.
+A variable which can be used in the content of software config and component config.
 
 **Software config**
-The configuration which defines content of a configuration file and will be applied to all the components of a software, such as nova.conf.
+A configuration that describes the content of a configuration file for all components.
 
 **Component config**
-The configuration which defines content of a configuration file and will be applied to only a component, such as proxy-server.conf.
+A configuration that describes the content of a configuration file for only one component.
 
 ## Installation
 
@@ -51,20 +51,20 @@ The following OSes are supported.
 * ubuntu 11.10
 
 ### Download dodai 
-Execute the following commands on deployment server and all the nodes.
+Execute the following commands on the deployment server and all the nodes.
 
     sudo apt-get install git -y
     git clone https://github.com/nii-cloud/dodai.git
     cd dodai; git checkout 1.0   #only used to get dodai 1.0
 
-### Set up deployment server
-Execute the following commands on deployment server to install necessary softwares and modify settings of them.
+### Set up the deployment server
+Execute the following commands on deployment server to install necessary softwares and modify their settings.
 
     sudo $home/setup-env/setup.sh server
 
 ### Set up nodes
 
-Execute the following commands on all the nodes to install necessary softwares and modify settings of them.
+Execute the following commands on all the nodes to install necessary softwares and modify their settings.
 
     sudo $home/setup-env/setup.sh node $server
 
@@ -72,10 +72,10 @@ The $server in the above command is the host name(fqdn) of the deployment server
 
     sudo hostname -f
 
-### Set up storage device for swift
-If swift will be installed, it is necessary to set up storage device before the installation. You should execute the commands ___for physical device___ or ___for loopback device___ on all the nodes where swift storage server will be installed.
+### Set up storage device for Swift
+It is necessary to set up a storage device before swift is installed. You should execute the commands ___for a physical device___ or ___for a loopback device___ on all nodes in which swift storage server is to be installed.
 
-___For physical device___
+___For a physical device___
 
 Use the following command when the device is a physical device.
 
@@ -85,7 +85,7 @@ For example,
 
     sudo $home/setup-env/setup-storage-for-swift.sh physical /srv/node sdb1
 
-___For loopback device___
+___For a loopback device___
 
 Use the following command when the device is a loopback device.
 
@@ -100,28 +100,25 @@ Execute the following command on the deployment server to start the web server a
 
     sudo $home/script/start-servers production
 
-### Stop servers
-Execute the following command on the deployment server to stop the web server and job server.
+BTW, You can stop the web server and job server with the following command.
 
     sudo $home/script/stop-servers
 
 ## Using web UI
-In the page http://$deployment_server:3000/, you can find guidance and do step by step.
+You can find step-by-step guidance at http://$deployment_server:3000/rest_apis/index.html.
 
-## Using rest API
-In the page http://$deployment_server:3000/rest_apis/index.html, you can find a rest api simulator. With it, you can know the definitions of APIs. Moreover, you can execute APIs by just filling parameters and clicking "Execute" button.
+## Using REST APIs
+An API simulator can be found at http://$deployment_server:3000/rest_apis/index.html. You can get the list of  REST APIs with it. Moreover, you can execute APIs by simply filling in parameters and clicking the "Execute" button.
 
 ## Notes
 
-### Cannot use swift as the store of glance
+### Cannot use swift as the image store of glance
 
-Due to the following bug, swift can't be used as the store of glance. 
-
+Swift cannot be used as the image store of glance because of the following bug. 
 https://bugs.launchpad.net/glance/+bug/862664
 
-### SSH login nova instance after the testing of nova
-
-During the testing of nova, an instance will be started. After the test, you can login the instance by executing the following commands.
+### SSH login nova instance after test of nova
+An instance will be started during the test of nova. After the test, you can login the instance by executing the following commands.
 
     sudo -i
     cd /tmp/nova
