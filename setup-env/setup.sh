@@ -190,9 +190,9 @@ function install_node {
 function print_usage {
   name=`basename $0`
   echo "Usage:
-  $name server \$software
+  $name server [\$software]
   OR 
-  $name node \$server \$software
+  $name node \$server [\$software]
 
 server:
   The hostname of the server where deployment_app will be installed or has been installed.
