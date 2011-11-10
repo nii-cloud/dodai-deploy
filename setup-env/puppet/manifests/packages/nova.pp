@@ -175,6 +175,10 @@ class nova_volume::install {
         "nova-volume":
     }
 
+    package {
+        iscsitarget:
+    }
+
     file {
         "/etc/default/iscsitarget":
             source => "puppet:///$nova_files_rel_dir/iscsitarget",
@@ -183,9 +187,9 @@ class nova_volume::install {
     }
 
     service {
-        "iscsitarget":
+        iscsitarget:
             ensure => running,
-            require => File["/etc/default/iscsitarget"]
+            require => [File["/etc/default/iscsitarget"], Package[iscsitarget]]
     }
 
 }
