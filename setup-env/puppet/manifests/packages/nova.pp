@@ -109,9 +109,15 @@ class rabbitmq::install {
 }
 
 class rabbitmq::uninstall {
+    service {
+        "rabbitmq-server":
+            ensure => stopped;
+    }
+
     package {
         "rabbitmq-server":
-            ensure => purged;
+            ensure => purged,
+            require => Service["rabbitmq-server"];
     }
 }
 
