@@ -102,15 +102,9 @@ class bridge {
 }
 
 class rabbitmq::install {
-    service {
-        "rabbitmq-server":
-            ensure => stopped;
-    }
-
     package {
         "rabbitmq-server":
-            ensure => present,
-            require => Service["rabbitmq-server"];
+            ensure => present
     }
 }
 
