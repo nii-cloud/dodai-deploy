@@ -111,8 +111,8 @@ function print_usage {
 "
 }
 
-server_softwares=(ruby_rubygems activemq_server mcollective_client puppet_server memcached deployment_app)
-node_softwares=(ruby_rubygems mcollective_server puppet_client openstack_repository)
+server_softwares=(activemq_server mcollective_client puppet_server memcached deployment_app ruby_rubygems)
+node_softwares=(mcollective_server puppet_client openstack_repository ruby_rubygems)
 
 type=$1
 if [ "$type" = "server" ]; then
