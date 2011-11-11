@@ -21,8 +21,8 @@ class MessageQueueClient
 
   def subscribe
     @client.subscribe "/topic/deploy" do |msg|
-			msg_obj = YAML.load msg.body
-			yield msg_obj
+      msg_obj = YAML.load msg.body
+      yield msg_obj
     end
   end
 

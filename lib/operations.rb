@@ -27,12 +27,12 @@ class Operations
 
       result = self.method(name).call
     rescue => exc
-			puts exc.inspect
-			puts exc.backtrace      
+      puts exc.inspect
+      puts exc.backtrace      
       result = false
     ensure
       if result
-				@proposal.state = "#{name}ed"
+        @proposal.state = "#{name}ed"
         @proposal.state = "init" if name == "uninstall"
       else
         @proposal.state = "#{name} failed"
@@ -123,8 +123,8 @@ class Operations
     end
 
     params = params.each{|key, value| params[key] = params[key][0] if params[key].size == 1}
-		eruby = Erubis::Eruby.new template 
-		eruby.result params
+    eruby = Erubis::Eruby.new template 
+    eruby.result params
   end
 
   def _save_puppet_parameters parameters

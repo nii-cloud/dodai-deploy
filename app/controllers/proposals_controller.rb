@@ -119,16 +119,16 @@ class ProposalsController < ApplicationController
     if @proposal.update_attributes(params[:proposal])
       @proposal.state = "init"
       if @proposal.save
-				respond_to do |format|
-					format.html { redirect_to(proposals_url) }
-					format.json { render :json => @proposal.as_json, :location => @proposal }
-				end
-			else
-				respond_to do |format|
-					format.html { render :action => "new" }
-					format.json { render :json => {:errors => @proposal.errors}.as_json }
-				end
-			end
+        respond_to do |format|
+          format.html { redirect_to(proposals_url) }
+          format.json { render :json => @proposal.as_json, :location => @proposal }
+        end
+      else
+        respond_to do |format|
+          format.html { render :action => "new" }
+          format.json { render :json => {:errors => @proposal.errors}.as_json }
+        end
+      end
     end
   end
 

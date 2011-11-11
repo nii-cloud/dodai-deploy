@@ -32,7 +32,7 @@ class Scheduler
     proposal.software.component_dependencies.reject{|dependency| dependency.operation != operation}.each do |dependency|
       if component_ids.include? dependency.source_component.id and component_ids.include? dependency.dest_component.id 
         dependency_map[dependency.source_component.id] = [] unless dependency_map.has_key? dependency.source_component.id 
-				dependency_map[dependency.source_component.id] << dependency.dest_component.id
+        dependency_map[dependency.source_component.id] << dependency.dest_component.id
       end
     end
 
@@ -57,7 +57,7 @@ class Scheduler
   end
 
   def self.current(proposal, operation = "install") 
-		return nil unless ScheduleCache.exist? proposal.id, operation
+    return nil unless ScheduleCache.exist? proposal.id, operation
 
     data = ScheduleCache.read proposal.id, operation
     schedule, position = data
@@ -69,7 +69,7 @@ class Scheduler
   end
 
   def self.next(proposal, operation = "install")
-		return nil unless ScheduleCache.exist? proposal.id, operation
+    return nil unless ScheduleCache.exist? proposal.id, operation
 
     data = ScheduleCache.read proposal.id, operation
     schedule, position = data

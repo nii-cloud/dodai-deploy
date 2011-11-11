@@ -76,10 +76,10 @@ define hadoop_component_install() {
                 require => File["core-site", "hdfs-site", "mapred-site", "hadoop-env"]
         }
     } else {
-				exec {
-						"$hadoop_home/bin/hadoop-daemon.sh --config $hadoop_home/conf start $title 2>&1":
-								require => File["core-site", "hdfs-site", "mapred-site", "hadoop-env"],
-				}
+        exec {
+            "$hadoop_home/bin/hadoop-daemon.sh --config $hadoop_home/conf start $title 2>&1":
+                 require => File["core-site", "hdfs-site", "mapred-site", "hadoop-env"],
+        }
     }
 }
 

@@ -25,10 +25,10 @@
   <table>
   <%= proposal_form.fields_for :config_items do |field| %>
     <tr>
-			<th><%= field.label :config_item, field.object.config_item_default.name %>
+      <th><%= field.label :config_item, field.object.config_item_default.name %>
           <%= field.hidden_field :config_item_default_id, :value => field.object.config_item_default_id %></th>
-			<td><%= field.text_field :value %></td>
-		</tr>
+      <td><%= field.text_field :value %></td>
+    </tr>
   <% end %>
   </table>
 

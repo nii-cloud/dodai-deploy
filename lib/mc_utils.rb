@@ -43,8 +43,8 @@ class McUtils
 
       status_code = item.results[:statuscode]
       if status_code == 0
-				message = item.results[:data][:output].gsub /\e[\[0-9;]+m/, ""
-				status_code = 1 if /^E: / =~ message or /^err: / =~ message
+        message = item.results[:data][:output].gsub /\e[\[0-9;]+m/, ""
+        status_code = 1 if /^E: / =~ message or /^err: / =~ message
       else
         message = item.results[:statusmsg]
       end

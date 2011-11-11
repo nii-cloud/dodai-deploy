@@ -36,14 +36,14 @@ class NodesController < ApplicationController
     @node.state = "available"
     if @node.save
       respond_to do |format|
-				format.html { redirect_to nodes_url }
-				format.json  { render :json => JSON.pretty_generate(@node.as_json), :status => :created, :location => @node }
-			end
+        format.html { redirect_to nodes_url }
+        format.json  { render :json => JSON.pretty_generate(@node.as_json), :status => :created, :location => @node }
+      end
     else
       respond_to do |format|
-				format.html {
+        format.html {
           @names = self._get_new_node_names
-				  render :action => "new"
+          render :action => "new"
         }
         format.json { render :json => JSON.pretty_generate({:errors => @node.errors}.as_json) }
       end
