@@ -31,7 +31,7 @@ define nova_component() {
 
 class nova_common::install {
     package {
-        ["python-mysqldb", "python-nova", "python-eventlet", "python-novaclient"]:
+        ["python-mysqldb", "python-nova", "python-eventlet", "python-novaclient"]:;
 
         "nova-common":
             require => Package["python-novaclient"]
@@ -164,10 +164,7 @@ class nova_objectstore::uninstall {
     }
 }
 
-
-class nova_volume::install {
-    nova_component { "nova-volume": }
-
+class iscsitarget::install {
     package {
         [iscsitarget, "iscsitarget-dkms"]:
     }
@@ -184,7 +181,22 @@ class nova_volume::install {
             ensure => running,
             require => [File["/etc/default/iscsitarget"], Package[iscsitarget, "iscsitarget-dkms"]]
     }
+}
 
+class iscsitarget::uninstall {
+    package {
+        [iscsitarget, "iscsitarget-dkms"]:
+            ensure => purged
+    }
+}
+
+class nova_volume::install {
+    nova_component { "nova-volume": }
+
+    if $is_virtual and $operatingsystem == "Ubuntu" and $operatingsystemrelease == "11.10" {
+    } else {
+        include iscsitarget::install
+    }
 }
 
 class nova_volume::uninstall {
@@ -194,8 +206,12 @@ class nova_volume::uninstall {
         "nova-volume":
             ensure => purged
     }
-}
 
+    if $is_virtual and $operatingsystem == "Ubuntu" and $operatingsystemrelease == "11.10" {
+    } else {
+        include iscsitarget::uninstall
+    }
+}
 
 class nova_compute::install {
     nova_component { ["nova-compute", vlan]: }
