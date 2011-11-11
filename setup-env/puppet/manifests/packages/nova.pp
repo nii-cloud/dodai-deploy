@@ -182,7 +182,7 @@ class nova_volume::install {
     }
 
     package {
-        iscsitarget:
+        [iscsitarget, "iscsitarget-dkms"]:
     }
 
     file {
@@ -195,7 +195,7 @@ class nova_volume::install {
     service {
         iscsitarget:
             ensure => running,
-            require => [File["/etc/default/iscsitarget"], Package[iscsitarget]]
+            require => [File["/etc/default/iscsitarget"], Package[iscsitarget, "iscsitarget-dkms"]]
     }
 
 }
