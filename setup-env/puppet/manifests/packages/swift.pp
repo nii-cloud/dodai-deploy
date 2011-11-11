@@ -19,10 +19,7 @@ $swift_templates_dir = "$proposal_id"
 $swift_files_rel_dir = "files/swift"
 
 class swift_common {
-    user {
-        swift:
-           ensure => present
-    }
+    user { swift: }
 
     file {
         "/etc/swift":
@@ -57,14 +54,10 @@ class swift_common {
 class swift_proxy::install {
     include swift_common
 
-    package {
-        ["swift"]:
-            ensure => present;
-    }
+    package { swift: }
 
     package {
-        ["swift-proxy", "memcached"]:
-            ensure => present,
+        ["swift-proxy", memcached]:
             require => [File["/etc/swift/swift.conf"], Package["swift"]]
     }
 
@@ -128,7 +121,7 @@ class swift_storage::install {
     include swift_common
 
     package {
-        ["swift-account", "swift-container", "swift-object", "xfsprogs", "rsync"]:
+        ["swift-account", "swift-container", "swift-object", xfsprogs, rsync]:
             require => File["/etc/swift/swift.conf"]
     }
 

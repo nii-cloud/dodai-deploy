@@ -24,7 +24,6 @@ define nova_component() {
 
     package {
         "$title":
-            ensure => present,
             require => Package["python-nova"],
             notify => File["/etc/nova/nova.conf"]
     }
@@ -33,10 +32,8 @@ define nova_component() {
 class nova_common::install {
     package {
         ["python-mysqldb", "python-nova", "python-eventlet", "python-novaclient"]:
-            ensure => present;
 
         "nova-common":
-            ensure => present,
             require => Package["python-novaclient"]
     }
 
@@ -95,17 +92,11 @@ class nova_common::test {
 }
 
 class bridge {
-    package {
-        "bridge-utils":
-            ensure => present;
-    }
+    package { "bridge-utils": }
 }
 
 class rabbitmq::install {
-    package {
-        "rabbitmq-server":
-            ensure => present
-    }
+    package { "rabbitmq-server": }
 }
 
 class rabbitmq::uninstall {
@@ -161,9 +152,7 @@ class nova_api::test {
 }
 
 class nova_objectstore::install {
-    nova_component { 
-        "nova-objectstore": 
-    }
+    nova_component { "nova-objectstore": }
 }
 
 class nova_objectstore::uninstall {
@@ -177,9 +166,7 @@ class nova_objectstore::uninstall {
 
 
 class nova_volume::install {
-    nova_component {
-        "nova-volume":
-    }
+    nova_component { "nova-volume": }
 
     package {
         [iscsitarget, "iscsitarget-dkms"]:
@@ -211,9 +198,7 @@ class nova_volume::uninstall {
 
 
 class nova_compute::install {
-    nova_component { 
-        ["nova-compute", "vlan"]:
-    }
+    nova_component { ["nova-compute", vlan]: }
 
     case $libvirt_type {
         kvm: {include kvm}
@@ -259,33 +244,22 @@ class nova_compute::uninstall {
 
 
 class kvm {
-    package {
-       "kvm":
-            ensure => present
-    }
+    package { kvm: }
 }
 
 class xen {
 }
 
 class uml {
-    package {
-       "user-mode-linux":
-            ensure => present
-    }
+    package { "user-mode-linux": }
 }
 
 class lxc {
-    package {
-       "lxc":
-            ensure => present
-    }
+    package { lxc: }
 }
 
 class nova_scheduler::install {
-    nova_component { 
-        "nova-scheduler": 
-    }
+    nova_component { "nova-scheduler": }
 }
 
 class nova_scheduler::uninstall {
@@ -298,14 +272,9 @@ class nova_scheduler::uninstall {
 }
 
 class nova_network::install {
-    nova_component { 
-        "nova-network":
-    }
+    nova_component { "nova-network": }
 
-    package {
-        ["radvd", "dnsmasq", "iptables"]:
-            ensure => present
-    }
+    package { [radvd, dnsmasq, iptables]: }
 
     service {
         dnsmasq:
@@ -358,7 +327,6 @@ class mysql::install {
     }
     package { 
         "mysql-server":
-            ensure => present,
             require => Exec["mysql-preseed.sh"],
             notify => [Service["mysql"], File["/etc/nova/nova.conf"]]
     }

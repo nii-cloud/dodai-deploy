@@ -20,68 +20,50 @@ $version = "0.20.2"
 $hadoop_home = "/var/opt/hadoop"
 
 class hadoop_common::install {
-    package {
-        "openjdk-6-jre":
-            ensure => present;
-    }
+    package { "openjdk-6-jre": }
 
     file {
         "$hadoop_home-$version.tar.gz":
-            ensure => present,
             source => "puppet:///files/hadoop/hadoop-$version.tar.gz",
             mode => 644,
             alias => tarball,
-            require => Package["openjdk-6-jre"]
-    }
+            require => Package["openjdk-6-jre"];
 
-    file {
         "/var/opt/init.sh":
-            ensure => present,
             source => "puppet:///files/hadoop/init.sh",
             alias => "init",
-            require => File[tarball]
+            require => File[tarball];
+
+        "$hadoop_home/conf/core-site.xml":
+            content => template("$hadoop_templates_dir/conf/core-site.xml.erb"),
+            mode => 644,
+            alias => "core-site",
+            require => Exec[init];
+
+        "$hadoop_home/conf/hdfs-site.xml":
+            content => template("$hadoop_templates_dir/conf/hdfs-site.xml.erb"),
+            mode => 644,
+            alias => "hdfs-site",
+            require => Exec[init];
+
+        "$hadoop_home/conf/mapred-site.xml":
+            content => template("$hadoop_templates_dir/conf/mapred-site.xml.erb"),
+            mode => 644,
+            alias => "mapred-site",
+            require => Exec[init];
+
+        "$hadoop_home/conf/hadoop-env.sh":
+            source => "puppet:///files/hadoop/hadoop-env.sh",
+            alias => "hadoop-env",
+            require => Exec[init];
     }
+
 
     exec {
         "/var/opt/init.sh 2>&1":
             alias => "init",
             cwd => "/var/opt",
             require => File[init]
-    }
-
-    file {
-        "$hadoop_home/conf/core-site.xml":
-            ensure => file,
-            content => template("$hadoop_templates_dir/conf/core-site.xml.erb"),
-            mode => 644,
-            alias => "core-site",
-            require => Exec[init]
-    }
-
-    file {
-        "$hadoop_home/conf/hdfs-site.xml":
-            ensure => file,
-            content => template("$hadoop_templates_dir/conf/hdfs-site.xml.erb"),
-            mode => 644,
-            alias => "hdfs-site",
-            require => Exec[init]
-    }
-
-    file {
-        "$hadoop_home/conf/mapred-site.xml":
-            ensure => file,
-            content => template("$hadoop_templates_dir/conf/mapred-site.xml.erb"),
-            mode => 644,
-            alias => "mapred-site",
-            require => Exec[init]
-    }
-
-    file {
-        "$hadoop_home/conf/hadoop-env.sh":
-            ensure => file,
-            source => "puppet:///files/hadoop/hadoop-env.sh",
-            alias => "hadoop-env",
-            require => Exec[init] 
     }
 }
 
@@ -160,7 +142,6 @@ class task_tracker::uninstall {
 class name_node::test {
     file {
         "$hadoop_home/test.sh":
-            ensure => file,
             source => "puppet:///files/hadoop/test.sh",
             alias => "test"
     }

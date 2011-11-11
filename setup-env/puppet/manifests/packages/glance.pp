@@ -18,21 +18,16 @@
 $glance_templates_dir = "${proposal_id}"
 
 class glance::install {
-    package {
-        [glance, "python-httplib2", "python-swift"]:
-            ensure => present;
-    }
+    package { [glance, "python-httplib2", "python-swift"]:}
 
     file {
         "/etc/glance/glance-api.conf":
-            ensure => file,
             content => template("$glance_templates_dir/etc/glance/glance-api.conf.erb"),
             mode => 644,
             alias => "glance-api",
             require => Package["glance"];
 
         "/etc/glance/glance-registry.conf":
-            ensure => file,
             content => template("$glance_templates_dir/etc/glance/glance-registry.conf.erb"),
             mode => 644,
             alias => "glance-registry",
