@@ -16,8 +16,9 @@
 require 'test_helper'
 
 class NodeCandidatesControllerTest < ActionController::TestCase
-  # Replace this with your real tests.
-  test "the truth" do
-    assert true
+  test "should get index" do
+    get :index, :format => :json
+    assert_response :success
+    assert_not_nil assigns(:candidates)
   end
 end

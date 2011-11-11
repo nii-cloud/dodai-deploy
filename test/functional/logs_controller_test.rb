@@ -16,8 +16,28 @@
 require 'test_helper'
 
 class LogsControllerTest < ActionController::TestCase
-  # Replace this with your real tests.
-  test "the truth" do
-    assert true
+  # called before every single test
+  def setup
+    proposal = Proposal.new(:name => 'test', :software => Software.find_by_name("nova"), :state => 'init')
+    node = Node.new(:name => 'test', :ip => '0.0.0.0', :state => 'available')
+    @log = Log.new(:content => 'log', :operation => 'install', :proposal => proposal, :node => node)
+  end
+
+  # called after every single test
+  def teardown
+  end
+
+  test "should get index" do
+    @log.save
+    get :index, :proposal_id => @log.proposal.id
+    assert_response :success
+    assert_not_nil assigns(:logs) 
+  end
+
+  test "should get index without params" do
+    @log.save
+    get :index
+    assert_response :success
+    assert_not_nil assigns(:logs)
   end
 end

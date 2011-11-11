@@ -16,9 +16,21 @@
 require 'test_helper'
 
 class WaitingProposalsControllerTest < ActionController::TestCase
+  # called before every single test
+  def setup
+    proposal = Proposal.new(:name => 'test', :software => Software.find_by_name("nova"), :state => 'init')
+    @wp = WaitingProposal.new(:proposal => proposal, :operation => 'install')
+    @wp.save
+  end
+
+  # called after every single test
+  def teardown
+  end
+
   test "should get index" do
     get :index
     assert_response :success
+    assert_not_nil assigns(:waiting_proposals)
   end
 
 end

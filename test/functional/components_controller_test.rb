@@ -16,10 +16,25 @@
 require 'test_helper'
 
 class ComponentsControllerTest < ActionController::TestCase
-  # Replace this with your real tests.
+  # called before every single test
+  def setup
+    @component = Component.new(:name => 'test', :software => Software.find_by_name("nova"))
+    @component.save
+  end
+
+  # called after every single test
+  def teardown
+  end
+
   test "should get index" do
-    xhr :post, :index
+    get :index, :format => :json
     assert_response :success
     assert_not_nil assigns(:components)
   end
+
+  test "should get show" do
+    get :show, :format => :json, :id => @component.id
+    assert_response :success
+    assert_not_nil assigns(:component)
+  end 
 end

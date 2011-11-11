@@ -16,8 +16,36 @@
 require 'test_helper'
 
 class NodeConfigsControllerTest < ActionController::TestCase
-  # Replace this with your real tests.
-  test "the truth" do
-    assert true
+  # called before every single test
+  def setup
+    @node = Node.new(:name => 'test', :ip => '0.0.0.0', :state => 'init')
+    @proposal = Proposal.new(:name => 'test', :software => Software.find_by_name("nova"), :state => 'init')
+    @node.save
+    @proposal.save
   end
+
+  # called after every single test
+  def teardown
+  end
+
+  test "should get index" do
+    get :index, :id => @node.id
+    assert_response :success
+    assert_not_nil assigns(:node_configs)
+    assert_template "index" 
+  end
+
+  test "should get index without param" do
+    get :index
+    assert_response :success
+    assert_not_nil assigns(:node_configs)
+    assert_template "index"
+  end
+
+  test "should get puppet" do
+    get :puppet, :node_name => @node.name, :format => :json, :proposal_id => @proposal.id
+    assert_response :success
+    assert_not_nil assigns(:node_configs)
+  end
+
 end

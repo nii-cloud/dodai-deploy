@@ -16,12 +16,43 @@
 require 'test_helper'
 
 class NodesControllerTest < ActionController::TestCase
+  # called before every single test
+  def setup
+    @node = Node.new(:name => 'test', :ip => '0.0.0.0', :state => 'available')
+    @node.save
+  end
+
+  # called after every single test
+  def teardown
+  end
+
+  test "should get index" do
+    get :index, :format => :json
+    assert_response :success
+    assert_not_nil assigns(:nodes)
+  end
+
+  test "should get new" do
+    get :new
+    assert_response :success
+    assert_not_nil assigns(:node)
+    assert_not_nil assigns(:names)
+    assert_template :new
+  end
+
   test "should create node" do
     assert_difference("Node.count") do
       post :create, :node => {:name => "ubuntu4"}
     end
-
     assert_redirected_to nodes_path
+  end
+
+  test "should get destroy" do
+    assert_not_nil Node.find(@node.id)
+    assert_difference("Node.count", -1) do
+      delete :destroy, :format => :json, :id => @node.id
+    end 
+    assert_response :success
   end
 
 end
