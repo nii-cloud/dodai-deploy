@@ -195,7 +195,7 @@ function print_usage {
   $name node \$server [\$software]
 
 server:
-  The hostname of the server where deployment_app will be installed or has been installed.
+  The fqdn of the server where deployment_app will be installed or has been installed.
 
 software:
   The name of the software which will be installed.

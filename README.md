@@ -68,7 +68,7 @@ Execute the following commands on all the nodes to install necessary softwares a
 
     sudo $home/setup-env/setup.sh node $server
 
-The $server in the above command is the host name(fqdn) of the deployment server. You can confirm the host name(fqdn) with the following command.
+The $server in the above command is the fqdn of the deployment server. You can confirm the fqdn with the following command.
 
     sudo hostname -f
 
