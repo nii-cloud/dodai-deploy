@@ -21,6 +21,9 @@ gem "daemon-spawn", :require => "daemon_spawn"
 gem 'memcache-client'
 
 gem 'mongrel'
+
+#gem 'aws'
+
 # Use unicorn as the web server
 # gem 'unicorn'
 

@@ -29,6 +29,10 @@ GEM
       activesupport (= 3.0.9)
     activesupport (3.0.9)
     arel (2.0.10)
+    aws (2.5.6)
+      http_connection
+      uuidtools
+      xml-simple
     builder (2.1.2)
     cgi_multipart_eof_fix (2.5.0)
     columnize (0.3.4)
@@ -38,6 +42,7 @@ GEM
       abstract (>= 1.0.0)
     fastthread (1.0.7)
     gem_plugin (0.2.3)
+    http_connection (1.4.1)
     i18n (0.5.0)
     jquery-rails (1.0.13)
       railties (~> 3.0)
@@ -95,11 +100,14 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     tzinfo (0.3.29)
+    uuidtools (2.1.2)
+    xml-simple (1.1.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  aws
   daemon-spawn
   jquery-rails (>= 1.0.12)
   json
