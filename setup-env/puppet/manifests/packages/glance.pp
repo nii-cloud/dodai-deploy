@@ -18,7 +18,12 @@
 $glance_templates_dir = "${proposal_id}"
 
 class glance::install {
-    package { [glance, "python-httplib2", "python-swift"]:}
+    package { 
+        [glance, "python-swift"]:
+            require => Package["python-httplib2"];
+
+        "python-httplib2":
+    }
 
     file {
         "/etc/glance/glance-api.conf":
