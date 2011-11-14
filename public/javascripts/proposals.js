@@ -20,9 +20,15 @@ function add_node_config(add_btn) {
   html = html.replaceAll("[" + old_index, "[" + index);
   html = html.replace("installed", "init");
 
+  var selected_index = node_config_tr.find("select").prop("selectedIndex");
+
   console.debug(html);
   new_node_config_tr.html(html);
   node_config_tr.parent().append(new_node_config_tr);
+  var found_selected = false;
+  console.debug(selected_index);
+  node_config_tr.parent().find(".node_config_tr:last").find("select").prop("selectedIndex", 
+    Math.min(selected_index + 1, node_size - 1));
 }
 
 function delete_node_config(delete_btn) {
