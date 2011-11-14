@@ -19,14 +19,18 @@ $swift_templates_dir = "$proposal_id"
 $swift_files_rel_dir = "files/swift"
 
 class swift_common {
-    user { swift: }
+    user { 
+        swift: 
+            ensure => present
+    }
 
     file {
         "/etc/swift":
             ensure => directory,
             mode => 644,
             owner => "swift",
-            group => "swift";
+            group => "swift",
+            require => User[swift];
 
         "/etc/swift/cert.crt":
             source => "puppet:///$swift_files_rel_dir/cert.crt",
