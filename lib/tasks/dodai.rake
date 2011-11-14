@@ -37,26 +37,45 @@ EOF
   end
 
   desc 'Set up ec2 instance'
-  task :start_ec2 do
-    access_key = ""
-    secret_key = ""
+  task :ec2 do
+
+    if (["access_key_id", "secret_access_key", "nodes_size", "key_pair"] - ENV.keys).size > 0
+
+      puts <<EOF
+Usage:
+
+  rake access_key_id=$ACCESS_KEY_ID secret_access_key=$SECRET_ACCESS_KEY nodes_size=$NODES_SIZE key_pair=$KEY_PAIR dodai:ec2
+
+  $ACCESS_KEY_ID: EC2 aws access key id.
+  $SECRET_ACCESS_KEY: EC2 aws secret access key.
+  $NODES_SIZE: The size of nodes.
+  $KEY_PAIR: key pair.
+EOF
+
+      break
+    end
+
+    access_key_id = ENV["access_key_id"] 
+    secret_access_key = ENV["secret_access_key"]
     region = "ap-northeast-1"
     image_id = "ami-fa9723fb"
     
     nodes_size = ENV["nodes_size"]
-    keypair = "guan_home"
+    key_pair = ENV["key_pair"]
     user_data = <<EOF
 #!/bin/bash
 apt-get install git -y
 git clone https://github.com/nii-cloud/dodai-deploy
 
+sed -i -e '/127\.0\.1\.1/d' /etc/hosts
+
 /dodai-deploy/setup-env/setup.sh server
-/dodai-deploy/script/start-servers
+/dodai-deploy/script/start-servers production
 EOF
     instance_type = "m1.large"
 
-    ec2 = Aws::Ec2.new access_key, secret_key, :region => region
-    result = ec2.run_instances image_id, 1, 1, ['default'], keypair, user_data, nil, instance_type 
+    ec2 = Aws::Ec2.new access_key_id, secret_access_key, :region => region
+    result = ec2.run_instances image_id, 1, 1, ['default'], key_pair, user_data, nil, instance_type 
     instance_id = result[0][:aws_instance_id]
     loop do
       result = ec2.describe_instances [instance_id]
@@ -73,10 +92,13 @@ EOF
 apt-get install git -y
 git clone https://github.com/nii-cloud/dodai-deploy
 
+sed -i -e '/127\.0\.1\.1/d' /etc/hosts
+
 /dodai-deploy/setup-env/setup.sh node #{server_fqdn} 
+/dodai-deploy/setup-env/setup-storage-for-swift.sh loopback /srv/node sdb1 4
 EOF
 
-    result = ec2.run_instances image_id, nodes_size, nodes_size, ['default'], keypair, user_data, nil, instance_type
+    result = ec2.run_instances image_id, nodes_size, nodes_size, ['default'], key_pair, user_data, nil, instance_type
     p result
   end
 end
