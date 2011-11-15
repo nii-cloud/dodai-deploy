@@ -36,9 +36,13 @@ EOF
     end
   end
 
+
+
   desc 'Set up ec2 instance'
   task :ec2 do
 
+    p __FILE__
+    p File.dirname __FILE__
     parameters = [ 
       ["ec2_access_key_id", "EC2 access key id"],
       ["ec2_secret_access_key", "EC2 access key"],
@@ -60,6 +64,7 @@ Usage:
   The following variables should be defined in environment.
     #{parameters_str}
 
+    ec2_endpoint_url is optional.
   Please refer to lib/tasks/dodai_ec2rc for values.
 EOF
       break
@@ -73,18 +78,15 @@ EOF
     security_group = ENV["ec2_security_group"]
     instance_type = ENV["ec2_instance_type"]
     nodes_size = ENV["dodai_nodes_size"]
-    user_data = <<EOF
-#!/bin/bash
-apt-get install git -y
-git clone https://github.com/nii-cloud/dodai-deploy
+    endpoint_url = ENV.fetch "ec2_endpoint_url", nil
+    user_data = get_erb_template_from_file_content("dodai_setup_server.sh.erb").result(binding)
+    puts user_data
 
-sed -i -e '/127\.0\.1\.1/d' /etc/hosts
-
-/dodai-deploy/setup-env/setup.sh server
-/dodai-deploy/script/start-servers production
-EOF
-
-    ec2 = Aws::Ec2.new access_key_id, secret_access_key, :region => region
+    if endpoint_url
+      ec2 = Aws::Ec2.new access_key_id, secret_access_key, :endpoint_url => endpoint_url
+    else
+      ec2 = Aws::Ec2.new access_key_id, secret_access_key, :region => region
+    end
     result = ec2.run_instances image_id, 1, 1, [security_group], key_pair, user_data, nil, instance_type 
     instance_id = result[0][:aws_instance_id]
     loop do
@@ -97,18 +99,18 @@ EOF
     end
 
     server_fqdn = result[0][:private_dns_name]
-    user_data = <<EOF
-#!/bin/bash
-apt-get install git -y
-git clone https://github.com/nii-cloud/dodai-deploy
-
-sed -i -e '/127\.0\.1\.1/d' /etc/hosts
-
-/dodai-deploy/setup-env/setup.sh node #{server_fqdn} 
-/dodai-deploy/setup-env/setup-storage-for-swift.sh loopback /srv/node sdb1 4
-EOF
+    user_data = get_erb_template_from_file_content("dodai_setup_node.sh.erb").result(binding)
+    puts user_data
 
     result = ec2.run_instances image_id, nodes_size, nodes_size, [security_group], key_pair, user_data, nil, instance_type
     p result
   end
+end
+
+def get_erb_template_from_file_content(file_name)
+  file = open File.dirname(__FILE__) + "/#{file_name}"
+  template = ERB.new file.read
+  file.close
+
+  template
 end

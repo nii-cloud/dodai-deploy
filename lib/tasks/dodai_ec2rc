@@ -6,3 +6,6 @@ export ec2_region=ap-northeast-1
 export ec2_image_id=ami-fa9723fb
 export ec2_instance_type=m1.large
 export dodai_nodes_size=1
+
+#The following variables are optional.
+export ec2_endpoint_url=

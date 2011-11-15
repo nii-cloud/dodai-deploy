@@ -1,0 +1,8 @@
+#!/bin/bash
+apt-get install git -y
+git clone https://github.com/nii-cloud/dodai-deploy
+
+sed -i -e '/127\.0\.1\.1/d' /etc/hosts
+
+/dodai-deploy/setup-env/setup.sh node <%= server_fqdn %>
+/dodai-deploy/setup-env/setup-storage-for-swift.sh loopback /srv/node sdb1 4
