@@ -80,7 +80,6 @@ EOF
     nodes_size = ENV["dodai_nodes_size"]
     endpoint_url = ENV.fetch "ec2_endpoint_url", nil
     user_data = get_erb_template_from_file_content("dodai_setup_server.sh.erb").result(binding)
-    puts user_data
 
     if endpoint_url
       ec2 = Aws::Ec2.new access_key_id, secret_access_key, :endpoint_url => endpoint_url
@@ -100,7 +99,6 @@ EOF
 
     server_fqdn = result[0][:private_dns_name]
     user_data = get_erb_template_from_file_content("dodai_setup_node.sh.erb").result(binding)
-    puts user_data
 
     result = ec2.run_instances image_id, nodes_size, nodes_size, [security_group], key_pair, user_data, nil, instance_type
     p result
