@@ -12,32 +12,16 @@ The dodai-deploy is a software management tool. It supports OpenStack Diablo(Nov
 * Support parallel installation of software components.
 
 ## Glossary
-**Deployment server**
-The server in which dodai-deploy is installed.
 
-**Node**
-The machine that is the target of installation.
-
-**Software**
-Nova, Glance, Swift etc.
-
-**Component**
-Part of software, such as nova-compute or swift-proxy.
-
-**Proposal**
-The set of the kinds of configurations which describe how to install a software. The configurations include "Node config", "Config item", "Software config", "Component config".
-
-**Node config**
-A configuration that describes which component to be installed on a node.
-
-**Config item**
-A variable which can be used in the content of software config and component config.
-
-**Software config**
-A configuration that describes the content of a configuration file for all components.
-
-**Component config**
-A configuration that describes the content of a configuration file for only one component.
+* **Deployment server** - The server in which Dodai is installed.
+* **Node** - The machine that is the target of installation.
+* **Software** - Nova, Glance, Swift etc.
+* **Component** - Part of software, such as nova-compute or swift-proxy.
+* **Proposal** - The set of the kinds of configurations which describe how to install a software. The configurations include "Node config", "Config item", "Software config", "Component config".
+* **Node config** - A configuration that describes which component to be installed on a node.
+* **Config item** - A variable which can be used in the content of software config and component config.
+* **Software config** - A configuration that describes the content of a configuration file for all components.
+* **Component config** - A configuration that describes the content of a configuration file for only one component.
 
 ## Installation
 
