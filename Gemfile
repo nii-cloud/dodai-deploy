@@ -22,7 +22,7 @@ gem 'memcache-client'
 
 gem 'mongrel'
 
-#gem 'aws'
+gem 'aws'
 
 # Use unicorn as the web server
 # gem 'unicorn'

@@ -39,29 +39,40 @@ EOF
   desc 'Set up ec2 instance'
   task :ec2 do
 
-    if (["access_key_id", "secret_access_key", "nodes_size", "key_pair"] - ENV.keys).size > 0
+    parameters = [ 
+      ["ec2_access_key_id", "EC2 access key id"],
+      ["ec2_secret_access_key", "EC2 access key"],
+      ["ec2_key_pair", "EC2 key pair"],
+      ["ec2_security_group", "EC2 security group"],
+      ["ec2_image_id", "EC2 image id. It should be the image id of ubuntu 10.10, 11.04 or 11.10."],
+      ["ec2_region", "EC2 region"],
+      ["ec2_instance_type", "EC2 instance type. It should the type which can be used for the image specified in image_id."],
+      ["dodai_nodes_size", "The size of nodes which will be set up."]
+    ]
 
+    parameters_str = parameters.collect{|parameter| "#{parameter[0]}: #{parameter[1]}"}.join("\n    ")
+    if (parameters.collect{|parameter| parameter[0]} - ENV.keys).size > 0
       puts <<EOF
 Usage:
 
-  rake access_key_id=$ACCESS_KEY_ID secret_access_key=$SECRET_ACCESS_KEY nodes_size=$NODES_SIZE key_pair=$KEY_PAIR dodai:ec2
+  rake dodai:ec2
 
-  $ACCESS_KEY_ID: EC2 aws access key id.
-  $SECRET_ACCESS_KEY: EC2 aws secret access key.
-  $NODES_SIZE: The size of nodes.
-  $KEY_PAIR: key pair.
+  The following variables should be defined in environment.
+    #{parameters_str}
+
+  Please refer to lib/tasks/dodai_ec2rc for values.
 EOF
-
       break
     end
 
-    access_key_id = ENV["access_key_id"] 
-    secret_access_key = ENV["secret_access_key"]
-    region = "ap-northeast-1"
-    image_id = "ami-fa9723fb"
-    
-    nodes_size = ENV["nodes_size"]
-    key_pair = ENV["key_pair"]
+    access_key_id = ENV["ec2_access_key_id"] 
+    secret_access_key = ENV["ec2_secret_access_key"]
+    region = ENV["ec2_region"] 
+    image_id = ENV["ec2_image_id"]
+    key_pair = ENV["ec2_key_pair"]
+    security_group = ENV["ec2_security_group"]
+    instance_type = ENV["ec2_instance_type"]
+    nodes_size = ENV["dodai_nodes_size"]
     user_data = <<EOF
 #!/bin/bash
 apt-get install git -y
@@ -72,10 +83,9 @@ sed -i -e '/127\.0\.1\.1/d' /etc/hosts
 /dodai-deploy/setup-env/setup.sh server
 /dodai-deploy/script/start-servers production
 EOF
-    instance_type = "m1.large"
 
     ec2 = Aws::Ec2.new access_key_id, secret_access_key, :region => region
-    result = ec2.run_instances image_id, 1, 1, ['default'], key_pair, user_data, nil, instance_type 
+    result = ec2.run_instances image_id, 1, 1, [security_group], key_pair, user_data, nil, instance_type 
     instance_id = result[0][:aws_instance_id]
     loop do
       result = ec2.describe_instances [instance_id]
@@ -98,7 +108,7 @@ sed -i -e '/127\.0\.1\.1/d' /etc/hosts
 /dodai-deploy/setup-env/setup-storage-for-swift.sh loopback /srv/node sdb1 4
 EOF
 
-    result = ec2.run_instances image_id, nodes_size, nodes_size, ['default'], key_pair, user_data, nil, instance_type
+    result = ec2.run_instances image_id, nodes_size, nodes_size, [security_group], key_pair, user_data, nil, instance_type
     p result
   end
 end
