@@ -36,14 +36,21 @@ EOF
     end
   end
 
-
-
-  desc 'Set up ec2 instance'
+  desc 'Equal to ec2:all'
   task :ec2 do
+    Rake::Task["dodai:ec2:all"].invoke
+  end
 
-    p __FILE__
-    p File.dirname __FILE__
-    parameters = [ 
+  namespace :ec2 do
+    def get_erb_template_from_file_content(file_name)
+      file = open File.dirname(__FILE__) + "/#{file_name}"
+      template = ERB.new file.read
+      file.close
+    
+      template
+    end
+
+    parameters = [
       ["ec2_access_key_id", "EC2 access key id"],
       ["ec2_secret_access_key", "EC2 access key"],
       ["ec2_key_pair", "EC2 key pair"],
@@ -51,64 +58,86 @@ EOF
       ["ec2_image_id", "EC2 image id. It should be the image id of ubuntu 10.10, 11.04 or 11.10."],
       ["ec2_region", "EC2 region"],
       ["ec2_instance_type", "EC2 instance type. It should the type which can be used for the image specified in image_id."],
-      ["dodai_nodes_size", "The size of nodes which will be set up."]
     ]
 
     parameters_str = parameters.collect{|parameter| "#{parameter[0]}: #{parameter[1]}"}.join("\n    ")
-    if (parameters.collect{|parameter| parameter[0]} - ENV.keys).size > 0
+    if (parameters.collect{|parameter| parameter[0]} - ENV.reject{|key, value| value.strip == ""}.keys).size > 0
       puts <<EOF
 Usage:
 
-  rake dodai:ec2
+  rake dodai:ec2 | dodai:ec2:server | dodai:ec2:nodes | dadai:all
 
   The following variables should be defined in environment.
     #{parameters_str}
-
+  
     ec2_endpoint_url is optional.
   Please refer to lib/tasks/dodai_ec2rc for values.
 EOF
-      break
+      break 
     end
 
-    access_key_id = ENV["ec2_access_key_id"] 
+    access_key_id = ENV["ec2_access_key_id"]
     secret_access_key = ENV["ec2_secret_access_key"]
-    region = ENV["ec2_region"] 
+    region = ENV["ec2_region"]
     image_id = ENV["ec2_image_id"]
     key_pair = ENV["ec2_key_pair"]
     security_group = ENV["ec2_security_group"]
     instance_type = ENV["ec2_instance_type"]
-    nodes_size = ENV["dodai_nodes_size"]
-    endpoint_url = ENV.fetch "ec2_endpoint_url", nil
-    user_data = get_erb_template_from_file_content("dodai_setup_server.sh.erb").result(binding)
+    endpoint_url = ENV.fetch "ec2_endpoint_url", "" 
 
-    if endpoint_url
+    if endpoint_url.strip != ""
       ec2 = Aws::Ec2.new access_key_id, secret_access_key, :endpoint_url => endpoint_url
     else
       ec2 = Aws::Ec2.new access_key_id, secret_access_key, :region => region
     end
-    result = ec2.run_instances image_id, 1, 1, [security_group], key_pair, user_data, nil, instance_type 
-    instance_id = result[0][:aws_instance_id]
-    loop do
-      result = ec2.describe_instances [instance_id]
-      p result
-      if result[0][:aws_state] == "running"
+
+    server_fqdn = "" 
+
+    desc 'Set up a dodai-deploy server and nodes on ec2'
+    task :all do
+      if ENV.fetch("nodes_size", "") == ""
+        puts <<EOF
+Please use dodai:ec2 | dodai:ec2:all like the following example.
+  rake nodes_size=1 dodai:ec2
+EOF
         break
       end
-      sleep 5
+      Rake::Task["dodai:ec2:server"].invoke
+      Rake::Task["dodai:ec2:nodes"].invoke
     end
 
-    server_fqdn = result[0][:private_dns_name]
-    user_data = get_erb_template_from_file_content("dodai_setup_node.sh.erb").result(binding)
+    desc 'Set up dodai-deploy nodes on ec2.'
+    task :nodes do 
+      nodes_size = ENV.fetch "nodes_size", "" 
+      server_fqdn = ENV.fetch "server_fqdn", "" if server_fqdn == ""
+      if nodes_size.strip == "" or server_fqdn.strip == ""
+        puts <<EOF
+Please use task dodai:ec2:nodes like the following example.
+  rake nodes_size=1 server_fqdn=ubuntu dodai:ec2:nodes 
+EOF
+        break
+      end
 
-    result = ec2.run_instances image_id, nodes_size, nodes_size, [security_group], key_pair, user_data, nil, instance_type
-    p result
+      user_data = get_erb_template_from_file_content("dodai_setup_node.sh.erb").result(binding)
+      result = ec2.run_instances image_id, nodes_size, nodes_size, [security_group], key_pair, user_data, nil, instance_type
+      p result
+    end
+
+    desc 'Set up a dodai-deploy server on ec2.'
+    task :server do
+      user_data = get_erb_template_from_file_content("dodai_setup_server.sh.erb").result(binding)
+      result = ec2.run_instances image_id, 1, 1, [security_group], key_pair, user_data, nil, instance_type
+      instance_id = result[0][:aws_instance_id]
+      loop do
+        result = ec2.describe_instances [instance_id]
+        p result
+        if result[0][:aws_state] == "running"
+          break
+        end
+        sleep 5
+      end
+
+      server_fqdn = result[0][:private_dns_name]
+    end
   end
-end
-
-def get_erb_template_from_file_content(file_name)
-  file = open File.dirname(__FILE__) + "/#{file_name}"
-  template = ERB.new file.read
-  file.close
-
-  template
 end
