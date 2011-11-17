@@ -32,6 +32,10 @@ rabbitmq:
   name: rabbitmq
   software: nova
 
+dashboard:
+  name: dashboard_r46
+  software: nova
+
 mysql:
   name: mysql
   software: nova

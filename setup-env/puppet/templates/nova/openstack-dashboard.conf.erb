@@ -1,0 +1,14 @@
+description "Openstack Dashboard Server"
+author "Xiaohua Guan <guanxiaohua2k6@gmail.com>"
+
+start on (local-filesystems and net-device-up IFACE!=lo)
+stop on runlevel [016]
+
+respawn
+
+script
+
+cd <%= dashboard_home %>
+tools/with_venv.sh dashboard/manage.py runserver --noreload 0.0.0.0:<%= dashboard_port %> >> dashboard.log 2>&1
+
+end script

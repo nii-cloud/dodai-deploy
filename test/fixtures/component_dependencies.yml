@@ -60,6 +60,11 @@ nova_compute_rabbitmq:
   dest_component: rabbitmq
   software: nova
 
+nova_dashboard_api:
+  source_component: dashboard
+  dest_component: nova_api
+  software: nova
+
 swift:
   source_component: swift_storage
   dest_component: swift_proxy

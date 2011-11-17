@@ -10,6 +10,31 @@ libvirt_type:
   name: libvirt_type
   value: kvm
 
+nova_project: 
+  software: nova
+  name: project
+  value: nova
+
+nova_user:
+  software: nova
+  name: user
+  value: admin
+
+nova_password:
+  software: nova
+  name: password
+  value: admin
+
+nova_email:
+  software: nova
+  name: email
+  value: admin@openstack.org
+
+nova_dashboard_port:
+  software: nova
+  name: dashboard_port
+  value: 8000
+
 glance_host:
   software: nova
   name: glance_host

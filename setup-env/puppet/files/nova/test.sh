@@ -25,11 +25,12 @@ if [ "`which nova-manage`" = ""  ]; then
     exit 1
 fi
 
-nova-manage user admin anne
-nova-manage project create IRT anne
+image_file="$1"
+project=$2
+user=$3
 
 rm nova.zip
-nova-manage project zipfile IRT anne
+nova-manage project zipfile $project $user
 
 rm -rf env
 unzip -d env/ nova.zip
@@ -40,7 +41,6 @@ euca-authorize -P tcp -p 22 default
 
 apt-get install cloud-utils -y
 
-image_file="$1"
 if [ ! -e "$HOME/$image_file" ]; then
   image_file="image_kvm.tgz"
 fi

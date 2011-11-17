@@ -15,9 +15,8 @@
  *    under the License.
  */
 
-$nova_templates_dir = "$proposal_id"
-$nova_files_rel_dir = "files/nova"
 $image_file_name = "image_kvm.tgz"
+$dashboard_home = "/var/opt/osdb/openstack-dashboard"
 
 define nova_component() {
     include nova_common::install
@@ -39,7 +38,7 @@ class nova_common::install {
 
     file {
         "/etc/nova/nova.conf":
-            content => template("$nova_templates_dir/etc/nova/nova.conf.erb"),
+            content => template("$proposal_id/etc/nova/nova.conf.erb"),
             mode => 644,
             require => Package["nova-common"];
 
@@ -133,12 +132,12 @@ class nova_api::test {
     file {
         "/tmp/nova/test.sh":
             alias => "test.sh",
-            source => "puppet:///$nova_files_rel_dir/test.sh",
+            source => "puppet:///files/nova/test.sh",
             require => File["/tmp/nova"];
     }
 
     exec {
-        "/tmp/nova/test.sh $image_file_name 2>&1":
+        "/tmp/nova/test.sh $image_file_name $project $user 2>&1":
             alias => "test.sh",
             require => File["test.sh", "$image_file_name"];
     }
@@ -146,7 +145,7 @@ class nova_api::test {
     file {
         "/tmp/nova/$image_file_name":
             alias => "$image_file_name",
-            source => "puppet:///$nova_files_rel_dir/$image_file_name",
+            source => "puppet:///files/nova/$image_file_name",
             require => File["/tmp/nova"];
     }
 }
@@ -171,7 +170,7 @@ class iscsitarget::install {
 
     file {
         "/etc/default/iscsitarget":
-            source => "puppet:///$nova_files_rel_dir/iscsitarget",
+            source => "puppet:///files/nova/iscsitarget",
             mode => 644,
             require => Package["nova-volume"]
     }
@@ -227,7 +226,7 @@ class nova_compute::install {
 
     file {
         "/etc/nova/nova-compute.conf":
-            content => template("$nova_templates_dir/etc/nova/nova-compute.conf.erb"),
+            content => template("$proposal_id/etc/nova/nova-compute.conf.erb"),
             mode => 644,
             require => Package["nova-compute"];
     }
@@ -244,7 +243,7 @@ class nova_compute::uninstall {
     file {
         "/tmp/nova/nova-compute-uninit.sh":
             alias => "nova-compute-uninit.sh",
-            source => "puppet:///$nova_files_rel_dir/nova-compute-uninit.sh"
+            source => "puppet:///files/nova/nova-compute-uninit.sh"
     }
 
     exec {
@@ -326,11 +325,11 @@ class mysql::install {
     file { 
         "/tmp/nova/mysql-preseed.sh":
             alias => "mysql-preseed.sh",
-            source => "puppet:///$nova_files_rel_dir/mysql-preseed.sh",
+            source => "puppet:///files/nova/mysql-preseed.sh",
             require => File["/tmp/nova"];
         "/tmp/nova/mysql-init.sh":
             alias => "mysql-init.sh",
-            source => "puppet:///$nova_files_rel_dir/mysql-init.sh",
+            source => "puppet:///files/nova/mysql-init.sh",
             require => File["/tmp/nova"];
     }
     exec { 
@@ -358,7 +357,7 @@ class mysql::uninstall {
     file {
         "/tmp/nova/mysql-uninit.sh":
             alias => "mysql-uninit.sh",
-            source => "puppet:///$nova_files_rel_dir/mysql-uninit.sh"
+            source => "puppet:///files/nova/mysql-uninit.sh"
     }
 
     exec {
@@ -379,4 +378,83 @@ class mysql::uninstall {
             ensure => purged,
             require => Service["mysql"]
     }    
+}
+
+class dashboard_r46::install {
+    package {
+        bzr:
+    }
+
+    file {
+        "/var/opt/dashboard-install.sh":
+            alias => "dashboard-install",
+            source => "puppet:///files/nova/dashboard-install.sh",
+            require => Package[bzr];
+
+        "$dashboard_home/dashboard-init.sh":
+            alias => "dashboard-init",
+            source => "puppet:///files/nova/dashboard-init.sh",
+            require => Exec["dashboard-install"];
+
+        "$dashboard_home/local/local_settings.py":
+            content => template("$proposal_id/local_settings.py.erb"),
+            alias => local_settings,
+            require => Exec["dashboard-install"];
+
+        "/etc/init/openstack-dashboard.conf":
+            content => template("nova/openstack-dashboard.conf.erb"),
+            mode => 644,
+            alias => "openstack-dashboard";
+
+        "$dashboard_home/tools/with_venv.sh":
+            alias => with_venv,
+            source => "puppet:///files/nova/with_venv.sh",
+            require => Exec["dashboard-install"];
+
+        "$dashboard_home/dashboard/change_password.py":
+            alias => change_password,
+            source => "puppet:///files/nova/change_password.py",
+            require => Exec["dashboard-install"];
+    }
+
+    exec {
+        "/var/opt/dashboard-install.sh 2>&1":
+            require => File["dashboard-install"],
+            timeout => 1800,
+            alias => "dashboard-install";
+
+        "$dashboard_home/dashboard-init.sh $project $user $password $email 2>&1":
+            alias => "dashboard-init",
+            require => File["dashboard-init", local_settings, "openstack-dashboard", with_venv, change_password],
+            notify => Service["openstack-dashboard"];
+    }
+
+    service {
+        "openstack-dashboard":
+            ensure => running,
+            start => "start openstack-dashboard",
+            stop => "stop openstack-dashboard; exit 0",
+            status => "status openstack-dashboard";
+    }
+}
+
+class dashboard_r46::uninstall {
+    service {
+        "openstack-dashboard":
+            ensure => stopped,
+            start => "start openstack-dashboard",
+            stop => "stop openstack-dashboard; exit 0",
+            status => "status openstack-dashboard";
+    }
+
+    file {
+        ["/etc/init/openstack-dashboard.conf", "/var/opt/dashboard-install.sh"]:
+            ensure => absent,
+            require => Service["openstack-dashboard"];
+    }
+
+    exec {
+        "rm -rf /var/opt/osdb; exit 0":
+            require => Service["openstack-dashboard"];
+    }
 }
