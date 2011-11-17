@@ -382,14 +382,14 @@ class mysql::uninstall {
 
 class dashboard_r46::install {
     package {
-        bzr:
+        [bzr, "python-virtualenv"]:
     }
 
     file {
         "/var/opt/dashboard-install.sh":
             alias => "dashboard-install",
             source => "puppet:///files/nova/dashboard-install.sh",
-            require => Package[bzr];
+            require => Package[bzr, "python-virtualenv"];
 
         "$dashboard_home/dashboard-init.sh":
             alias => "dashboard-init",
