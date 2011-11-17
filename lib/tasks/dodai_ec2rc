@@ -8,3 +8,5 @@ export ec2_instance_type=m1.large
 
 #The following variables are optional.
 export ec2_endpoint_url=
+export dodai_setup_server_script_file=
+export dodai_setup_node_script_file=

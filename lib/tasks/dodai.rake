@@ -42,8 +42,8 @@ EOF
   end
 
   namespace :ec2 do
-    def get_erb_template_from_file_content(file_name)
-      file = open File.dirname(__FILE__) + "/#{file_name}"
+    def get_erb_template_from_file_content(path)
+      file = open path
       template = ERB.new file.read
       file.close
     
@@ -60,20 +60,25 @@ EOF
       ["ec2_instance_type", "EC2 instance type. It should the type which can be used for the image specified in image_id."],
     ]
 
-    parameters_str = parameters.collect{|parameter| "#{parameter[0]}: #{parameter[1]}"}.join("\n    ")
-    if (parameters.collect{|parameter| parameter[0]} - ENV.reject{|key, value| value.strip == ""}.keys).size > 0
-      puts <<EOF
+    def validate_parameters
+      parameters_str = parameters.collect{|parameter| "#{parameter[0]}: #{parameter[1]}"}.join("\n    ")
+      result = (parameters.collect{|parameter| parameter[0]} - ENV.reject{|key, value| value.strip == ""}.keys).size == 0
+      unless result
+        puts <<EOF
 Usage:
 
   rake dodai:ec2 | dodai:ec2:server | dodai:ec2:nodes | dadai:all
 
   The following variables should be defined in environment.
     #{parameters_str}
-  
+
     ec2_endpoint_url is optional.
   Please refer to lib/tasks/dodai_ec2rc for values.
 EOF
-      break 
+
+      end
+
+      result
     end
 
     access_key_id = ENV["ec2_access_key_id"]
@@ -84,17 +89,21 @@ EOF
     security_group = ENV["ec2_security_group"]
     instance_type = ENV["ec2_instance_type"]
     endpoint_url = ENV.fetch "ec2_endpoint_url", "" 
+    server_fqdn = "" 
 
-    if endpoint_url.strip != ""
-      ec2 = Aws::Ec2.new access_key_id, secret_access_key, :endpoint_url => endpoint_url
-    else
-      ec2 = Aws::Ec2.new access_key_id, secret_access_key, :region => region
+    def create_ec2_connection
+      if endpoint_url.strip != ""
+        ec2 = Aws::Ec2.new access_key_id, secret_access_key, :endpoint_url => endpoint_url
+      else
+        ec2 = Aws::Ec2.new access_key_id, secret_access_key, :region => region
+      end
     end
 
-    server_fqdn = "" 
 
     desc 'Set up a dodai-deploy server and nodes on ec2'
     task :all do
+      break unless validate_parameters
+
       if ENV.fetch("nodes_size", "") == ""
         puts <<EOF
 Please use dodai:ec2 | dodai:ec2:all like the following example.
@@ -108,6 +117,10 @@ EOF
 
     desc 'Set up dodai-deploy nodes on ec2.'
     task :nodes do 
+      break unless validate_parameters
+
+      ec2 = create_ec2_connection
+
       nodes_size = ENV.fetch "nodes_size", "" 
       server_fqdn = ENV.fetch "server_fqdn", "" if server_fqdn == ""
       if nodes_size.strip == "" or server_fqdn.strip == ""
@@ -118,14 +131,21 @@ EOF
         break
       end
 
-      user_data = get_erb_template_from_file_content("dodai_setup_node.sh.erb").result(binding)
+      path = ENV.fetch "dodai_setup_node_script_file", "dodai_setup_node.sh.erb"
+      user_data = get_erb_template_from_file_content(path).result(binding)
       result = ec2.run_instances image_id, nodes_size, nodes_size, [security_group], key_pair, user_data, nil, instance_type
       p result
     end
 
     desc 'Set up a dodai-deploy server on ec2.'
     task :server do
-      user_data = get_erb_template_from_file_content("dodai_setup_server.sh.erb").result(binding)
+      break unless validate_parameters
+
+      ec2 = create_ec2_connection
+
+      path = ENV.fetch "dodai_setup_server_script_file", "dodai_setup_server.sh.erb"
+      path = File.dirname(__FILE__) + "/" + path if Pathname.new(path).relative?
+      user_data = get_erb_template_from_file_content(path).result(binding)
       result = ec2.run_instances image_id, 1, 1, [security_group], key_pair, user_data, nil, instance_type
       instance_id = result[0][:aws_instance_id]
       loop do
