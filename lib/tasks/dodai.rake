@@ -60,7 +60,7 @@ EOF
       ["ec2_instance_type", "EC2 instance type. It should the type which can be used for the image specified in image_id."],
     ]
 
-    def validate_parameters
+    def validate_parameters(parameters)
       parameters_str = parameters.collect{|parameter| "#{parameter[0]}: #{parameter[1]}"}.join("\n    ")
       result = (parameters.collect{|parameter| parameter[0]} - ENV.reject{|key, value| value.strip == ""}.keys).size == 0
       unless result
@@ -90,8 +90,11 @@ EOF
     instance_type = ENV["ec2_instance_type"]
     endpoint_url = ENV.fetch "ec2_endpoint_url", "" 
     server_fqdn = "" 
+    server_dns_name = ""
+ 
+    ec2 = nil
 
-    def create_ec2_connection
+    def create_ec2_connection(access_key_id, secret_access_key, endpoint_url = "", region = "")
       if endpoint_url.strip != ""
         ec2 = Aws::Ec2.new access_key_id, secret_access_key, :endpoint_url => endpoint_url
       else
@@ -102,7 +105,7 @@ EOF
 
     desc 'Set up a dodai-deploy server and nodes on ec2'
     task :all do
-      break unless validate_parameters
+      break unless validate_parameters parameters
 
       if ENV.fetch("nodes_size", "") == ""
         puts <<EOF
@@ -111,15 +114,29 @@ Please use dodai:ec2 | dodai:ec2:all like the following example.
 EOF
         break
       end
-      Rake::Task["dodai:ec2:server"].invoke
-      Rake::Task["dodai:ec2:nodes"].invoke
+      Rake::Task["dodai:ec2:start_server"].invoke
+      Rake::Task["dodai:ec2:start_nodes"].invoke
+
+      Rake::Task["dodai:ec2:wait_server"].invoke
+      Rake::Task["dodai:ec2:wait_nodes"].invoke
     end
 
     desc 'Set up dodai-deploy nodes on ec2.'
     task :nodes do 
-      break unless validate_parameters
+      Rake::Task["dodai:ec2:start_nodes"].invoke
+      Rake::Task["dodai:ec2:wait_nodes"].invoke
+    end
 
-      ec2 = create_ec2_connection
+    desc 'Set up a dodai-deploy server on ec2.'
+    task :server do
+      Rake::Task["dodai:ec2:start_server"].invoke
+      Rake::Task["dodai:ec2:wait_server"].invoke
+    end
+
+    task :start_nodes do
+      break unless validate_parameters parameters
+
+      ec2 = create_ec2_connection(access_key_id, secret_access_key, endpoint_url, region) unless ec2
 
       nodes_size = ENV.fetch "nodes_size", "" 
       server_fqdn = ENV.fetch "server_fqdn", "" if server_fqdn == ""
@@ -132,32 +149,88 @@ EOF
       end
 
       path = ENV.fetch "dodai_setup_node_script_file", "dodai_setup_node.sh.erb"
+      path = File.dirname(__FILE__) + "/" + path if Pathname.new(path).relative?
       user_data = get_erb_template_from_file_content(path).result(binding)
       result = ec2.run_instances image_id, nodes_size, nodes_size, [security_group], key_pair, user_data, nil, instance_type
-      p result
+      instance_ids = result.collect{|i| i[:aws_instance_id]}
+      puts "Wait until states of all the instances become running"
+      loop do
+        result = ec2.describe_instances instance_ids
+        puts "The states of instances are as follows."
+        instance_ids.each_index{|index| puts "  instance[#{instance_ids[index]}]: #{result[index][:aws_state]}"}
+        if result.collect{|i| i[:aws_state]}.delete_if{|i| i == "running"}.empty?
+          break
+        end
+        sleep 10
+      end
+
+      puts <<EOF
+Nodes are started.
+EOF
+
+      result.each{|item|
+        puts <<EOF
+  instance id: #{item[:aws_instance_id]}
+  dns name: #{item[:dns_name]}
+  private dns name: #{item[:private_dns_name]}
+
+EOF
+      }
     end
 
-    desc 'Set up a dodai-deploy server on ec2.'
-    task :server do
-      break unless validate_parameters
+    task :start_server do
+      break unless validate_parameters parameters
 
-      ec2 = create_ec2_connection
+      ec2 = create_ec2_connection(access_key_id, secret_access_key, endpoint_url, region) unless ec2
 
       path = ENV.fetch "dodai_setup_server_script_file", "dodai_setup_server.sh.erb"
       path = File.dirname(__FILE__) + "/" + path if Pathname.new(path).relative?
       user_data = get_erb_template_from_file_content(path).result(binding)
       result = ec2.run_instances image_id, 1, 1, [security_group], key_pair, user_data, nil, instance_type
       instance_id = result[0][:aws_instance_id]
+      puts "Wait until the instance[#{instance_id}]'s state become running."
       loop do
-        result = ec2.describe_instances [instance_id]
-        p result
-        if result[0][:aws_state] == "running"
+        result = ec2.describe_instances([instance_id])[0]
+        puts "The instance[#{instance_id}]'s state is #{result[:aws_state]}."
+        if result[:aws_state] == "running"
           break
         end
-        sleep 5
+        sleep 10 
       end
 
-      server_fqdn = result[0][:private_dns_name]
+      puts <<EOF
+Deploy server is started.
+  instance id: #{instance_id}
+  dns name: #{result[:dns_name]}
+  private dns name: #{result[:private_dns_name]}
+EOF
+
+      server_dns_name = result[:dns_name]
+      server_fqdn = result[:private_dns_name]
+    end
+
+    task :wait_nodes do
+    end
+
+    task :wait_server do
+      break if server_dns_name == ""
+ 
+      puts "Wait until deploy server[#{server_dns_name}] is set up."
+      timeout(1200) do
+        loop do
+          puts "Polling..."
+          begin
+            s = TCPSocket.open(server_dns_name, 3000)
+            s.close
+            break
+          rescue
+          end
+          
+          sleep 20
+        end
+      end
+
+      puts "Deploy server[#{server_dns_name}] has been set up."
     end
   end
 end
