@@ -17,7 +17,7 @@ cat > add_hosts.rb <<EOF
   \`echo "#{ip} #{hostname}" >> /etc/hosts\`
 }
 EOF
+ruby add_hosts.rb
 
 setup-env/setup-storage-for-swift.sh loopback /srv/node sdb1 4 2>&1 > setup-storage.log
 setup-env/setup.sh node <%= server_fqdn %>
-ruby add_hosts.rb

@@ -106,12 +106,12 @@ EOF
 
     def create_ec2_connection(access_key_id, secret_access_key, endpoint_url = "", region = "")
       if endpoint_url.strip != ""
-        ec2 = Aws::Ec2.new access_key_id, secret_access_key, :endpoint_url => endpoint_url
+        ec2 = RightAws::Ec2.new access_key_id, secret_access_key, :endpoint_url => endpoint_url, :logger => Logger.new(STDOUT) 
       else
         if region.strip != ""
-          ec2 = Aws::Ec2.new access_key_id, secret_access_key, :region => region
+          ec2 = RightAws::Ec2.new access_key_id, secret_access_key, :region => region, :logger => Logger.new(STDOUT)
         else
-          ec2 = Aws::Ec2.new access_key_id, secret_access_key
+          ec2 = RightAws::Ec2.new access_key_id, secret_access_key, :logger => Logger.new(STDOUT)
         end
       end
     end
