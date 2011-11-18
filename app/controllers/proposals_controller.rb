@@ -75,6 +75,7 @@ class ProposalsController < ApplicationController
 
     _strip_contents_in_params
     @proposal = Proposal.new(params[:proposal])
+    p @proposal
     @proposal.state = "init" 
     if @proposal.save
       respond_to do |format|
@@ -161,10 +162,51 @@ class ProposalsController < ApplicationController
     proposal_hash = params[:proposal]
     logger.debug params[:proposal].inspect
 
+    if (proposal_hash.keys - ["name", "software_desc"]).empty?
+      software = Software.find_by_desc(proposal_hash["software_desc"])
+      proposal_hash["software_id"] = software.id
+      proposal_hash.delete "software_desc"
+
+      attributes = {}
+      index = 0
+      software.config_item_defaults.each{|default| 
+        attributes[index] = {"config_item_default_id" => default.id, "value" => default.value}
+        index += 1
+      }
+      proposal_hash["config_items_attributes"] = attributes
+
+      attributes = {}
+      index = 0
+      node = Node.first
+      software.components.each{|component| 
+        attributes[index] = {"node_id" => node.id, "component_id" => component.id}
+        index += 1
+      }
+      proposal_hash["node_configs_attributes"] = attributes
+
+      attributes = {}
+      index = 0
+      software.components.each {|component|
+        component.component_config_defaults.each {|default|
+          attributes[index] = {"component_id" => component.id, "component_config_default_id" => default.id, "content" => default.content}
+          index += 1
+        }
+      }
+      proposal_hash["component_configs_attributes"] = attributes
+
+      attributes = {}
+      index = 0
+      software.software_config_defaults.each {|default|
+        attributes[index] = {"software_id" => software.id, "software_config_default_id" => default.id, "content" => default.content}
+      }
+      proposal_hash["software_configs_attributes"] = attributes
+      return proposal_hash
+    end
+
     proposal_hash["software_id"] = Software.find_by_desc(proposal_hash["software_desc"]).id
     proposal_hash.delete "software_desc"
 
-    proposal_hash.fetch("config_items_attributes", []).each {|index, config_item|
+    proposal_hash.fetch("config_items_attributes", {}).each {|index, config_item|
       config_item["config_item_default_id"] = ConfigItemDefault.find_by_name(config_item["name"]).id
       config_item.delete "name"
     }
