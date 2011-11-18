@@ -10,7 +10,7 @@ $(function() {
 
 function start_polling(state_span, proposal_id) {
 	$("#processing_img_" + proposal_id).show();
-  $.timer(2000, function (timer) {
+  $.timer(10000, function (timer) {
 		$.ajax({
 			url: "/proposals/" + proposal_id + ".json",
 			dataType: 'json',
