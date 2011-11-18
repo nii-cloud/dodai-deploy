@@ -158,7 +158,8 @@ EOF
       if nodes_size.strip == "" or server_fqdn.strip == "" or server_dns_name.strip == ""
         puts <<EOF
 Please use task dodai:ec2:nodes like the following example.
-  rake nodes_size=1 server_fqdn=ubuntu server_dns_name=ubuntu dodai:ec2:nodes 
+  rake nodes_size=1 server_fqdn=ubuntu server_dns_name=ubuntu dodai:ec2:nodes
+where ether dns name or ip address is ok for server_dns_name.
 EOF
         break
       end
