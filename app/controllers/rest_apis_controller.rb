@@ -14,4 +14,37 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 class RestApisController < ApplicationController
+
+  def index
+    respond_to do |format|
+      format.html
+      format.json {
+        apis = [{
+            :name => "software", 
+            :actions => [{:name => "list"}, {:name => "show"}]
+          }, {
+            :name => "component", 
+            :actions => [{:name => "list"}, {:name => "show"}]
+          }, {
+            :name => "node",
+            :actions => [{:name => "list"}, {:name => "create", :parameters => ["node[name]"]}, {:name => "destroy"}]
+          }, {
+            :name => "node_candidate",
+            :actions => [{:name => "list"}]
+          }, {
+            :name => "proposal",
+            :actions => [
+              {:name => "list"}, 
+              {:name => "create", :parameters => ["proposal[name]", "proposal[software_name]"]}, 
+              {:name => "destroy"},
+              {:name => "install"},
+              {:name => "uninstall"},
+              {:name => "test"}
+            ]
+          },
+        ]
+        render :json => JSON.pretty_generate(apis.as_json) 
+      }
+    end 
+  end
 end
