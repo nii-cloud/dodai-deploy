@@ -22,5 +22,7 @@ $(function () {
     resizable: false,
     slidable: false
   });
+
+  $(":text").attr("size", 60);
 });
 
