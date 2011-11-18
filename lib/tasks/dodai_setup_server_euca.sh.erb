@@ -17,7 +17,7 @@ cat > add_hosts.rb <<EOF
   next unless ip
   \`sed -i -e "/#{ip}/d" /etc/hosts\`
   hostname = "ip-" + ip.gsub(/\./, "-")
-  \`echo "#{hostname} #{ip}" >> /etc/hosts\`
+  \`echo "#{ip} #{hostname}" >> /etc/hosts\`
 }
 EOF
 ruby add_hosts.rb
