@@ -97,7 +97,7 @@ EOF
     security_group = ENV["ec2_security_group"]
     instance_type = ENV["ec2_instance_type"]
     endpoint_url = ENV.fetch "ec2_endpoint_url", "" 
-    region = ENV["ec2_region"], ""
+    region = ENV.fetch "ec2_region", ""
     server_fqdn = "" 
     server_dns_name = ""
     node_private_dns_names = []
