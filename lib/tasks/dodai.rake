@@ -177,7 +177,7 @@ EOF
         if result.collect{|i| i[:aws_state]}.delete_if{|i| i == "running"}.empty?
           break
         end
-        sleep 10
+        sleep 30
       end
 
       puts <<EOF
