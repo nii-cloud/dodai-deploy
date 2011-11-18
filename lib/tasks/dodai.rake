@@ -57,7 +57,6 @@ EOF
       ["ec2_key_pair", "EC2 key pair"],
       ["ec2_security_group", "EC2 security group"],
       ["ec2_image_id", "EC2 image id. It should be the image id of ubuntu 10.10, 11.04 or 11.10."],
-      ["ec2_region", "EC2 region"],
       ["ec2_instance_type", "EC2 instance type. It should the type which can be used for the image specified in image_id."],
     ]
 
@@ -73,7 +72,9 @@ Usage:
   The following variables should be defined in environment.
     #{parameters_str}
 
-    ec2_endpoint_url is optional.
+  The following variables are optional.
+    ec2_endpoint_url: EC2 end point url
+    ec2_region: EC2 region
   Please refer to lib/tasks/dodai_ec2rc for values.
 EOF
 
@@ -84,12 +85,12 @@ EOF
 
     access_key_id = ENV["ec2_access_key_id"]
     secret_access_key = ENV["ec2_secret_access_key"]
-    region = ENV["ec2_region"]
     image_id = ENV["ec2_image_id"]
     key_pair = ENV["ec2_key_pair"]
     security_group = ENV["ec2_security_group"]
     instance_type = ENV["ec2_instance_type"]
     endpoint_url = ENV.fetch "ec2_endpoint_url", "" 
+    region = ENV["ec2_region"], ""
     server_fqdn = "" 
     server_dns_name = ""
     node_private_dns_names = []
@@ -100,7 +101,11 @@ EOF
       if endpoint_url.strip != ""
         ec2 = Aws::Ec2.new access_key_id, secret_access_key, :endpoint_url => endpoint_url
       else
-        ec2 = Aws::Ec2.new access_key_id, secret_access_key, :region => region
+        if region.strip != ""
+          ec2 = Aws::Ec2.new access_key_id, secret_access_key, :region => region
+        else
+          ec2 = Aws::Ec2.new access_key_id, secret_access_key
+        end
       end
     end
 

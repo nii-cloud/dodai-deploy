@@ -1,5 +1,5 @@
 #!/bin/bash
-apt-get install git -y
+apt-get install git euca2ools -y
 git clone https://github.com/nii-cloud/dodai-deploy
 
 sed -i -e '/127\.0\.1\.1/d' /etc/hosts
@@ -7,4 +7,19 @@ sed -i -e '/127\.0\.1\.1/d' /etc/hosts
 cd /dodai-deploy
 
 setup-env/setup.sh server
+
+
+export EC2_ACCESS_KEY="<%= access_key_id %>"
+export EC2_SECRET_KEY="<%= secret_access_key%>"
+export EC2_URL="<%= endpoint_url %>"
+cat > add_hosts.rb <<EOF
+\`euca-describe-instances\`.split("\n")[1..-1].collect{|i| i.split(" ")[4]}.each {|ip|
+  next unless ip
+  \`sed -i -e "/#{ip}/d" /etc/hosts\`
+  hostname = "ip-" + ip.gsub(/\./, "-")
+  \`echo "#{hostname} #{ip}" >> /etc/hosts\`
+}
+EOF
+ruby add_hosts.rb
+
 script/start-servers production

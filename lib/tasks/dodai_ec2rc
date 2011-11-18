@@ -2,11 +2,11 @@ export ec2_access_key_id=
 export ec2_secret_access_key=
 export ec2_key_pair=
 export ec2_security_group=default
-export ec2_region=ap-northeast-1
 export ec2_image_id=ami-fa9723fb
 export ec2_instance_type=m1.large
 
 #The following variables are optional.
 export ec2_endpoint_url=
+export ec2_region=ap-northeast-1
 export dodai_setup_server_script_file=
 export dodai_setup_node_script_file=

@@ -8,3 +8,16 @@ cd /dodai-deploy
 
 setup-env/setup-storage-for-swift.sh loopback /srv/node sdb1 4 2>&1 > setup-storage.log
 setup-env/setup.sh node <%= server_fqdn %>
+
+export EC2_ACCESS_KEY="<%= access_key_id %>"
+export EC2_SECRET_KEY="<%= secret_access_key%>"
+export EC2_URL="<%= endpoint_url %>"
+cat > add_hosts.rb <<EOF
+\`euca-describe-instances\`.split("\n")[1..-1].collect{|i| i.split(" ")[4]}.each {|ip|
+  next unless ip
+  \`sed -i -e "/#{ip}/d" /etc/hosts\`
+  hostname = "ip-" + ip.gsub(/\./, "-")
+  \`echo "#{hostname} #{ip}" >> /etc/hosts\`
+}
+EOF
+ruby add_hosts.rb
