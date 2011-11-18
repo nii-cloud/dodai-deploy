@@ -4,5 +4,7 @@ git clone https://github.com/nii-cloud/dodai-deploy
 
 sed -i -e '/127\.0\.1\.1/d' /etc/hosts
 
-/dodai-deploy/setup-env/setup.sh server
-/dodai-deploy/script/start-servers production
+cd /dodai-deploy
+
+setup-env/setup.sh server
+script/start-servers production

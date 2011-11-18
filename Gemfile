@@ -8,21 +8,15 @@ gem 'rails', '3.0.9'
 gem 'sqlite3'
 gem 'stomp'
 gem 'json'
-
 gem 'jquery-rails', '>= 1.0.12'
 gem 'ruby-debug'
-
 gem 'rcov'
-
 gem "rails_config"
-
 gem "daemon-spawn", :require => "daemon_spawn"
-
 gem 'memcache-client'
-
 gem 'mongrel'
-
 gem 'aws'
+gem 'rest-client'
 
 # Use unicorn as the web server
 # gem 'unicorn'

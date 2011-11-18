@@ -36,7 +36,8 @@ EOF
     end
   end
 
-  desc 'Equal to ec2:all'
+
+  desc 'Equal to dodai:ec2:all'
   task :ec2 do
     Rake::Task["dodai:ec2:all"].invoke
   end
@@ -91,6 +92,7 @@ EOF
     endpoint_url = ENV.fetch "ec2_endpoint_url", "" 
     server_fqdn = "" 
     server_dns_name = ""
+    node_private_dns_names = []
  
     ec2 = nil
 
@@ -140,10 +142,11 @@ EOF
 
       nodes_size = ENV.fetch "nodes_size", "" 
       server_fqdn = ENV.fetch "server_fqdn", "" if server_fqdn == ""
-      if nodes_size.strip == "" or server_fqdn.strip == ""
+      server_dns_name = ENV.fetch "server_dns_name", "" if server_dns_name == ""
+      if nodes_size.strip == "" or server_fqdn.strip == "" or server_dns_name.strip == ""
         puts <<EOF
 Please use task dodai:ec2:nodes like the following example.
-  rake nodes_size=1 server_fqdn=ubuntu dodai:ec2:nodes 
+  rake nodes_size=1 server_fqdn=ubuntu server_dns_name=ubuntu dodai:ec2:nodes 
 EOF
         break
       end
@@ -170,12 +173,14 @@ EOF
 
       result.each{|item|
         puts <<EOF
-  instance id: #{item[:aws_instance_id]}
-  dns name: #{item[:dns_name]}
+  instance id     : #{item[:aws_instance_id]}
+  dns name        : #{item[:dns_name]}
   private dns name: #{item[:private_dns_name]}
 
 EOF
       }
+
+      node_private_dns_names = result.collect{|i| i[:private_dns_name]}
     end
 
     task :start_server do
@@ -200,8 +205,8 @@ EOF
 
       puts <<EOF
 Deploy server is started.
-  instance id: #{instance_id}
-  dns name: #{result[:dns_name]}
+  instance id     : #{instance_id}
+  dns name        : #{result[:dns_name]}
   private dns name: #{result[:private_dns_name]}
 EOF
 
@@ -210,6 +215,19 @@ EOF
     end
 
     task :wait_nodes do
+      break if server_dns_name == ""
+
+      resource = RestClient::Resource.new("http://#{server_dns_name}:3000/nodes.json")
+      begin
+        node_private_dns_names.each{|private_dns_name|
+          puts "Add node[#{private_dns_name}]"
+          resource.post "node[name]=#{private_dns_name}"
+        }
+      rescue Exception => exc
+        "Failed to add node."
+         puts exc.inspect
+         puts exc.backtrace
+      end
     end
 
     task :wait_server do

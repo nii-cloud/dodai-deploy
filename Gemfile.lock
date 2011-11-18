@@ -88,6 +88,8 @@ GEM
     rbx-require-relative (0.0.5)
     rcov (0.9.10)
     rdoc (3.9.4)
+    rest-client (1.6.7)
+      mime-types (>= 1.16)
     ruby-debug (0.10.4)
       columnize (>= 0.1)
       ruby-debug-base (~> 0.10.4.0)
@@ -116,6 +118,7 @@ DEPENDENCIES
   rails (= 3.0.9)
   rails_config
   rcov
+  rest-client
   ruby-debug
   sqlite3
   stomp
