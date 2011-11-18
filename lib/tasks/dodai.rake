@@ -51,15 +51,6 @@ EOF
       template
     end
 
-    parameters = [
-      ["ec2_access_key_id", "EC2 access key id"],
-      ["ec2_secret_access_key", "EC2 access key"],
-      ["ec2_key_pair", "EC2 key pair"],
-      ["ec2_security_group", "EC2 security group"],
-      ["ec2_image_id", "EC2 image id. It should be the image id of ubuntu 10.10, 11.04 or 11.10."],
-      ["ec2_instance_type", "EC2 instance type. It should the type which can be used for the image specified in image_id."],
-    ]
-
     def validate_parameters(parameters)
       parameters_str = parameters.collect{|parameter| "#{parameter[0]}: #{parameter[1]}"}.join("\n    ")
       result = (parameters.collect{|parameter| parameter[0]} - ENV.reject{|key, value| value.strip == ""}.keys).size == 0
@@ -82,6 +73,22 @@ EOF
 
       result
     end
+
+    def convert_private_dns_name(private_dns_name)
+      if private_dns_name =~ /^[0-9.]*$/
+        private_dns_name = "ip-" + private_dns_name.gsub(/\./, "-") 
+      end
+      private_dns_name
+    end
+
+    parameters = [
+      ["ec2_access_key_id", "EC2 access key id"],
+      ["ec2_secret_access_key", "EC2 access key"],
+      ["ec2_key_pair", "EC2 key pair"],
+      ["ec2_security_group", "EC2 security group"],
+      ["ec2_image_id", "EC2 image id. It should be the image id of ubuntu 10.10, 11.04 or 11.10."],
+      ["ec2_instance_type", "EC2 instance type. It should the type which can be used for the image specified in image_id."],
+    ]
 
     access_key_id = ENV["ec2_access_key_id"]
     secret_access_key = ENV["ec2_secret_access_key"]
@@ -177,15 +184,16 @@ Nodes are started.
 EOF
 
       result.each{|item|
+        private_dns_name = convert_private_dns_name item[:private_dns_name]
         puts <<EOF
   instance id     : #{item[:aws_instance_id]}
   dns name        : #{item[:dns_name]}
-  private dns name: #{item[:private_dns_name]}
+  private dns name: #{private_dns_name}
 
 EOF
       }
 
-      node_private_dns_names = result.collect{|i| i[:private_dns_name]}
+      node_private_dns_names = result.collect{|i| convert_private_dns_name i[:private_dns_name]}
     end
 
     task :start_server do
@@ -205,18 +213,19 @@ EOF
         if result[:aws_state] == "running"
           break
         end
-        sleep 10 
+        sleep 30
       end
 
+      private_dns_name = convert_private_dns_name result[:private_dns_name]
       puts <<EOF
 Deploy server is started.
   instance id     : #{instance_id}
   dns name        : #{result[:dns_name]}
-  private dns name: #{result[:private_dns_name]}
+  private dns name: #{private_dns_name}
 EOF
 
       server_dns_name = result[:dns_name]
-      server_fqdn = result[:private_dns_name]
+      server_fqdn = private_dns_name
     end
 
     task :wait_nodes do
@@ -249,7 +258,7 @@ EOF
           rescue
           end
           
-          sleep 20
+          sleep 30
         end
       end
 
