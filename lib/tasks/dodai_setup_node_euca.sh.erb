@@ -1,13 +1,10 @@
 #!/bin/bash
-apt-get install git -y
+apt-get install git euca2ools ruby -y
 git clone https://github.com/nii-cloud/dodai-deploy
 
 sed -i -e '/127\.0\.1\.1/d' /etc/hosts
 
 cd /dodai-deploy
-
-setup-env/setup-storage-for-swift.sh loopback /srv/node sdb1 4 2>&1 > setup-storage.log
-setup-env/setup.sh node <%= server_fqdn %>
 
 export EC2_ACCESS_KEY="<%= access_key_id %>"
 export EC2_SECRET_KEY="<%= secret_access_key%>"
@@ -20,4 +17,7 @@ cat > add_hosts.rb <<EOF
   \`echo "#{ip} #{hostname}" >> /etc/hosts\`
 }
 EOF
+
+setup-env/setup-storage-for-swift.sh loopback /srv/node sdb1 4 2>&1 > setup-storage.log
+setup-env/setup.sh node <%= server_fqdn %>
 ruby add_hosts.rb

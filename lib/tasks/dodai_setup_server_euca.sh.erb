@@ -1,13 +1,13 @@
 #!/bin/bash
-apt-get install git euca2ools -y
+apt-get install git euca2ools ruby -y
 git clone https://github.com/nii-cloud/dodai-deploy
+
+# wait nodes for a while
+sleep 60
 
 sed -i -e '/127\.0\.1\.1/d' /etc/hosts
 
 cd /dodai-deploy
-
-setup-env/setup.sh server
-
 
 export EC2_ACCESS_KEY="<%= access_key_id %>"
 export EC2_SECRET_KEY="<%= secret_access_key%>"
@@ -22,4 +22,5 @@ cat > add_hosts.rb <<EOF
 EOF
 ruby add_hosts.rb
 
+setup-env/setup.sh server
 script/start-servers production
