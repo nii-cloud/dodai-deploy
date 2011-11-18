@@ -15,7 +15,7 @@ gem "rails_config"
 gem "daemon-spawn", :require => "daemon_spawn"
 gem 'memcache-client'
 gem 'mongrel'
-gem 'right_aws', '>=3.0'
+gem 'right_aws', '=2.0'
 gem 'rest-client'
 
 # Use unicorn as the web server
