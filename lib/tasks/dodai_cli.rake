@@ -67,7 +67,7 @@ EOF
       result = site[url].method(method).call(data)
     end
 
-    if ENV.fetch("verbose", "") == ""
+    if ENV.fetch("verbose", "") == "" and result != ""
       depth = 3 
       object = JSON.load(result) 
       if object.kind_of? Array
