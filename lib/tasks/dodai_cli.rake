@@ -13,8 +13,8 @@ namespace :dodai do
 
     if server == ""
       puts <<EOF
-"dodai_server" was undefined. Please define the following environment variables.
-  dodai_server: IP address or dns name of dodai server.
+"server" was undefined. Please define the following environment variables.
+  server: IP address or dns name of dodai server.
 EOF
       break
     end
