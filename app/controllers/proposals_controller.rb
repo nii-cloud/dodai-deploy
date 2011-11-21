@@ -198,6 +198,7 @@ class ProposalsController < ApplicationController
       index = 0
       software.software_config_defaults.each {|default|
         attributes[index] = {"software_id" => software.id, "software_config_default_id" => default.id, "content" => default.content}
+        index += 1
       }
       proposal_hash["software_configs_attributes"] = attributes
       return proposal_hash

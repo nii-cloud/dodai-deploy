@@ -37,6 +37,7 @@ class RestApisController < ApplicationController
               {:name => "list"}, 
               {:name => "create", :parameters => ["name", "software_desc"]}, 
               {:name => "destroy"},
+              {:name => "show"},
               {:name => "install"},
               {:name => "uninstall"},
               {:name => "test"}
