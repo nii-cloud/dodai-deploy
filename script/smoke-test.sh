@@ -15,7 +15,10 @@ for id in 1 2 3 4
 do
   echo "Install for proposal $id."
   rake dodai:cli server=$server resource=proposal action=install id=$id
+done
 
+for id in 1 2 3 4
+do
   echo "Test for proposal $id."
   rake dodai:cli server=$server resource=proposal action=test id=$id
 done
