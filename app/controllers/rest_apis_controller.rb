@@ -27,7 +27,7 @@ class RestApisController < ApplicationController
             :actions => [{:name => "list"}, {:name => "show"}]
           }, {
             :name => "node",
-            :actions => [{:name => "list"}, {:name => "create", :parameters => ["node[name]"]}, {:name => "destroy"}]
+            :actions => [{:name => "list"}, {:name => "create", :parameters => ["name"]}, {:name => "destroy"}]
           }, {
             :name => "node_candidate",
             :actions => [{:name => "list"}]
@@ -35,7 +35,7 @@ class RestApisController < ApplicationController
             :name => "proposal",
             :actions => [
               {:name => "list"}, 
-              {:name => "create", :parameters => ["proposal[name]", "proposal[software_name]"]}, 
+              {:name => "create", :parameters => ["name", "software_name"]}, 
               {:name => "destroy"},
               {:name => "install"},
               {:name => "uninstall"},
