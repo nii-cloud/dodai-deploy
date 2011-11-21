@@ -242,7 +242,7 @@ class ProposalsController < ApplicationController
     proposal_id = params[:id]
 
     @proposal = Proposal.find proposal_id
-    @proposal.state = "waiting"
+    @proposal.state = "waiting" unless @proposal.state =~ /ing$/
     @proposal.save
 
     waiting_proposal = WaitingProposal.new
