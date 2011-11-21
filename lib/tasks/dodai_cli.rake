@@ -67,7 +67,36 @@ EOF
       result = site[url].method(method).call(data)
     end
 
-    puts result
+    if ENV.fetch("verbose", "") == ""
+      depth = 3 
+      object = JSON.load(result) 
+      if object.kind_of? Array
+        depth += 1
+      end 
+      new_object = clone_object object, depth
+      puts JSON.pretty_generate new_object
+    else
+      puts result
+    end
+  end
+
+  def clone_object(object, depth)
+    return nil if depth == 0
+    return nil if depth == 1 and (object.kind_of? Array or object.kind_of? Hash)
+
+    if object.kind_of? Array
+      new_object = object.collect{|i| clone_object i, depth - 1}.select{|i| i}
+    elsif object.kind_of? Hash
+      new_object = {}
+      object.each{|key, value|
+        new_value = clone_object value, depth - 1
+        new_object[key] = new_value if new_value
+      }
+    elsif object.kind_of? String or object.kind_of? Integer
+      new_object = object
+    end
+
+    return new_object
   end
 
   def get_url_and_method_and_data(resource, action, params)
@@ -93,7 +122,6 @@ EOF
 
     params.delete "id"
     data = params.collect{|param| "#{resource}[#{URI.escape(param)}]=#{URI.escape(ENV[param])}"}.join "&" 
-    p [url, method, data]
     [url, method, data]
   end
 end
