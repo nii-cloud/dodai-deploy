@@ -14,4 +14,9 @@ swift:
 
 hadoop:
   software: hadoop
-  component: name_node 
+  component: name_node
+
+sge:
+  software: sge
+  component: sge_master
+ 

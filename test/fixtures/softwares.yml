@@ -15,3 +15,7 @@ swift:
 hadoop:
   name: hadoop
   desc: hadoop 0.20.2
+
+sge:
+  name: sge
+  desc: sun grid engine 6.2u5

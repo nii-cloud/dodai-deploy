@@ -67,3 +67,12 @@ job_tracker:
 task_tracker:
   name: task_tracker
   software: hadoop
+
+sge_master:
+  name: sge_master
+  software: sge
+
+sge_slave:
+  name: sge_slave
+  software: sge
+

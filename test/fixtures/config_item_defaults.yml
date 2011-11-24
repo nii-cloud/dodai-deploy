@@ -8,7 +8,7 @@ network_ip_range:
 libvirt_type:
   software: nova
   name: libvirt_type
-  value: qemu 
+  value: kvm
 
 nova_project: 
   software: nova

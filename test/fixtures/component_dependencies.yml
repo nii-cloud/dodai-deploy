@@ -69,3 +69,8 @@ swift:
   source_component: swift_storage
   dest_component: swift_proxy
   software: swift
+
+sge:
+  source_component: sge_slave
+  dest_component: sge_master
+  software: sge
