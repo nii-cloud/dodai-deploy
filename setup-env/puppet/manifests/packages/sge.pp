@@ -142,6 +142,6 @@ class sge_master::test {
 
     exec {
         "/tmp/sge/test.sh $sge_slave_nodes 2>&1":
-            require => File[test, q_conf];
+            require => File[test];
     }
 }
