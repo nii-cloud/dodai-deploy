@@ -155,10 +155,10 @@ function install_openstack_repository {
 }
 
 function install_sge_repository {
-  echo " 
-# deb http://archive.canonical.com/ubuntu oneiric partner
-# deb-src http://archive.canonical.com/ubuntu oneiric partner
-" >> /etc/apt/sources.list
+  apt-get -y install python-software-properties
+  add-apt-repository "deb http://archive.canonical.com/ lucid partner"
+
+  apt-get update
 }
 
 function install_memcached {
