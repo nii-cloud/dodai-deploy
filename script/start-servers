@@ -10,7 +10,7 @@ fi
 
 #start rails server
 echo "Start rails server in $env."
-RAILS_ENV=$env rails s -d
+RAILS_ENV=$env rails s -d --port=80
 echo "Rails server is started."
 
 #start job server

@@ -154,6 +154,13 @@ function install_openstack_repository {
   apt-get update 
 }
 
+function install_sge_repository {
+  echo " 
+# deb http://archive.canonical.com/ubuntu oneiric partner
+# deb-src http://archive.canonical.com/ubuntu oneiric partner
+" >> /etc/apt/sources.list
+}
+
 function install_memcached {
   apt-get -y install memcached
 }
@@ -208,7 +215,7 @@ software:
 }
 
 server_softwares=(ruby_rubygems activemq_server mcollective_client puppet_server memcached deployment_app)
-node_softwares=(ruby_rubygems mcollective_server puppet_client openstack_repository)
+node_softwares=(ruby_rubygems mcollective_server puppet_client openstack_repository sge_repository)
 
 type=$1
 if [ "$type" = "server" ]; then
