@@ -54,6 +54,9 @@ class NodeConfigsController < ApplicationController
         proposal.node_configs.each do |node_config|
           output[:parameters][node_config.component.name] = [] unless output[:parameters].has_key? node_config.component.name
           output[:parameters][node_config.component.name] << IPSocket.getaddress(node_config.node.name)
+
+          output[:parameters][node_config.component.name + "_fqdn"] = [] unless output[:parameters].has_key?(node_config.component.name + "_fqdn")
+          output[:parameters][node_config.component.name + "_fqdn"] << node_config.node.name
         end
 
         output[:parameters]["proposal_id"] = proposal_id
