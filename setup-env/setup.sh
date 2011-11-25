@@ -148,10 +148,12 @@ function install_puppet_client {
 }
 
 function install_openstack_repository {
-  apt-get -y install python-software-properties
-  add-apt-repository ppa:openstack-release/2011.3
-
-  apt-get update 
+  lsb_release -r | grep 11.10
+  if [ $? = 0  ]; then
+    apt-get -y install python-software-properties
+    add-apt-repository ppa:openstack-release/2011.3
+    apt-get update 
+  fi
 }
 
 function install_sge_repository {
