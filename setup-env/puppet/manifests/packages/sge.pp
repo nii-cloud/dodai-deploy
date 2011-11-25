@@ -82,6 +82,10 @@ class sge_master::install {
         "/tmp/sge/sge-init.sh":
             source => "puppet:///files/sge/sge-init.sh",
             require => File["/tmp/sge"];
+            
+        "/tmp/sge/sge-slave-servers":
+        	alias => "sge-slave-servers",
+            content => template("/etc/puppet/templates/sge/sge-slave-servers.erb");
     }
     
     package {
@@ -90,8 +94,9 @@ class sge_master::install {
             notify => Exec["sge-init"];
     }
     exec {             
-        "/tmp/sge/sge-init.sh ${sge_slave_nodes} 2>&1":
+        "/tmp/sge/sge-init.sh 2>&1":
             alias => "sge-init",
+            require => File["sge-slave-servers"];
     }
 }
 
@@ -135,13 +140,17 @@ class sge_master::test {
             source => "puppet:///files/sge/test.sh",
             alias => "test";
 
+        "/tmp/sge/example.sh":
+            source => "puppet:///files/sge/example.sh",
+            alias => "example";
+            
         "/tmp/sge/test_q.cnf":
             source => "puppet:///files/sge/test_q.cnf",
             alias => "q_conf";
     }
 
     exec {
-        "/tmp/sge/test.sh $sge_slave_nodes 2>&1":
-            require => File[test];
+        "/tmp/sge/test.sh 2>&1":
+            require => File[test, example, q_conf];
     }
 }
