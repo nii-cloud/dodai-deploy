@@ -12,7 +12,7 @@ fi
 service glance-registry status | grep running
 if [ $? != 0 ]; then
     echo "Service glance-registry is not started."
-    exit
+    exit 1
 fi
 
 echo "Test finished. It is OK."
