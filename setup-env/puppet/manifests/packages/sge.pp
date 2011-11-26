@@ -19,7 +19,7 @@ $sge_templates_dir = "${proposal_id}"
 $sge_slave_nodes = "${sge_slave}"
 $sge_home = "/var/lib/gridengine"
 
-class sun_jre::install {
+class sge_common::install {
 
     file {
         "/tmp/sge":
@@ -28,31 +28,8 @@ class sun_jre::install {
             
         "/tmp/sge/sun-jre-preseed.sh":
             alias => "sun-jre-preseed.sh",
-            source => "puppet:///files/sge/sun-jre-preseed.sh",
-    }
-    
-    exec { 
-        "/tmp/sge/sun-jre-preseed.sh 2>&1":
-            alias => "sun-jre-preseed.sh",
-            require => File["sun-jre-preseed.sh"];
-            
-        "update-java-alternatives -s java-6-sun 2>&1; exit 0":
-            alias => "alternatives-java",
-            require => Package["sun-java6-jre"];
-    }
-    
-    package { 
-        ["sun-java6-jre"]:
-            require => Exec["sun-jre-preseed.sh"],
-            ensure => installed,
-            notify => Exec["alternatives-java"];
-    }
-}
+            source => "puppet:///files/sge/sun-jre-preseed.sh";
 
-class sge_slave::install {
-    include sun_jre::install
-  
-    file { 
         "/tmp/sge/sge-preseed.sh":
             alias => "sge-preseed.sh",
             source => "puppet:///files/sge/sge-preseed.sh",
@@ -60,43 +37,57 @@ class sge_slave::install {
     }
     
     exec { 
+        "/tmp/sge/sun-jre-preseed.sh 2>&1":
+            alias => "sun-jre-preseed.sh",
+            require => File["sun-jre-preseed.sh"];
+            
+        "update-java-alternatives -s java-6-sun > /dev/null; exit 0":
+            alias => "alternatives-java",
+            require => Package["sun-java6-jre"];
+
         "/tmp/sge/sge-preseed.sh 2>&1":
             alias => "sge-preseed.sh",
             require => File["sge-preseed.sh"];
     }
-    
+
+    package { 
+        "sun-java6-jre":
+            require => Exec["sun-jre-preseed.sh"];
+    }
+}
+
+class sge_slave::install {
+    include sge_common::install
+  
     package {
-      ["gridengine-client", "gridengine-exec"]:
-            require => Package["sun-java6-jre"];
+        ["gridengine-client", "gridengine-exec"]:
+            require => Exec["alternatives-java", "sge-preseed.sh"];
     }
 }
 
 class sge_master::install {
-    include sun_jre::install
+    include sge_common::install
   
     file { 
-        "/tmp/sge/sge-preseed.sh":
-            alias => "sge-preseed.sh",
-            source => "puppet:///files/sge/sge-preseed.sh";
-            
         "/tmp/sge/sge-init.sh":
+            alias => "sge-init",
             source => "puppet:///files/sge/sge-init.sh",
             require => File["/tmp/sge"];
             
         "/tmp/sge/sge-slave-servers":
-        	alias => "sge-slave-servers",
+            alias => "sge-slave-servers",
             content => template("/etc/puppet/templates/sge/sge-slave-servers.erb");
     }
     
     package {
         ["gridengine-client", "gridengine-common", "gridengine-master", gridengine-qmon]:
-            require => Package["sun-java6-jre"],
-            notify => Exec["sge-init"];
+            require => Exec["alternatives-java", "sge-preseed.sh"]
     }
+
     exec {             
         "/tmp/sge/sge-init.sh 2>&1":
             alias => "sge-init",
-            require => File["sge-slave-servers"];
+            require => [Package["gridengine-client", "gridengine-common", "gridengine-master", gridengine-qmon], File["sge-slave-servers", "sge-init"]];
     }
 }
 
