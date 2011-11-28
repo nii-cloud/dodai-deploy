@@ -233,7 +233,7 @@ EOF
     task :wait_nodes do
       break if server_dns_name == ""
 
-      resource = RestClient::Resource.new("http://#{server_dns_name}:3000/nodes.json")
+      resource = RestClient::Resource.new("http://#{server_dns_name}:#{server_port}/nodes.json")
       begin
         node_private_dns_names.each{|private_dns_name|
           puts "Add node[#{private_dns_name}]"
