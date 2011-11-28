@@ -16,8 +16,7 @@
  */
 
 $sge_templates_dir = "${proposal_id}"
-$sge_slave_nodes = "${sge_slave}"
-$sge_home = "/var/lib/gridengine"
+$sge_master_node = "${sge_master_fqdn}"
 
 class sge_common::install {
 
@@ -29,11 +28,6 @@ class sge_common::install {
         "/tmp/sge/sun-jre-preseed.sh":
             alias => "sun-jre-preseed.sh",
             source => "puppet:///files/sge/sun-jre-preseed.sh";
-
-        "/tmp/sge/sge-preseed.sh":
-            alias => "sge-preseed.sh",
-            source => "puppet:///files/sge/sge-preseed.sh",
-            require => File["/tmp/sge"];
     }
     
     exec { 
@@ -44,10 +38,6 @@ class sge_common::install {
         "update-java-alternatives -s java-6-sun > /dev/null 2>&1; exit 0":
             alias => "alternatives-java",
             require => Package["sun-java6-jre"];
-
-        "/tmp/sge/sge-preseed.sh 2>&1":
-            alias => "sge-preseed.sh",
-            require => File["sge-preseed.sh"];
     }
 
     package { 
@@ -58,17 +48,30 @@ class sge_common::install {
 
 class sge_slave::install {
     include sge_common::install
-  
+
+    file {
+        "/tmp/sge/sge-slv-preseed.sh":
+            alias => "sge-slv-preseed.sh",
+            source => "puppet:///files/sge/sge-slv-preseed.sh",
+            require => File["/tmp/sge"];
+    }
+ 
     package {
         ["gridengine-client", "gridengine-exec"]:
-            require => Exec["alternatives-java", "sge-preseed.sh"];
+            responsefile => "/tmp/sge/sge-slv-preseed.sh",
+            require => File["sge-slv-preseed.sh"];
     }
 }
 
 class sge_master::install {
     include sge_common::install
   
-    file { 
+    file {
+        "/tmp/sge/sge-preseed.sh":
+            alias => "sge-preseed.sh",
+            source => "puppet:///files/sge/sge-preseed.sh",
+            require => File["/tmp/sge"];
+ 
         "/tmp/sge/sge-init.sh":
             alias => "sge-init",
             source => "puppet:///files/sge/sge-init.sh",
@@ -84,7 +87,11 @@ class sge_master::install {
             require => Exec["alternatives-java", "sge-preseed.sh"]
     }
 
-    exec {             
+    exec {
+        "/tmp/sge/sge-preseed.sh $sge_master_node 2>&1":
+            alias => "sge-preseed.sh",
+            require => File["sge-preseed.sh"];
+  
         "/tmp/sge/sge-init.sh 2>&1":
             alias => "sge-init",
             require => [Package["gridengine-client", "gridengine-common", "gridengine-master", gridengine-qmon], File["sge-slave-servers", "sge-init"]];

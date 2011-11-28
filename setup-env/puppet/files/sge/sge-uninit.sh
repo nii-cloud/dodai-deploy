@@ -2,11 +2,14 @@
 
 CELL_NAME="default"
 
-#shutdown all execd daemons
-qconf -ke all
+if type -P qconf
+then
+  #shutdown all execd daemons
+  qconf -ke all
 
-#shutdown qmaster daemon
-qconf -km
+  #shutdown qmaster daemon
+  qconf -km
+fi
 
 #remove cell configuration
 rm -rf /var/lib/gridengine/$CELL_NAME/
