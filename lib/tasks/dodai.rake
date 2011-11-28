@@ -101,6 +101,7 @@ EOF
     region = ENV.fetch "ec2_region", ""
     server_fqdn = "" 
     server_dns_name = ""
+    server_port = ""
     node_private_dns_names = []
  
     ec2 = nil
@@ -202,6 +203,7 @@ EOF
 
       ec2 = create_ec2_connection(access_key_id, secret_access_key, endpoint_url, region) unless ec2
 
+      server_port = ENV.fetch "server_port", "3000"
       path = ENV.fetch "dodai_setup_server_script_file", "dodai_setup_server.sh.erb"
       user_data = get_erb_template_from_file_content(path).result(binding)
       result = ec2.run_instances image_id, 1, 1, [security_group], key_pair, user_data, nil, instance_type
@@ -231,7 +233,7 @@ EOF
     task :wait_nodes do
       break if server_dns_name == ""
 
-      resource = RestClient::Resource.new("http://#{server_dns_name}:3000/nodes.json")
+      resource = RestClient::Resource.new("http://#{server_dns_name}:#{server_port}/nodes.json")
       begin
         node_private_dns_names.each{|private_dns_name|
           puts "Add node[#{private_dns_name}]"
@@ -252,7 +254,7 @@ EOF
         loop do
           puts "Polling..."
           begin
-            s = TCPSocket.open(server_dns_name, 3000)
+            s = TCPSocket.open(server_dns_name, server_port.to_i)
             s.close
             break
           rescue
