@@ -24,4 +24,4 @@ EOF
 ruby add_hosts.rb
 
 setup-env/setup.sh -p <%= server_port %> server
-script/start-servers production
+script/start-servers production <%= server_port %>

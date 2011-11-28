@@ -7,4 +7,4 @@ sed -i -e '/127\.0\.1\.1/d' /etc/hosts
 cd /dodai-deploy
 
 setup-env/setup.sh -p <%= server_port %> server
-script/start-servers production
+script/start-servers production <%= server_port %>
