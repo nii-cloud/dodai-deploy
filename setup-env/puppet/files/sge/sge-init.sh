@@ -11,8 +11,9 @@ qconf -as $MY_HOST
 #Register executive hosts
 for server in `cat /tmp/sge/sge-slave-servers`
 do
-	qconf -ae $server
-	echo "Add executive host:$server"
+  qconf -ah $server
+  qconf -ae $server
+  echo "Add executive host:$server"
 done
 
 exit 0
