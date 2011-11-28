@@ -8,9 +8,14 @@ if [ "$1" != ""  ]; then
   env=$1
 fi
 
+port=3000
+if [ "$2" != "" ]; then
+  port=$2
+fi
+
 #start rails server
 echo "Start rails server in $env."
-RAILS_ENV=$env rails s -d 
+RAILS_ENV=$env rails s -d -p $port 
 echo "Rails server is started."
 
 #start job server

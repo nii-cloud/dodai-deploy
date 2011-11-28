@@ -23,5 +23,5 @@ cat > add_hosts.rb <<EOF
 EOF
 ruby add_hosts.rb
 
-setup-env/setup.sh server
+setup-env/setup.sh -p <%= server_port %> server
 script/start-servers production

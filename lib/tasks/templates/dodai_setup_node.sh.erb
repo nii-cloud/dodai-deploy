@@ -7,4 +7,4 @@ sed -i -e '/127\.0\.1\.1/d' /etc/hosts
 cd /dodai-deploy
 
 setup-env/setup-storage-for-swift.sh loopback /srv/node sdb1 4 2>&1 > setup-storage.log
-setup-env/setup.sh node <%= server_fqdn %> 2>&1 > setup.log
+setup-env/setup.sh -s <%= server_fqdn %> node 2>&1 > setup.log

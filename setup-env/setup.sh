@@ -3,8 +3,6 @@
 cd `dirname $0`
 home_path=`pwd`
 
-server=$2
-
 function install {
   target=$1
   echo "-----------------Begin to install $target-----------------------"
@@ -52,6 +50,11 @@ function install_puppet_server {
   apt-get -y install puppetmaster
   cp -r puppet/* /etc/puppet/
 
+  if [ "$port" = "" ]; then
+    port=3000
+  fi
+  sed -i -e "s/PORT/$port/g" /etc/puppet/external_nodes.rb
+
   #download kvm image
   target_file="/etc/puppet/files/nova/image_kvm.tgz"
   if [ ! -e $target_file ]; then
@@ -68,6 +71,7 @@ function install_puppet_server {
   fi
 
   service puppetmaster stop
+  sleep 5
   service puppetmaster start
 }
 
@@ -198,37 +202,65 @@ function install_node {
 
 function print_usage {
   name=`basename $0`
-  echo "Usage:
-  $name server [\$software]
-  OR 
-  $name node \$server [\$software]
+  echo "Usage: $name [OPTIONS] TYPE [SOFTWARE]
 
-server:
-  The fqdn of the server where deployment_app will be installed or has been installed.
+TYPE:
+  The type of deploy host. It is server or node.
 
-software:
+OPTIONS:
+  -s: The fqdn of deploy server. It should be specified if the TYPE is node.
+  -p: The port number of the rails server on deploy server. It will be used only if the TYPE is server and SOFTWARE is puppet_server.
+
+SOFTWARE:
   The name of the software which will be installed.
 
   For server, the following softwares can be specified.
     ${server_softwares[*]}
   For node, the following softwares can be specified.
     ${node_softwares[*]}
+
+For examples,
+  $name server
+  $name server puppet_server
+  $name -p 80 server
+  $name -s ubuntu node
+  $name -s ubuntu node mcollective_server
 "
 }
 
 server_softwares=(ruby_rubygems activemq_server mcollective_client puppet_server memcached deployment_app)
 node_softwares=(ruby_rubygems mcollective_server puppet_client openstack_repository sge_repository)
 
+
+while getopts "s:p:": opt
+do
+  case $opt in
+    \?) OPT_ERROR=1; break;;
+    s) server="$OPTARG";;
+    p) port="$OPTARG";;
+  esac
+done
+
+if [ $OPT_ERROR ]; then      # option error
+  echo >&2 
+  print_usage
+  exit 1
+fi
+
+shift $(( $OPTIND - 1 ))
+
 type=$1
 if [ "$type" = "server" ]; then
   install_server "$2"
 elif [ "$type" = "node" ]; then
-  if [ "$2" = "" ]; then
+  if [ "$server" = ""  ]; then
+    echo "Please specify the fqdn of deploy server."
     print_usage
-    exit
+    exit 1
   fi
-
-  install_node "$3"
+  install_node "$2"
 else
+  echo "Please specify the TYPE. It should be server or node."
   print_usage
+  exit 1
 fi
