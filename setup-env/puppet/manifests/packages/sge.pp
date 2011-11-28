@@ -41,7 +41,7 @@ class sge_common::install {
             alias => "sun-jre-preseed.sh",
             require => File["sun-jre-preseed.sh"];
             
-        "update-java-alternatives -s java-6-sun > /dev/null; exit 0":
+        "update-java-alternatives -s java-6-sun > /dev/null 2>&1; exit 0":
             alias => "alternatives-java",
             require => Package["sun-java6-jre"];
 
