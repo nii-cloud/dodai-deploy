@@ -231,7 +231,6 @@ For examples,
 server_softwares=(ruby_rubygems activemq_server mcollective_client puppet_server memcached deployment_app)
 node_softwares=(ruby_rubygems mcollective_server puppet_client openstack_repository sge_repository)
 
-
 while getopts "s:p:": opt
 do
   case $opt in
@@ -246,7 +245,6 @@ if [ $OPT_ERROR ]; then      # option error
   print_usage
   exit 1
 fi
-
 shift $(( $OPTIND - 1 ))
 
 type=$1
