@@ -32,7 +32,7 @@ function uninstall_mcollective_client {
   dpkg -P mcollective-common
 }
 
-function install_puppet_server {
+function uninstall_puppet_server {
   service puppetmaster stop
 
   apt-get -y --purge remove puppetmaster
@@ -41,19 +41,7 @@ function install_puppet_server {
 function uninstall_deployment_app {
   cd ..
 
-  RAILS_ENV=production rake db:drop
-  RAILS_ENV=production rake db:migrate
-  RAILS_ENV=production rake db:fixtures:load
-  RAILS_ENV=production rake tmp:clear
-  RAILS_ENV=production rake log:clear
-
-  rake db:drop
-  rake db:migrate
-  rake db:fixtures:load
-  rake tmp:clear
-  rake log:clear
-
-  cd $home_path 
+  script/stop-servers
 }
 
 function uninstall_mcollective_server {
@@ -71,7 +59,14 @@ function uninstall_openstack_repository {
   apt-get update
 }
 
-function install_memcached {
+function uninstall_sge_repository {
+  sed -i -e "/lucid partner/d" /etc/apt/sources.list 
+
+  apt-get update
+}
+
+function uninstall_memcached {
+  service memcached stop
   apt-get -y --purge remove memcached
 }
 
@@ -104,15 +99,14 @@ function uninstall_node {
 
 function print_usage {
   name=`basename $0`
-  echo "Usage:
-  $name server
-  OR 
-  $name node
+  echo "Usage: $name TYPE
+
+TYPE: server or node
 "
 }
 
 server_softwares=(activemq_server mcollective_client puppet_server memcached deployment_app ruby_rubygems)
-node_softwares=(mcollective_server puppet_client openstack_repository ruby_rubygems)
+node_softwares=(mcollective_server puppet_client openstack_repository sge_repository ruby_rubygems)
 
 type=$1
 if [ "$type" = "server" ]; then
