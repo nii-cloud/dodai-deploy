@@ -139,7 +139,7 @@ class sge_master::test {
             alias => "test-example";
             
         "/tmp/sge/test-queue.cnf":
-            source => "puppet:///files/sge/test-queue.cnf",
+            content => template("sge/test-queue.cnf.erb"),
             alias => "test-queue";
     }
 

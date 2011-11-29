@@ -1,5 +1,5 @@
 qname                 test-queue
-hostlist              {hostlist}
+hostlist              <%= sge_slave_fqdn.join "," %> 
 seq_no                0
 load_thresholds       np_load_avg=1.75
 suspend_thresholds    NONE

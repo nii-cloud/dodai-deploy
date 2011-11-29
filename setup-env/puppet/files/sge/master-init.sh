@@ -1,12 +1,12 @@
 #!/bin/bash
 
-MY_HOST=`hostname -f`
+fqdn=`hostname -f`
 
 #Register admin host
-qconf -ah $MY_HOST
+qconf -ah $fqdn
 
 #Register submit host
-qconf -as $MY_HOST
+qconf -as $fqdn
 
 #Register executive hosts
 for server in `cat /tmp/sge/slave-servers`
