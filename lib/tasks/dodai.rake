@@ -266,5 +266,14 @@ EOF
 
       puts "Deploy server[#{server_dns_name}] has been set up."
     end
+
+    task :terminate do
+      instance_id = ENV.fetch "instance", ""
+      break if instance_id == ""
+
+      ec2 = create_ec2_connection(access_key_id, secret_access_key, endpoint_url, region) unless ec2
+      puts "Terminate instance[#{instance_id}]."
+      ec2.terminate_instances [instance_id]
+    end
   end
 end
