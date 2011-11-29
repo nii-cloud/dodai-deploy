@@ -1,6 +1,6 @@
-gridengine-client       shared/gridenginemaster string ubuntu1
-gridengine-common       shared/gridenginemaster string ubuntu1 
-gridengine-exec shared/gridenginemaster string ubuntu1
+gridengine-client       shared/gridenginemaster string <%= sge_master_node %> 
+gridengine-common       shared/gridenginemaster string <%= sge_master_node %> 
+gridengine-exec shared/gridenginemaster string <%= sge_master_node %>
 gridengine-client       shared/gridenginecell   string default
 gridengine-common       shared/gridenginecell   string default
 gridengine-exec shared/gridenginecell   string default

@@ -72,7 +72,7 @@ class swift_proxy::install {
             require => Package["swift-proxy"];
 
         "/tmp/swift/storage-servers":
-            content => template("/etc/puppet/templates/swift/storage-servers.erb");
+            content => template("swift/storage-servers.erb");
 
         "/tmp/swift/proxy-init.sh":
             source => "puppet:///$swift_files_rel_dir/proxy-init.sh",

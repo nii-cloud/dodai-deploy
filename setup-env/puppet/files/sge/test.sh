@@ -6,7 +6,7 @@ ME=`whoami`
 qconf -au $ME arusers
 
 SLAVE_NODES=()
-for server in `cat /tmp/sge/sge-slave-servers`
+for server in `cat /tmp/sge/slave-servers`
 do
   SLAVE_NODES=("${SLAVE_NODES[@]}" $server)
 done
@@ -17,16 +17,16 @@ NODE_LIST=`echo "${SLAVE_NODES[@]}" | sed -e "s/ /,/g"`
 echo "Test slave nodes:$NODE_LIST"
 
 #Setting to configuration file 
-sed -i -e "s/{hostlist}/$NODE_LIST/g" /tmp/sge/test_q.cnf
+sed -i -e "s/{hostlist}/$NODE_LIST/g" /tmp/sge/test-queue.cnf
 
 #Add queue configuration
-qconf -Aq /tmp/sge/test_q.cnf
+qconf -Aq /tmp/sge/test-queue.cnf
 
 #Execute test command
-qsub -now y /tmp/sge/example.sh
+qsub -now y /tmp/sge/test-example.sh
 
 if [ $? != 0 ]; then
-    echo "Service sun-grid-engine is failed."
+    echo "Test failed."
     exit 1
 fi
 

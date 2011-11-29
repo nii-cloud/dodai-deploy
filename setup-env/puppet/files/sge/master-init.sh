@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MY_HOST=`hostname`
+MY_HOST=`hostname -f`
 
 #Register admin host
 qconf -ah $MY_HOST
@@ -9,7 +9,7 @@ qconf -ah $MY_HOST
 qconf -as $MY_HOST
 
 #Register executive hosts
-for server in `cat /tmp/sge/sge-slave-servers`
+for server in `cat /tmp/sge/slave-servers`
 do
   qconf -ah $server
   qconf -ae $server

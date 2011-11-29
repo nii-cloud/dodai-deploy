@@ -25,16 +25,12 @@ class sge_common::install {
             ensure => directory,
             mode => 644;
             
-        "/tmp/sge/sun-jre-preseed.sh":
-            alias => "sun-jre-preseed.sh",
-            source => "puppet:///files/sge/sun-jre-preseed.sh";
+        "/tmp/sge/sun-jre-preseed.conf":
+            alias => "sun-jre-preseed",
+            source => "puppet:///files/sge/sun-jre-preseed.conf";
     }
     
     exec { 
-        "/tmp/sge/sun-jre-preseed.sh 2>&1":
-            alias => "sun-jre-preseed.sh",
-            require => File["sun-jre-preseed.sh"];
-            
         "update-java-alternatives -s java-6-sun > /dev/null 2>&1; exit 0":
             alias => "alternatives-java",
             require => Package["sun-java6-jre"];
@@ -42,7 +38,8 @@ class sge_common::install {
 
     package { 
         "sun-java6-jre":
-            require => Exec["sun-jre-preseed.sh"];
+            responsefile => "/tmp/sge/sun-jre-preseed.conf",
+            require => File["sun-jre-preseed"];
     }
 }
 
@@ -50,16 +47,16 @@ class sge_slave::install {
     include sge_common::install
 
     file {
-        "/tmp/sge/sge-slv-preseed.sh":
-            alias => "sge-slv-preseed.sh",
-            source => "puppet:///files/sge/sge-slv-preseed.sh",
+        "/tmp/sge/slave-preseed.conf":
+            alias => "slave-preseed",
+            content => template("sge/slave-preseed.conf.erb"),
             require => File["/tmp/sge"];
     }
  
     package {
         ["gridengine-client", "gridengine-exec"]:
-            responsefile => "/tmp/sge/sge-slv-preseed.sh",
-            require => File["sge-slv-preseed.sh"];
+            responsefile => "/tmp/sge/slave-preseed.conf",
+            require => File["slave-preseed"];
     }
 }
 
@@ -67,57 +64,43 @@ class sge_master::install {
     include sge_common::install
   
     file {
-        "/tmp/sge/sge-preseed.sh":
-            alias => "sge-preseed.sh",
-            source => "puppet:///files/sge/sge-preseed.sh",
+        "/tmp/sge/master-preseed.conf":
+            alias => "master-preseed",
+            content => template("sge/master-preseed.conf.erb"),
             require => File["/tmp/sge"];
  
-        "/tmp/sge/sge-init.sh":
-            alias => "sge-init",
-            source => "puppet:///files/sge/sge-init.sh",
+        "/tmp/sge/master-init.sh":
+            alias => "master-init",
+            source => "puppet:///files/sge/master-init.sh",
             require => File["/tmp/sge"];
             
-        "/tmp/sge/sge-slave-servers":
-            alias => "sge-slave-servers",
-            content => template("/etc/puppet/templates/sge/sge-slave-servers.erb");
+        "/tmp/sge/slave-servers":
+            alias => "slave-servers",
+            content => template("sge/slave-servers.erb");
     }
     
     package {
-        ["gridengine-client", "gridengine-common", "gridengine-master", gridengine-qmon]:
-            require => Exec["alternatives-java", "sge-preseed.sh"]
+        ["gridengine-client", "gridengine-common", "gridengine-master", "gridengine-qmon"]:
+            responsefile => "/tmp/sge/master-preseed.conf",
+            require => [Exec["alternatives-java"], File["master-preseed"]]
     }
 
     exec {
-        "/tmp/sge/sge-preseed.sh $sge_master_node 2>&1":
-            alias => "sge-preseed.sh",
-            require => File["sge-preseed.sh"];
-  
-        "/tmp/sge/sge-init.sh 2>&1":
-            alias => "sge-init",
-            require => [Package["gridengine-client", "gridengine-common", "gridengine-master", gridengine-qmon], File["sge-slave-servers", "sge-init"]];
+        "/tmp/sge/master-init.sh 2>&1":
+            alias => "master-init",
+            require => [Package["gridengine-client", "gridengine-common", "gridengine-master", "gridengine-qmon"], File["slave-servers", "master-init"]];
     }
 }
 
 class sge_common::uninstall {
 
-    file {             
-        "/tmp/sge/sge-uninit.sh":
-            source => "puppet:///files/sge/sge-uninit.sh",
-            alias => "sge-uninit.sh";
-    }
-    
     package {
-        ["gridengine-common", "gridengine-client", "postfix", "bsd-mailx"]:
+        ["gridengine-common", "gridengine-client", postfix, "bsd-mailx"]:
             ensure => purged,
-            require => Exec["sge-uninit"],
             notify => Exec["rm-dir"];
     }
     
     exec {
-        "/tmp/sge/sge-uninit.sh 2>&1":
-            alias => "sge-uninit",
-            require => File["sge-uninit.sh"];
-            
         "rm -rf /tmp/sge 2>&1":
             alias => "rm-dir";
     }
@@ -125,6 +108,19 @@ class sge_common::uninstall {
 
 class sge_master::uninstall {
     include sge_common::uninstall
+
+    file {
+        "/tmp/sge/master-uninit.sh":
+            source => "puppet:///files/sge/master-uninit.sh",
+            alias => "master-uninit";
+    }
+
+    exec {
+        "/tmp/sge/master-uninit.sh 2>&1":
+            alias => "master-uninit",
+            notify => Package["gridengine-common", "gridengine-client", postfix, "bsd-mailx"],
+            require => File["master-uninit"];
+    }
 }
 
 class sge_slave::uninstall {
@@ -138,17 +134,17 @@ class sge_master::test {
             source => "puppet:///files/sge/test.sh",
             alias => "test";
 
-        "/tmp/sge/example.sh":
-            source => "puppet:///files/sge/example.sh",
-            alias => "example";
+        "/tmp/sge/test-example.sh":
+            source => "puppet:///files/sge/test-example.sh",
+            alias => "test-example";
             
-        "/tmp/sge/test_q.cnf":
-            source => "puppet:///files/sge/test_q.cnf",
-            alias => "q_conf";
+        "/tmp/sge/test-queue.cnf":
+            source => "puppet:///files/sge/test-queue.cnf",
+            alias => "test-queue";
     }
 
     exec {
         "/tmp/sge/test.sh 2>&1":
-            require => File[test, example, q_conf];
+            require => File[test, "test-example", "test-queue"];
     }
 }
