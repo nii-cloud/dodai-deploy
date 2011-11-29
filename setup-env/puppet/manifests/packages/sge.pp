@@ -51,6 +51,18 @@ class sge_slave::install {
             alias => "slave-preseed",
             content => template("sge/slave-preseed.conf.erb"),
             require => File["/tmp/sge"];
+
+        "/etc/gridengine/bootstrap":
+            content => template("$sge_templates_dir/etc/gridengine/bootstrap.erb"),
+            mode => 644,
+            alias => "bootstrap",
+            require => Package["gridengine-client", "gridengine-exec"];
+
+        "/etc/gridengine/configuration":
+            content => template("$sge_templates_dir/etc/gridengine/configuration.erb"),
+            mode => 644,
+            alias => "configuration",
+            require => File["bootstrap"];
     }
  
     package {
@@ -77,6 +89,18 @@ class sge_master::install {
         "/tmp/sge/slave-servers":
             alias => "slave-servers",
             content => template("sge/slave-servers.erb");
+
+        "/etc/gridengine/bootstrap":
+            content => template("$sge_templates_dir/etc/gridengine/bootstrap.erb"),
+            mode => 644,
+            alias => "bootstrap",
+            require => Package["gridengine-client", "gridengine-common", "gridengine-master", "gridengine-qmon"];
+
+        "/etc/gridengine/configuration":
+            content => template("$sge_templates_dir/etc/gridengine/configuration.erb"),
+            mode => 644,
+            alias => "configuration",
+            require => File["bootstrap"];
     }
     
     package {
