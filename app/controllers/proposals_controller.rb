@@ -75,7 +75,6 @@ class ProposalsController < ApplicationController
 
     _strip_contents_in_params
     @proposal = Proposal.new(params[:proposal])
-    p @proposal
     @proposal.state = "init" 
     if @proposal.save
       respond_to do |format|

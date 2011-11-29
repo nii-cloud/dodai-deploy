@@ -19,6 +19,5 @@ class NodeCandidatesControllerTest < ActionController::TestCase
   test "should get index" do
     get :index, :format => :json
     assert_response :success
-    assert_not_nil assigns(:candidates)
   end
 end

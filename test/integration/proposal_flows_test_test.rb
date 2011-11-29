@@ -39,23 +39,29 @@ class MessageQueueClient
   end
 end
 
+class IPSocket
+  def self.getaddress(name)
+    "10.0.0.1"
+  end
+end
+
 class ProposalFlowsTestTest < ActionDispatch::IntegrationTest
   fixtures :all
 
   def setup
-    #create node "ubuntu3"
-    @node_name = "ubuntu3"
+    #create node "some node"
+    @node_name = "some node"
     post "/nodes.json", :node => {:name => @node_name}
   end
 
   def teardown
-    #delete node "ubuntu3"
+    #delete node "some node"
     node = Node.find_by_name @node_name
     delete "/nodes/#{node.id}.json"
   end
 
   # Replace this with your real tests.
-  test "create, install, uninstall and destroy nova" do
+  test "create and install and uninstall and destroy nova" do
     software_name = "nova"
 
     #create proposal

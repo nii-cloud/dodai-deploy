@@ -15,12 +15,18 @@
 #    under the License.
 require 'test_helper'
 
+class IPSocket
+  def self.getaddress(name)
+    "10.0.0.1"
+  end
+end
+
 class NodeFlowsTest < ActionDispatch::IntegrationTest
   fixtures :all
 
   # Replace this with your real tests.
   test "add and destroy node" do
-    node_name = "ubuntu4"
+    node_name = "some node"
     
     #create node
     post "/nodes.json", :node => {:name => node_name}
