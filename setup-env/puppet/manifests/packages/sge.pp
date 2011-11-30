@@ -85,10 +85,16 @@ class sge_master::install {
             alias => "master-init",
             source => "puppet:///files/sge/master-init.sh",
             require => File["/tmp/sge"];
+
+        "/tmp/sge/allhosts-group.conf":
+            alias => "allhosts-group",
+            source => "puppet:///files/sge/allhosts-group.conf",
+            require => File["/tmp/sge"];
             
         "/tmp/sge/slave-servers":
             alias => "slave-servers",
-            content => template("sge/slave-servers.erb");
+            content => template("sge/slave-servers.erb"),
+            require => File["/tmp/sge"];
 
         "/etc/gridengine/bootstrap":
             content => template("$sge_templates_dir/etc/gridengine/bootstrap.erb"),
@@ -112,7 +118,7 @@ class sge_master::install {
     exec {
         "/tmp/sge/master-init.sh 2>&1":
             alias => "master-init",
-            require => [Package["gridengine-client", "gridengine-common", "gridengine-master", "gridengine-qmon"], File["slave-servers", "master-init"]];
+            require => [Package["gridengine-client", "gridengine-common", "gridengine-master", "gridengine-qmon"], File["slave-servers", "master-init", "allhosts-group"]];
     }
 }
 
@@ -162,8 +168,8 @@ class sge_master::test {
             source => "puppet:///files/sge/test-example.sh",
             alias => "test-example";
             
-        "/tmp/sge/test-queue.cnf":
-            content => template("sge/test-queue.cnf.erb"),
+        "/tmp/sge/test-queue.conf":
+            content => template("sge/test-queue.conf.erb"),
             alias => "test-queue";
     }
 

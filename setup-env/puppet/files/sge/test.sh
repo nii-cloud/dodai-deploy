@@ -1,15 +1,15 @@
 #!/bin/bash
 
-ME=`whoami`
+cd `dirname $0`
 
 #Add users that are allowed to access SGE
-qconf -au $ME arusers
+qconf -au `whoami` arusers
 
 #Add queue configuration
-qconf -Aq /tmp/sge/test-queue.cnf
+qconf -Aq test-queue.conf
 
 #Execute test command
-qsub -now y /tmp/sge/test-example.sh
+qsub -now y test-example.sh
 
 if [ $? != 0 ]; then
     echo "Test failed."

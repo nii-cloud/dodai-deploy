@@ -74,3 +74,9 @@ sge:
   source_component: sge_slave
   dest_component: sge_master
   software: sge
+
+sge_uninstall:
+  source_component: sge_slave
+  dest_component: sge_master
+  software: sge
+  operation: uninstall

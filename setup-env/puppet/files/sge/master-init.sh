@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd `dirname $0`
+
 fqdn=`hostname -f`
 
 #Register admin host
@@ -8,11 +10,12 @@ qconf -ah $fqdn
 #Register submit host
 qconf -as $fqdn
 
-#Register executive hosts
-for server in `cat /tmp/sge/slave-servers`
+qconf -Ahgrp allhosts-group.conf
+
+for server in `cat slave-servers`
 do
-  qconf -ah $server
   qconf -ae $server
+  qconf -aattr hostgroup hostlist $server @allhosts
   echo "Add executive host:$server"
 done
 

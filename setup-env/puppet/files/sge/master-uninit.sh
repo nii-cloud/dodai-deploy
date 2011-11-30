@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if type -P qconf
+if which qconf
 then
   #shutdown all execd daemons
   qconf -ke all
