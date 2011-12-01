@@ -66,5 +66,5 @@ do
     exit 0
   fi
 
-  sleep 30 
+  sleep 90 
 done
