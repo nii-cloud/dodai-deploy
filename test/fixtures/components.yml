@@ -69,10 +69,10 @@ task_tracker:
   software: hadoop
 
 sge_master:
-  name: sge_master
+  name: master
   software: sge
 
 sge_slave:
-  name: sge_slave
+  name: slave
   software: sge
 

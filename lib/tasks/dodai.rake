@@ -126,7 +126,7 @@ EOF
       if ENV.fetch("nodes_size", "") == ""
         puts <<EOF
 Please use dodai:ec2 | dodai:ec2:all like the following example.
-  rake nodes_size=1 dodai:ec2
+  rake dodai:ec2 nodes_size=1
 EOF
         break
       end
@@ -160,7 +160,7 @@ EOF
       if nodes_size.strip == "" or server_fqdn.strip == "" or server_dns_name.strip == ""
         puts <<EOF
 Please use task dodai:ec2:nodes like the following example.
-  rake nodes_size=1 server_fqdn=ubuntu server_dns_name=ubuntu dodai:ec2:nodes
+  rake dodai:ec2:nodes nodes_size=1 server_fqdn=ubuntu server_dns_name=ubuntu
 where ether dns name or ip address is ok for server_dns_name.
 EOF
         break
@@ -274,6 +274,33 @@ EOF
       ec2 = create_ec2_connection(access_key_id, secret_access_key, endpoint_url, region) unless ec2
       puts "Terminate instance[#{instance_id}]."
       ec2.terminate_instances [instance_id]
+    end
+  end
+
+
+  namespace :module do
+    task :create do
+      name = ENV.fetch "name", ""
+      if name == ""
+        puts <<EOF
+Usage: rake dodai:create_module name=NAME
+
+NAME: the name of module
+EOF
+        break
+      end
+  
+      path = File.dirname(__FILE__) + "/../../setup-env/puppet/modules"
+      ["mkdir #{path}/#{name}",
+       "mkdir #{path}/#{name}/files",
+       "mkdir #{path}/#{name}/lib",
+       "mkdir #{path}/#{name}/manifests",
+       "mkdir #{path}/#{name}/templates",
+       "mkdir #{path}/#{name}/tests",
+       "echo \"class #{name}{}\" > #{path}/#{name}/manifests/init.pp"].each{|cmd|
+        puts cmd
+        `#{cmd}`
+      }
     end
   end
 end

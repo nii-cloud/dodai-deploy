@@ -44,7 +44,7 @@ class NodeConfigsController < ApplicationController
         output = {:classes => [], :parameters => {}}
 
         @node_configs.each do |node_config|
-          output[:classes] << node_config.component.name + "::" + params[:operation] if node_config.node_id == node.id
+          output[:classes] << "#{proposal.software.name}::#{node_config.component.name}::#{params[:operation]}" if node_config.node_id == node.id
         end
 
         proposal.config_items.each do |config_item|

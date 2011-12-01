@@ -12,11 +12,9 @@ path = "/etc/puppet/parameters"
 parameters = YAML.load_file path
 
 url = "http://localhost:PORT/node_configs/#{hostname}/puppet.json?" + parameters.to_query
-resp = Net::HTTP.get_response(URI.parse(url))
-data = resp.body
+data = Net::HTTP.get_response(URI.parse(url)).body
 
 obj = JSON.parse data
-
 puts YAML.dump obj 
 
 exit 0 

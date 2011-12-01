@@ -26,5 +26,3 @@ File {
     mode => 777
 }
 
-import "packages/*.pp"
-

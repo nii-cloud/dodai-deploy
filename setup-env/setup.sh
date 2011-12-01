@@ -56,7 +56,7 @@ function install_puppet_server {
   sed -i -e "s/PORT/$port/g" /etc/puppet/external_nodes.rb
 
   #download kvm image
-  target_file="/etc/puppet/files/nova/image_kvm.tgz"
+  target_file="/etc/puppet/modules/nova/files/image_kvm.tgz"
   if [ ! -e $target_file ]; then
     image="ttylinux-uec-amd64-12.1_2.6.35-22_1.tar.gz"
     wget http://smoser.brickies.net/ubuntu/ttylinux-uec/$image
@@ -64,7 +64,7 @@ function install_puppet_server {
   fi
 
   version="0.20.2"
-  target_file="/etc/puppet/files/hadoop/hadoop-$version.tar.gz"
+  target_file="/etc/puppet/modules/hadoop/files/hadoop-$version.tar.gz"
   if [ ! -e $target_file ]; then
     wget http://ftp.jaist.ac.jp/pub/apache//hadoop/common/hadoop-$version/hadoop-$version.tar.gz
     mv hadoop-$version.tar.gz $target_file
