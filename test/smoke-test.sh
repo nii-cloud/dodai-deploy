@@ -46,6 +46,12 @@ do
   $cli proposal test $id
 done
 
+for id in `seq $software_count`
+do
+  echo "Test for proposal $id."
+  $cli proposal uninstall $id
+done
+
 while true 
 do
   echo "Checking result of tests..."
