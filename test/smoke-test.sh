@@ -65,7 +65,7 @@ do
     exit 1
   fi
 
-  count=`echo "$output" | grep -c "tested"`
+  count=`echo "$output" | grep -c "init"`
 
   if [ "$count" = "$software_count" ]; then
     echo "Test succeeded."
