@@ -36,25 +36,47 @@ $cli proposal create sge "sun grid engine 6.2u5"
 software_count=5
 for id in `seq $software_count` 
 do
-  echo "Install for proposal $id."
+  echo "Install proposal $id."
   $cli proposal install $id
 done
 
 for id in `seq $software_count`
 do
-  echo "Test for proposal $id."
+  echo "Test proposal $id."
   $cli proposal test $id
-done
-
-for id in `seq $software_count`
-do
-  echo "Test for proposal $id."
-  $cli proposal uninstall $id
 done
 
 while true 
 do
   echo "Checking result of tests..."
+
+  output="`$cli proposal list`"
+  echo "$output"
+
+  echo "$output" | grep "failed" > /dev/null
+  if [ $? -eq 0 ]; then
+    echo "Test failed."
+    exit 1
+  fi
+
+  count=`echo "$output" | grep -c "tested"`
+
+  if [ "$count" = "$software_count" ]; then
+    break
+  fi
+
+  sleep 120 
+done
+
+for id in `seq $software_count`
+do
+  echo "Uninstall proposal $id."
+  $cli proposal uninstall $id
+done
+
+while true
+do
+  echo "Checking result of Uninstallations..."
 
   output="`$cli proposal list`"
   echo "$output"
@@ -72,5 +94,5 @@ do
     exit 0
   fi
 
-  sleep 90 
+  sleep 20
 done

@@ -54,9 +54,6 @@ class ProposalsController < ApplicationController
       end
     end
 
-    @proposal.node_configs.sort! {|a, b| a.component.name <=> b.component.name}
-    @proposal.component_configs.sort! {|a, b| a.component.name <=> b.component.name}
-
     logger.debug @proposal.component_configs
 
     @proposal.software.software_config_defaults.each do |software_config_default|

@@ -1,0 +1,19 @@
+description: openstack glance diablo
+
+components:
+  - name: glance
+
+component_dependencies:
+
+config_item_defaults:
+  - name: swift_proxy_host
+    value: localhost 
+
+component_config_defaults:
+
+software_config_defaults:
+  - path: /etc/glance/glance-api.conf
+  - path: /etc/glance/glance-registry.conf
+
+test_components:
+  - component: glance  

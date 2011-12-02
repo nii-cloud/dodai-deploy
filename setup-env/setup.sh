@@ -48,7 +48,14 @@ function install_mcollective_client {
 
 function install_puppet_server {
   apt-get -y install puppetmaster
+
   cp -r puppet/* /etc/puppet/
+
+  for software in `ls ../softwares/`
+  do
+    mkdir -p /etc/puppet/modules/$software
+    cp -r ../softwares/$software/puppet/* /etc/puppet/modules/$software/
+  done
 
   if [ "$port" = "" ]; then
     port=3000
@@ -105,13 +112,13 @@ function install_deployment_app {
 
   RAILS_ENV=production rake db:drop
   RAILS_ENV=production rake db:migrate
-  RAILS_ENV=production rake db:fixtures:load
+  RAILS_ENV=production rake dodai:softwares:load 
   RAILS_ENV=production rake tmp:clear
   RAILS_ENV=production rake log:clear
 
   rake db:drop
   rake db:migrate
-  rake db:fixtures:load
+  rake dodai:softwares:load 
   rake tmp:clear
   rake log:clear
 

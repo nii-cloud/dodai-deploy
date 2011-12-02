@@ -1,0 +1,22 @@
+description: hadoop 0.20.2
+
+components:
+  - name: name_node
+  - name: job_tracker
+  - name: secondary_name_node
+  - name: data_node
+  - name: task_tracker
+
+component_dependencies:
+
+config_item_defaults:
+
+component_config_defaults:
+
+software_config_defaults:
+  - path: conf/core-site.xml
+  - path: conf/hdfs-site.xml
+  - path: conf/mapred-site.xml   
+
+test_components:
+  - component: name_node

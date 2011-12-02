@@ -1,0 +1,70 @@
+description: openstack nova diablo
+
+components:
+  - name: nova_api
+  - name: nova_compute
+  - name: nova_network
+  - name: nova_scheduler
+  - name: nova_volume
+  - name: nova_objectstore
+  - name: rabbitmq
+  - name: dashboard_r46
+  - name: mysql
+
+component_dependencies:
+  - source_component: nova_api
+    dest_component: mysql
+  - source_component: nova_scheduler
+    dest_component: mysql
+  - source_component: nova_objectstore
+    dest_component: mysql
+  - source_component: nova_volume
+    dest_component: mysql
+  - source_component: nova_network
+    dest_component: mysql
+  - source_component: nova_compute
+    dest_component: mysql
+  - source_component: nova_api
+    dest_component: rabbitmq
+  - source_component: nova_scheduler
+    dest_component: rabbitmq
+  - source_component: nova_objectstore
+    dest_component: rabbitmq
+  - source_component: nova_volume
+    dest_component: rabbitmq
+  - source_component: nova_network
+    dest_component: rabbitmq
+  - source_component: nova_compute
+    dest_component: rabbitmq
+  - source_component: dashboard_r46
+    dest_component: nova_api
+
+config_item_defaults:
+  - name: network_ip_range
+    value: "10.0.0.0/24"
+  - name: libvirt_type
+    value: qemu
+  - name: project
+    value: nova
+  - name: user
+    value: admin
+  - name: password
+    value: admin
+  - name: email
+    value: admin@openstack.org
+  - name: dashboard_port
+    value: 8000
+  - name: glance_host
+    value: localhost
+
+component_config_defaults:
+  - path: /etc/nova/nova-compute.conf
+    component: nova_compute
+  - path: local_settings.py
+    component: dashboard_r46
+
+software_config_defaults:
+  - path: /etc/nova/nova.conf
+
+test_components:
+  - component: nova_api

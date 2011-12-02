@@ -1,0 +1,23 @@
+description: sun grid engine 6.2u5
+
+components:
+  - name: master
+  - name: slave
+
+component_dependencies:
+  - source_component: slave
+    dest_component: master
+  - source_component: slave
+    dest_component: master
+    operation: uninstall
+
+config_item_defaults:
+
+component_config_defaults:
+
+software_config_defaults:
+  - path: /etc/gridengine/bootstrap
+  - path: /etc/gridengine/configuration
+
+test_components:
+  - component: master

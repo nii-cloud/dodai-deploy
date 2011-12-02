@@ -1,0 +1,38 @@
+--sql_connection=mysql://root:nova@<%= mysql %>/nova
+
+--s3_host=<%= nova_objectstore %>
+
+--rabbit_host=<%= rabbitmq %>
+--cc_host=<%= nova_api %>
+--ec2_url=http://<%= nova_api %>:8773/services/Cloud
+
+--daemonize=1
+
+--dhcpbridge_flagfile=/etc/nova/nova.conf
+--dhcpbridge=/usr/bin/nova-dhcpbridge
+
+--FAKE_subdomain=ec2
+
+--ca_path=/var/lib/nova/CA
+--keys_path=/var/lib/nova/keys
+--networks_path=/var/lib/nova/networks
+--instances_path=/var/lib/nova/instances
+--images_path=/var/lib/nova/images
+--buckets_path=/var/lib/nova/buckets
+
+--vlan_interface=eth0
+--flat_interface=eth0
+--volume_group=<%= nova_volume %>
+
+--network_manager=nova.network.manager.VlanManager
+
+--libvirt_type=<%= libvirt_type %>
+
+--glance_api_servers=<%= glance_host %>:9292
+
+--image_service=nova.image.glance.GlanceImageService
+
+--lock_path=/var/lib/nova/tmp
+--logdir=/var/log/nova
+--verbose
+--use_deprecated_auth=true
