@@ -76,7 +76,7 @@ done
 
 while true
 do
-  echo "Checking result of Uninstallations..."
+  echo "Checking result of uninstallations..."
 
   output="`$cli proposal list`"
   echo "$output"
