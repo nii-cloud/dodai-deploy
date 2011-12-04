@@ -7,9 +7,6 @@ sed -i -e '/127\.0\.1\.1/d' /etc/hosts
 
 cd /dodai-deploy
 
-export EC2_ACCESS_KEY="<%= access_key_id %>"
-export EC2_SECRET_KEY="<%= secret_access_key%>"
-export EC2_URL="<%= endpoint_url %>"
 cat > add_hosts.rb <<EOF
 \`sed -i -e "/10.3.4/d" /etc/hosts\`
 254.times {|index|
