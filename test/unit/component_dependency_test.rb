@@ -20,8 +20,8 @@ class ComponentDependencyTest < ActiveSupport::TestCase
   # called before every single test
   def setup
     @cd = ComponentDependency.new(:operation => 'install', :software => Software.find_by_name("nova"), 
-                                  :source_component => Component.find_by_name("nova_compute"),
-                                  :dest_component => Component.find_by_name("mysql"))
+                                  :source_component => Component.find_by_name("mysql"),
+                                  :dest_component => Component.find_by_name("rabbitmq"))
   end
 
   # called after every single test
