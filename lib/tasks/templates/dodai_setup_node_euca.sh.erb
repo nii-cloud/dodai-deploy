@@ -11,9 +11,9 @@ export EC2_ACCESS_KEY="<%= access_key_id %>"
 export EC2_SECRET_KEY="<%= secret_access_key%>"
 export EC2_URL="<%= endpoint_url %>"
 cat > add_hosts.rb <<EOF
-\`euca-describe-instances\`.split("\n")[1..-1].collect{|i| i.split(" ")[4]}.each {|ip|
-  next unless ip
-  \`sed -i -e "/#{ip}/d" /etc/hosts\`
+\`sed -i -e "/10.3.4/d" /etc/hosts\`
+254.times {|index|
+  ip = "10.3.4.#{index + 1}"
   hostname = "ip-" + ip.gsub(/\./, "-")
   \`echo "#{ip} #{hostname}" >> /etc/hosts\`
 }
