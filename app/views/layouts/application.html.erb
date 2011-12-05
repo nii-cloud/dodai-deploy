@@ -3,14 +3,15 @@
 <head>
   <title>dodai-deploy</title>
   <%= stylesheet_link_tag :all %>
-  <%= stylesheet_link_tag "layout-default-latest" %>
-  <%= stylesheet_link_tag "smoothness/jquery-ui-1.8.16.custom" %>
+  <%= stylesheet_link_tag "lib/layout-default-latest" %>
+  <%= stylesheet_link_tag "lib/smoothness/jquery-ui-1.8.16.custom" %>
   <%= stylesheet_link_tag "application" %>
-  <%= javascript_include_tag :defaults %>
-  <%= javascript_include_tag "jquery_ujs" %>
-  <%= javascript_include_tag 'jquery.layout-latest' %>
-  <%= javascript_include_tag 'jquery.timer' %>
-  <%= javascript_include_tag 'jquery-ui-1.8.16.custom.min' %>
+  <%= javascript_include_tag "lib/jquery" %>
+  <%= javascript_include_tag "lib/jquery_ujs" %>
+  <%= javascript_include_tag 'lib/jquery.layout-latest' %>
+  <%= javascript_include_tag 'lib/jquery.timer' %>
+  <%= javascript_include_tag 'lib/jquery-ui-1.8.16.custom.min' %>
+  <%= javascript_include_tag "application" %>
   <%= javascript_include_tag_if_exists "#{params[:controller]}" %>
   <%= javascript_include_tag_if_exists "#{params[:controller]}/#{params[:action]}" %>
   <%= csrf_meta_tag %>
