@@ -36,6 +36,8 @@ function uninstall_puppet_server {
   service puppetmaster stop
 
   apt-get -y --purge remove puppetmaster
+  rm -rf /etc/puppet/*
+  rm -rf /var/lib/puppet/*
 }
 
 function uninstall_deployment_app {
@@ -51,6 +53,8 @@ function uninstall_mcollective_server {
 
 function uninstall_puppet_client {
   apt-get -y --purge remove puppet
+  rm -rf /etc/puppet/*
+  rm -rf /var/lib/puppet/*
 }
 
 function uninstall_openstack_repository {
