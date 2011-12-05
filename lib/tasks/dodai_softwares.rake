@@ -2,6 +2,7 @@ namespace :dodai do
   namespace :softwares do
 
     def load_data_yml(path)
+      base_path = File.dirname path
       data = YAML.load_file path
       name = File.basename(File.dirname(path))
 
@@ -32,7 +33,7 @@ namespace :dodai do
             end
 
             if field_name =~ /_ref/
-              file = open "#{base_path}/#{name}/templates/#{field_value}"
+              file = open "#{base_path}/templates/#{field_value}"
               field_value = file.read
               file.close
 
@@ -44,7 +45,7 @@ namespace :dodai do
 
           if cls_name =~ /ConfigDefault/
               file_name = File.basename obj.path
-              file = open "#{base_path}/#{name}/templates/#{file_name}.erb"
+              file = open "#{base_path}/templates/#{file_name}.erb"
               obj.content = file.read
               file.close
           end
