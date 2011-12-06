@@ -50,7 +50,7 @@ Execute the following commands on deployment server to install necessary softwar
 
 Execute the following commands on all the nodes to install necessary softwares and modify their settings.
 
-    sudo $home/setup-env/setup.sh node $server
+    sudo $home/setup-env/setup.sh -s $server node
 
 The $server in the above command is the fqdn of the deployment server. You can confirm the fqdn with the following command.
 
@@ -99,6 +99,7 @@ An API simulator can be found at http://$deployment_server:3000/rest_apis/index.
 ### Cannot use swift as the image store of glance
 
 Swift cannot be used as the image store of glance because of the following bug. 
+
 https://bugs.launchpad.net/glance/+bug/862664
 
 ### SSH login nova instance after test of nova
