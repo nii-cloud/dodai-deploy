@@ -95,12 +95,6 @@ ActiveRecord::Schema.define(:version => 20111027025254) do
     t.datetime "updated_at"
   end
 
-  create_table "roles", :force => true do |t|
-    t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "software_config_defaults", :force => true do |t|
     t.string   "path"
     t.string   "content"
@@ -128,14 +122,6 @@ ActiveRecord::Schema.define(:version => 20111027025254) do
   create_table "test_components", :force => true do |t|
     t.integer  "software_id"
     t.integer  "component_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "users", :force => true do |t|
-    t.string   "name"
-    t.string   "password"
-    t.integer  "role_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
