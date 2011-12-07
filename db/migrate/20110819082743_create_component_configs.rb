@@ -19,7 +19,7 @@ class CreateComponentConfigs < ActiveRecord::Migration
       t.references :proposal
       t.references :component
       t.references :component_config_default
-      t.string :content
+      t.text :content
 
       t.timestamps
     end

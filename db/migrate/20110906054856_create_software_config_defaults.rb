@@ -17,7 +17,7 @@ class CreateSoftwareConfigDefaults < ActiveRecord::Migration
   def self.up
     create_table :software_config_defaults do |t|
       t.string :path
-      t.string :content
+      t.text :content
       t.references :software
 
       t.timestamps

@@ -14,7 +14,7 @@ ActiveRecord::Schema.define(:version => 20111027025254) do
 
   create_table "component_config_defaults", :force => true do |t|
     t.string   "path"
-    t.string   "content"
+    t.text     "content"
     t.integer  "component_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(:version => 20111027025254) do
     t.integer  "proposal_id"
     t.integer  "component_id"
     t.integer  "component_config_default_id"
-    t.string   "content"
+    t.text     "content"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -62,7 +62,7 @@ ActiveRecord::Schema.define(:version => 20111027025254) do
   end
 
   create_table "logs", :force => true do |t|
-    t.string   "content"
+    t.text     "content"
     t.string   "operation"
     t.integer  "proposal_id"
     t.integer  "node_id"
@@ -97,7 +97,7 @@ ActiveRecord::Schema.define(:version => 20111027025254) do
 
   create_table "software_config_defaults", :force => true do |t|
     t.string   "path"
-    t.string   "content"
+    t.text     "content"
     t.integer  "software_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -107,7 +107,7 @@ ActiveRecord::Schema.define(:version => 20111027025254) do
     t.integer  "software_config_default_id"
     t.integer  "software_id"
     t.integer  "proposal_id"
-    t.string   "content"
+    t.text     "content"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

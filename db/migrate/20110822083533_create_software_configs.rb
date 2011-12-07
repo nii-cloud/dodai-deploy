@@ -19,7 +19,7 @@ class CreateSoftwareConfigs < ActiveRecord::Migration
       t.references :software_config_default
       t.references :software
       t.references :proposal
-      t.string :content
+      t.text :content
 
       t.timestamps
     end
