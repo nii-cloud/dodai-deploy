@@ -64,6 +64,18 @@ ACTION     : Action name, such as list, show, create, destroy.
 EOF
 end
 
+def print_list(resources)
+  resource_action_names_str = resources.collect{|resource| 
+    resource["name"] + "\n    " + resource["actions"].collect{|action| action["name"]}.join("\n    ")
+  }.join("\n  ")
+
+  puts <<EOF
+Resources and corresponding actions are listed below.
+  #{resource_action_names_str}
+EOF
+
+end
+
 def validate_resource_name(resource_name, resources)
   resource_names = resources.collect{|i| i["name"]}
   unless resource_names.include? resource_name
@@ -121,7 +133,7 @@ rescue
   exit
 end
 
-if ARGV.size < 3
+if ARGV.size < 1 
   print_usage
   exit 
 end 
@@ -134,6 +146,11 @@ port=OPTS.fetch :port, 3000
 site = RestClient::Resource.new("http://#{server}:#{port}/")
 
 resources = JSON.load site["rest_apis/index.json"].get
+if resource_name == "list"
+  print_list resources
+  exit
+end
+
 exit 1 unless validate_resource_name resource_name, resources
 
 actions = resources.select{|i| i["name"] == resource_name}[0]["actions"]

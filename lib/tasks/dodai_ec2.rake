@@ -59,7 +59,14 @@ EOF
         puts <<EOF
 Usage:
 
-  rake dodai:ec2 | dodai:ec2:server | dodai:ec2:nodes | dadai:all
+  rake dodai:ec2 | dadai:ec2:all nodes_size=NODES_SIZE [server_port=SERVER_PORT]
+  rake dodai:ec2:server [server_port=SERVER_PORT]
+  rake dodai:ec2:nodes nodes_size=NODES_SIZE server_fqdn=SERVER_FQDN server_dns_name=SERVER_DNS_NAME
+
+  NODES_SIZE     : The number of dodai-deploy nodes to be started.
+  SERVER_FQDN    : The fqdn of dodai-deploy server, which can be confirmed with command "hostname -f".
+  SERVER_DNS_NAME: The IP address or dns name of dodai-deploy server.
+  SERVER_PORT    : The port number of dodai-deploy server. The default value is 3000.
 
   The following variables should be defined in environment.
     #{parameters_str}
@@ -75,11 +82,12 @@ EOF
       result
     end
 
-    def convert_private_dns_name(private_dns_name)
-      if private_dns_name =~ /^[0-9.]*$/
-        private_dns_name = "ip-" + private_dns_name.gsub(/\./, "-") 
+    def convert_to_private_dns_name(ip)
+      if ip =~ /^[0-9.]*$/ # ip is IP address.
+        private_dns_name = "ip-" + ip.gsub(/\./, "-")
+      else #ip is dns name.
+        ip 
       end
-      private_dns_name
     end
 
     parameters = [
@@ -119,13 +127,13 @@ EOF
     end
 
 
-    desc 'Set up a dodai-deploy server and nodes on ec2'
+    desc 'Set up a dodai-deploy server and nodes on ec2, and add the nodes to the server.'
     task :all do
       break unless validate_parameters parameters
 
       if ENV.fetch("nodes_size", "") == ""
         puts <<EOF
-Please use dodai:ec2 | dodai:ec2:all like the following example.
+Please specify nodes_size such as the following example.
   rake dodai:ec2 nodes_size=1
 EOF
         break
@@ -137,7 +145,7 @@ EOF
       Rake::Task["dodai:ec2:wait_nodes"].invoke
     end
 
-    desc 'Set up dodai-deploy nodes on ec2.'
+    desc 'Set up dodai-deploy nodes on ec2, and add the nodes to the dodai-deploy server specified.'
     task :nodes do 
       Rake::Task["dodai:ec2:start_nodes"].invoke
       Rake::Task["dodai:ec2:wait_nodes"].invoke
@@ -159,7 +167,7 @@ EOF
       server_dns_name = ENV.fetch "server_dns_name", "" if server_dns_name == ""
       if nodes_size.strip == "" or server_fqdn.strip == "" or server_dns_name.strip == ""
         puts <<EOF
-Please use task dodai:ec2:nodes like the following example.
+Please specify nodes_size, server_fqdn and server_dns_name such as the following example.
   rake dodai:ec2:nodes nodes_size=1 server_fqdn=ubuntu server_dns_name=ubuntu
 where ether dns name or ip address is ok for server_dns_name.
 EOF
@@ -186,7 +194,7 @@ Nodes are started.
 EOF
 
       result.each{|item|
-        private_dns_name = convert_private_dns_name item[:private_dns_name]
+        private_dns_name = convert_to_private_dns_name item[:private_dns_name]
         puts <<EOF
   instance id     : #{item[:aws_instance_id]}
   dns name        : #{item[:dns_name]}
@@ -195,7 +203,7 @@ EOF
 EOF
       }
 
-      node_private_dns_names = result.collect{|i| convert_private_dns_name i[:private_dns_name]}
+      node_private_dns_names = result.collect{|i| convert_to_private_dns_name i[:private_dns_name]}
     end
 
     task :start_server do
@@ -218,7 +226,7 @@ EOF
         sleep 30
       end
 
-      private_dns_name = convert_private_dns_name result[:private_dns_name]
+      private_dns_name = convert_to_private_dns_name result[:private_dns_name]
       puts <<EOF
 Deploy server is started.
   instance id     : #{instance_id}

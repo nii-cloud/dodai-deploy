@@ -52,8 +52,7 @@ component_config_defaults:
 #  - path: /etc/nova/nova.conf
 software_config_defaults:
 
-# The component which is installed on the node where testing will be done, 
-# such as the following example.
+# The component which is installed on a node where a test script will be executed.
 #
 #test_components:
 #  # The test will be done on the node where nova_api is installed.
