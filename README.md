@@ -23,10 +23,10 @@ The following OSes are supported.
 * ubuntu 11.10
 
 ## User guide
-Please refer to [User guide](wiki/User-guide). 
+Please refer to [User guide](/nii-cloud/dodai-deploy/wiki/User-guide). 
 
 ## Developer guide
-Please refer to [Deploper guide](wiki/Developer-guide).
+Please refer to [Deploper guide](/nii-cloud/dodai-deploy/wiki/Developer-guide).
 
 ## FAQ
-Please refer to [FAQ](wiki/FAQ).
+Please refer to [FAQ](/nii-cloud/dodai-deploy/wiki/FAQ).
