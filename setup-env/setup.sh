@@ -122,6 +122,10 @@ function install_deployment_app {
   rake tmp:clear
   rake log:clear
 
+  # install puppet vim addon.
+  apt-get install vim-puppet -y
+  vim-addons install puppet -w 
+
   cd $home_path 
 }
 
