@@ -103,6 +103,12 @@ class ProposalsController < ApplicationController
   end
 
   def update
+    if params[:format] == "json"
+      _change_params
+    end
+
+    params[:proposal].delete "software_id"
+
     @proposal = Proposal.find(params[:id])
     node_config_ids = @proposal.node_configs.collect {|node_config| node_config.id}
     new_node_config_ids = params[:proposal][:node_configs_attributes].values.collect {|value| value["id"].to_i}
@@ -200,8 +206,12 @@ class ProposalsController < ApplicationController
       return proposal_hash
     end
 
-    proposal_hash["software_id"] = Software.find_by_desc(proposal_hash["software_desc"]).id
-    proposal_hash.delete "software_desc"
+    if proposal_hash.has_key? "software_desc"
+      proposal_hash["software_id"] = Software.find_by_desc(proposal_hash["software_desc"]).id
+      proposal_hash.delete "software_desc"
+    else
+      proposal_hash["software_id"] = Proposal.find(params[:id]).software_id
+    end
 
     proposal_hash.fetch("config_items_attributes", {}).each {|index, config_item|
       config_item["config_item_default_id"] = ConfigItemDefault.find_by_name(config_item["name"]).id

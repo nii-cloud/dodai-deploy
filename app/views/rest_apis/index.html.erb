@@ -49,6 +49,9 @@
 </tr></table><br/>
 <%= raw rest_api_table "create_proposal", "/proposals.json", "post", ["proposal[name]"] %>
 
+<h4>Updating a proposal</h4>
+<%= raw rest_api_table "update_proposal", "/proposals/:id.json", "put", ["id", "proposal[name]"] %>
+
 <h4>Destroying a proposal</h4>
 <%= raw rest_api_table "destroy_proposal", "/proposals/:id.json", "delete", ["id"] %>
 
