@@ -165,6 +165,7 @@ function do_click_exec_btn(btn) {
       alert("Succeeded.");
     },
     error: function(data) {
+      $("#" + action + "_result_textarea").attr("rows", 1).val("");
       alert("Error occurred!!!");
     },
     complete: function() {
