@@ -8,13 +8,13 @@ class nova::dashboard_r46::uninstall {
     }
 
     file {
-        ["/etc/init/openstack-dashboard.conf", "/var/opt/dashboard-install.sh"]:
+        ["/etc/init/openstack-dashboard.conf", "/opt/dashboard-install.sh"]:
             ensure => absent,
             require => Service[openstack-dashboard];
     }
 
     exec {
-        "rm -rf /var/opt/osdb; exit 0":
+        "rm -rf /opt/osdb; exit 0":
             require => Service[openstack-dashboard];
     }
 }

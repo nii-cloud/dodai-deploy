@@ -1,5 +1,5 @@
 class hadoop::name_node::test {
-    $hadoop_home = "/var/opt/hadoop"
+    $hadoop_home = "/opt/hadoop"
     $version = "0.20.2"
 
     file {

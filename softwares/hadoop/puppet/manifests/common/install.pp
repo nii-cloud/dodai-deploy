@@ -1,5 +1,5 @@
 class hadoop::common::install {
-    $hadoop_home = "/var/opt/hadoop" 
+    $hadoop_home = "/opt/hadoop" 
     $version = "0.20.2"
 
     package { openjdk-6-jre: }
@@ -11,7 +11,7 @@ class hadoop::common::install {
             alias => tarball,
             require => Package[openjdk-6-jre];
 
-        "/var/opt/init.sh":
+        "/opt/init.sh":
             source => "puppet:///modules/hadoop/init.sh",
             alias => init,
             require => File[tarball];
@@ -42,9 +42,9 @@ class hadoop::common::install {
 
 
     exec {
-        "/var/opt/init.sh 2>&1":
+        "/opt/init.sh 2>&1":
             alias => "init",
-            cwd => "/var/opt",
+            cwd => "/opt",
             require => File[init]
     }
 }

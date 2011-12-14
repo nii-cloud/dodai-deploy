@@ -1,12 +1,12 @@
 class nova::dashboard_r46::install {
-    $dashboard_home = "/var/opt/osdb/openstack-dashboard"
+    $dashboard_home = "/opt/osdb/openstack-dashboard"
 
     package {
         [bzr, python-virtualenv]:
     }
 
     file {
-        "/var/opt/dashboard-install.sh":
+        "/opt/dashboard-install.sh":
             alias => "dashboard-install",
             source => "puppet:///modules/nova/dashboard-install.sh",
             require => Package[bzr, python-virtualenv];
@@ -38,7 +38,7 @@ class nova::dashboard_r46::install {
     }
 
     exec {
-        "/var/opt/dashboard-install.sh 2>&1":
+        "/opt/dashboard-install.sh 2>&1":
             require => File["dashboard-install"],
             timeout => 1800,
             alias => "dashboard-install";

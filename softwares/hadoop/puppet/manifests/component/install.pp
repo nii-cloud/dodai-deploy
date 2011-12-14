@@ -1,5 +1,5 @@
 define hadoop::component::install() {
-    $hadoop_home = "/var/opt/hadoop"
+    $hadoop_home = "/opt/hadoop"
 
     include hadoop::common::install
 
