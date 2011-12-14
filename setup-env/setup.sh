@@ -22,14 +22,13 @@ function install_activemq_server {
   wget "http://ftp.riken.jp/net/apache//activemq/apache-activemq/5.4.3/$activemq-bin.tar.gz"
   tar xzvf $activemq-bin.tar.gz > /dev/null
   rm $activemq-bin.tar.gz
-  mv $activemq ~/
-  cp activemq/activemq.xml ~/$activemq/conf/
+  mv $activemq /opt/
+  cp activemq/activemq.xml /opt/$activemq/conf/
 
-  #start activemq-server
-  cd ~/$activemq
-  bin/activemq start
+  ln -sf /opt/$activemq/bin/activemq /etc/init.d/
 
-  cd $home_path
+  service activemq start
+  sysv-rc-conf activemq on
 }
 
 function install_mcollective_client {
@@ -151,7 +150,6 @@ function install_mcollective_server {
 
   service mcollective restart
 
-  apt-get install sysv-rc-conf -y
   sysv-rc-conf mcollective on
 }
 
@@ -182,9 +180,13 @@ function install_memcached {
   apt-get -y install memcached
 }
 
+function pre_install {
+  apt-get update
+  apt-get install sysv-rc-conf -y
+}
 
 function install_server {
-  apt-get update
+  pre_install
 
   soft="$1"
   if [ "$soft" != "" ]; then
@@ -198,7 +200,7 @@ function install_server {
 }
 
 function install_node {
-  apt-get update
+  pre_install
 
   soft="$1"
   if [ "$soft" != "" ]; then

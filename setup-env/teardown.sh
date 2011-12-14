@@ -19,12 +19,10 @@ function uninstall_activemq_server {
   activemq="apache-activemq-5.4.3"
 
   #stop activemq-server
-  cd ~/$activemq
-  bin/activemq stop
+  service activemq stop
 
-  cd $home_path
-
-  rm -rf ~/$activemq
+  rm -rf /opt/$activemq
+  rm -f /etc/init.d/activemq
 }
 
 function uninstall_mcollective_client {
