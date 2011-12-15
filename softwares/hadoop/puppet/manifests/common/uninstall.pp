@@ -3,7 +3,7 @@ class hadoop::common::uninstall {
     $version = "0.20.2"
 
     exec {
-        "rm -rf /tmp/hadoop-*; rm -f /opt/init.sh; rm -rf $hadoop_home; rm -rf $hadoop_home-$version; rm -f $hadoop_home-$version.tar.gz":
+        "rm -rf /tmp/hadoop-*; rm -f /opt/init.sh; rm -rf $hadoop_home; rm -rf $hadoop_home-$version; rm -f $hadoop_home-$version.tar.gz; rm -rf /etc/init.d/hadoop-*;":
             alias => "rm_hadoop_home"
     }
 }

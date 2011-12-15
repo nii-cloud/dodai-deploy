@@ -38,6 +38,31 @@ class hadoop::common::install {
             source => "puppet:///modules/hadoop/hadoop-env.sh",
             alias => "hadoop-env",
             require => Exec[init];
+
+        "/etc/init.d/hadoop-namenode":
+            source => "puppet:///modules/hadoop/hadoop-namenode",
+            alias => "hadoop-namenode",
+            require => Exec[init];
+
+        "/etc/init.d/hadoop-datanode":
+            source => "puppet:///modules/hadoop/hadoop-datanode",
+            alias => "hadoop-datanode",
+            require => Exec[init];
+
+        "/etc/init.d/hadoop-secondarynamenode":
+            source => "puppet:///modules/hadoop/hadoop-secondarynamenode",
+            alias => "hadoop-secondarynamenode",
+            require => Exec[init];
+
+        "/etc/init.d/hadoop-jobtracker":
+            source => "puppet:///modules/hadoop/hadoop-jobtracker",
+            alias => "hadoop-jobtracker",
+            require => Exec[init];
+
+        "/etc/init.d/hadoop-tasktracker":
+            source => "puppet:///modules/hadoop/hadoop-tasktracker",
+            alias => "hadoop-tasktracker",
+            require => Exec[init];
     }
 
 

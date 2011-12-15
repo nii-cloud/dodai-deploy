@@ -1,0 +1,127 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          hadoop-0.20.2-tasktracker
+# Required-Start:    $network $local_fs
+# Required-Stop:
+# Should-Start:      $named
+# Should-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Hadoop tasktracker daemon
+### END INIT INFO
+HADOOP_HOME=/opt/hadoop
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON_SCRIPT=$HADOOP_HOME/bin/hadoop-daemon.sh
+NAME=hadoop--tasktracker
+DESC="Hadoop tasktracker daemon"
+if [ "$HADOOP_PID_DIR" = "" ]; then
+  HADOOP_PID_DIR=/tmp
+fi
+
+if [ "$HADOOP_IDENT_STRING" = "" ]; then
+  HADOOP_IDENT_STRING=root
+fi
+
+PID_FILE=$HADOOP_PID_DIR/hadoop-$HADOOP_IDENT_STRING-tasktracker.pid
+SLEEP_TIME=5
+
+test -x $DAEMON_SCRIPT || exit 1
+
+
+DODTIME=3                   # Time to wait for the server to die, in seconds
+                            # If this value is set too low you might not
+                            # let some servers to die gracefully and
+                            # 'restart' will not work
+
+# Checks if the given pid represents a live process.
+# Returns 0 if the pid is a live process, 1 otherwise
+hadoop_is_process_alive() {
+  local pid="$1" 
+
+  ps -fp $pid | grep $pid | grep tasktracker > /dev/null 2>&1
+}
+
+# Check if the process associated to a pidfile is running.
+# Return 0 if the pidfile exists and the process is running, 1 otherwise
+hadoop_check_pidfile() {
+  local pidfile="$1" # IN
+  local pid
+  pid=`cat "$pidfile" 2>/dev/null`
+  if [ "$pid" = '' ]; then
+    # The file probably does not exist or is empty. 
+    return 1
+  fi
+  
+  set -- $pid
+  pid="$1"
+
+  hadoop_is_process_alive $pid
+}
+
+start() {
+    USER=root $HADOOP_HOME/bin/hadoop-daemon.sh start tasktracker $DAEMON_FLAGS
+
+    if [ "tasktracker" = "datanode" ]; then
+      # Some processes are slow to start
+      sleep $SLEEP_TIME
+    fi
+
+}
+stop() {
+    USER=root $HADOOP_HOME/bin/hadoop-daemon.sh stop tasktracker
+    if [ "tasktracker" = "datanode" ]; then
+      # Some processes are slow to stop
+      sleep $SLEEP_TIME
+    fi
+}
+
+hadoop_service() {
+    case "$1" in
+         start)
+            echo -n "Starting $DESC: "
+            start
+
+            if hadoop_check_pidfile $PID_FILE ; then
+                echo "$NAME."
+            else
+                echo "ERROR. Could not start $DESC"
+                exit 1
+            fi
+            ;;
+        stop)
+            echo -n "Stopping $DESC: "
+            stop
+
+            if hadoop_check_pidfile $PID_FILE ; then
+                echo "ERROR. Could not stop $DESC"
+                exit 1
+            else
+                echo "$NAME."
+            fi
+            ;;
+        restart)
+            echo -n "Restarting $DESC: "
+            stop
+            [ -n "$DODTIME" ] && sleep $DODTIME
+            $0 start
+            ;;
+        status)
+            echo -n "$NAME is "
+            if hadoop_check_pidfile $PID_FILE ;  then
+                echo "running"
+            else
+                echo "not running."
+                exit 1
+            fi
+            ;;
+        *)
+            N=/etc/init.d/$NAME
+            echo "Usage: $N {start|stop|restart|status}" >&2
+            exit 1
+            ;;
+    esac
+}
+
+hadoop_service "$1"
+
+exit 0

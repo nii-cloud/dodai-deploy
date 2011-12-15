@@ -5,12 +5,12 @@ define hadoop::component::install() {
 
     if $title == "namenode" {
         exec {
-            "echo Y | $hadoop_home/bin/hadoop namenode -format; $hadoop_home/bin/hadoop-daemon.sh --config $hadoop_home/conf start $title 2>&1":
+            "echo Y | $hadoop_home/bin/hadoop namenode -format; USER=root $hadoop_home/bin/hadoop-daemon.sh --config $hadoop_home/conf start $title 2>&1; sudo sysv-rc-conf hadoop-$title on":
                 require => File["core-site", "hdfs-site", "mapred-site", "hadoop-env"]
         }
     } else {
         exec {
-            "$hadoop_home/bin/hadoop-daemon.sh --config $hadoop_home/conf start $title 2>&1":
+            "echo Y | USER=root $hadoop_home/bin/hadoop-daemon.sh --config $hadoop_home/conf start $title 2>&1; sudo sysv-rc-conf hadoop-$title on":
                  require => File["core-site", "hdfs-site", "mapred-site", "hadoop-env"],
         }
     }
