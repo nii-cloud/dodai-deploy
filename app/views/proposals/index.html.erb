@@ -22,7 +22,7 @@
     <td><span class="state_span"><%= proposal.state %></span>&nbsp;<img id="processing_img_<%= proposal.id %>" class="processing_img" src="/images/processing.gif"></img></td>
     <td><%= link_to 'Show', proposal %></td>
     <td><%= link_to 'Edit', edit_proposal_path(proposal) %></td>
-    <td><%= link_to_unless ["installed", "tested", "test failed"].include?(proposal.state), 'Destroy', proposal, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td><%= link_to_unless ["installed", "tested", "test failed", "installing", "testing", "uninstalling", "waiting"].include?(proposal.state), 'Destroy', proposal, :confirm => 'Are you sure?', :method => :delete %></td>
     <td><%= link_to_if ["init", "install failed"].include?(proposal.state), 'Install', install_proposal_path(proposal) %></td>
     <td><%= link_to_if ["installed", "tested", "test failed", "install failed", "uninstall failed"].include?(proposal.state), 'Uninstall', uninstall_proposal_path(proposal) %></td>
     <td><%= link_to_if ["installed", "test failed"].include?(proposal.state), 'Test', test_proposal_path(proposal) %></td>

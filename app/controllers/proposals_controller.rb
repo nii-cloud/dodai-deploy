@@ -137,11 +137,18 @@ class ProposalsController < ApplicationController
 
   def destroy
     @proposal = Proposal.find(params[:id])
-    if @proposal.destroy
-      Utils.delete_template_from_puppet params[:id]
+    if ["installed", "tested", "test failed", "installing", "testing", "uninstalling", "waiting"].include?(@proposal.state)
       respond_to do |format|
         format.html { redirect_to(proposals_url) }
-        format.json { render :json => "".as_json }
+        format.json { render :json => {:errors => "installed proposal can't be destroyed"}.as_json }
+      end
+    else
+      if @proposal.destroy
+        Utils.delete_template_from_puppet params[:id]
+        respond_to do |format|
+          format.html { redirect_to(proposals_url) }
+          format.json { render :json => "".as_json }
+        end
       end
     end
   end
