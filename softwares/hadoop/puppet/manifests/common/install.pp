@@ -40,6 +40,9 @@ class hadoop::common::install {
             require => Exec[init];
     }
 
+    package {
+        sysv-rc-conf:
+    }
 
     exec {
         "/opt/init.sh 2>&1":

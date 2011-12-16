@@ -14,22 +14,17 @@ define hadoop::component::install() {
     file {
         "/etc/init.d/hadoop-$title":
             content => template("hadoop/component.erb"),
-            mode => 0644,
-            alias => "hadoop-init";
+            alias => "hadoop-init-$title";
     }
 
     service {
         "hadoop-$title":
             ensure => running,
-            require => File["hadoop-init", "core-site", "hdfs-site", "mapred-site", "hadoop-env"];
-    }
-
-    package {
-        sysv-rc-conf:
+            require => File["hadoop-init-$title", "core-site", "hdfs-site", "mapred-site", "hadoop-env"];
     }
 
     exec {
         "sysv-rc-conf hadoop-$title on":
-            require => [File["hadoop-init"], Package[sysv-rc-conf]];
+            require => [File["hadoop-init-$title"], Package[sysv-rc-conf]];
     }
 }
