@@ -52,6 +52,17 @@ class NodesController < ApplicationController
 
   def destroy
     @node = Node.find(params[:id])
+    if @node.node_configs.find(:first)
+      @_errorMsg = "Added proposals must be destroyed first."
+      respond_to do |format|
+        format.html { 
+          flash[:_errorMsg] = @_errorMsg
+          redirect_to (nodes_url)
+        }
+        format.json { render :json => JSON.pretty_generate({:errors => @_errorMsg}.as_json) }
+      end
+      return
+    end 
     if @node.destroy
       respond_to do |format|
         format.html { redirect_to(nodes_url) }
