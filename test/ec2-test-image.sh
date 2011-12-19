@@ -18,11 +18,16 @@ function test_image {
   instance_ids=(`echo "$output" | grep "instance id" | awk '{print $4}'` )
 
   test/smoke-test.sh $dns_name $port
+  result=$?
 
   for instance_id in ${instance_ids[@]}
   do
     rake dodai:ec2:terminate instance=$instance_id
   done
+  if [ $result != 0 ]; then
+    echo "Test failed."
+    exit 1
+  fi
 
   echo "Test of image $1 finished."
   echo ""
