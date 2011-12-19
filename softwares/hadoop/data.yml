@@ -8,6 +8,14 @@ components:
   - name: task_tracker
 
 component_dependencies:
+  - source_component: job_tracker
+    dest_component: name_node
+  - source_component: secondary_name_node
+    dest_component: name_node
+  - source_component: data_node
+    dest_component: name_node
+  - source_component: task_tracker
+    dest_component: name_node
 
 config_item_defaults:
 
