@@ -21,6 +21,11 @@ class LogsController < ApplicationController
     else
       @logs = Log.all
     end
+
+    respond_to do |format|
+      format.html
+      format.json { render :json => JSON.pretty_generate(@logs.as_json) }
+    end
   end
 end
 

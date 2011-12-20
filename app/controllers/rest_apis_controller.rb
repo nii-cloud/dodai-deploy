@@ -21,13 +21,13 @@ class RestApisController < ApplicationController
       format.json {
         apis = [{
             :name => "software", 
-            :actions => [{:name => "list"}, {:name => "show"}]
+            :actions => [{:name => "list"}, {:name => "show", :parameters => ["id"]}]
           }, {
             :name => "component", 
-            :actions => [{:name => "list"}, {:name => "show"}]
+            :actions => [{:name => "list"}, {:name => "show", :parameters => ["id"]}]
           }, {
             :name => "node",
-            :actions => [{:name => "list"}, {:name => "create", :parameters => ["name"]}, {:name => "destroy"}]
+            :actions => [{:name => "list"}, {:name => "create", :parameters => ["name"]}, {:name => "destroy", :parameters => ["id"]}]
           }, {
             :name => "node_candidate",
             :actions => [{:name => "list"}]
@@ -36,13 +36,16 @@ class RestApisController < ApplicationController
             :actions => [
               {:name => "list"}, 
               {:name => "create", :parameters => ["name", "software_desc"]}, 
-              {:name => "destroy"},
-              {:name => "show"},
-              {:name => "install"},
-              {:name => "uninstall"},
-              {:name => "test"}
+              {:name => "destroy", :parameters => ["id"]},
+              {:name => "show", :parameters => ["id"]},
+              {:name => "install", :parameters => ["id"]},
+              {:name => "uninstall", :parameters => ["id"]},
+              {:name => "test", :parameters => ["id"]}
             ]
-          },
+          }, {
+            :name => "log",
+            :actions => [{:name => "list"}]
+          }
         ]
         render :json => JSON.pretty_generate(apis.as_json) 
       }

@@ -25,6 +25,7 @@ function test_image {
     rake dodai:ec2:terminate instance=$instance_id
   done
   if [ $result != 0 ]; then
+    script/cli.rb --port=$port $dns_name log list
     echo "Test failed."
     exit 1
   fi

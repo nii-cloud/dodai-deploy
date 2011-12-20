@@ -29,7 +29,11 @@ def get_url_and_method_and_data(resource, action, params)
   end
 
   params.delete "id"
-  data = params.collect{|param| "#{resource}[#{URI.escape(param)}]=#{URI.escape(ARGV.shift)}"}.join "&"
+  if resource == "log"
+    data = params.collect{|param| "#{URI.escape(param)}=#{URI.escape(ARGV.shift)}"}.join "&"
+  else
+    data = params.collect{|param| "#{resource}[#{URI.escape(param)}]=#{URI.escape(ARGV.shift)}"}.join "&"
+  end
   [url, method, data]
 end
 
@@ -54,7 +58,9 @@ end
 
 def print_usage
   puts <<EOF
-Usage: ruby dodai_deploy_cli.rb [--verbose] [--port=PORT_NUMBER] SERVER RESOURCE ACTION [PARAM1 PARAM2 ...]
+Usage: ruby cli.rb [--verbose] [--port=PORT_NUMBER] SERVER RESOURCE ACTION [PARAM1 PARAM2 ...]
+       OR
+       ruby cli.rb SERVER list             -- List available resources and actions.
 
 SERVER     : IP address or dns name of deploy server.
 PORT_NUMBER: Port number of the rails server in deploy server. 
@@ -66,7 +72,9 @@ end
 
 def print_list(resources)
   resource_action_names_str = resources.collect{|resource| 
-    resource["name"] + "\n    " + resource["actions"].collect{|action| action["name"]}.join("\n    ")
+    resource["name"] + "\n    " + resource["actions"].collect{|action| 
+      action["name"] + " " + action.fetch("parameters", []).join(" ")
+    }.join("\n    ")
   }.join("\n  ")
 
   puts <<EOF
@@ -92,9 +100,9 @@ EOF
 end
 
 def validate_action_name(action_name, actions)
-  action_names = actions.collect{|i| i["name"]}
+  action_names = actions.collect{|i| i["name"] }
   unless action_names.include? action_name
-    action_names_str = action_names.join "\n  "
+    action_names_str = actions.collect{|i| i["name"] + " " + i.fetch("parameters", []).join(" ")}.join "\n  "
     puts <<EOF
 Action name wasn't provided or was wrong. Please provide a name of action. The following actions could be used.
   #{action_names_str}
@@ -107,7 +115,6 @@ EOF
 end
 
 def validate_parameters action_name, params
-  params.insert(0, "id") unless ["list", "create"].include? action_name
   params_str = params.join "\n  "
   if params.size > ARGV.size
     puts <<EOF
@@ -156,7 +163,7 @@ exit 1 unless validate_resource_name resource_name, resources
 actions = resources.select{|i| i["name"] == resource_name}[0]["actions"]
 exit 1 unless validate_action_name action_name, actions
 
-action = actions.select{|i| i["name"] == action_name}[0]
+action = actions.select{|i| i["name"] == action_name }[0]
 params = action.fetch "parameters", []
 exit 1 unless validate_parameters action_name, params
 
