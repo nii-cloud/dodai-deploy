@@ -15,6 +15,12 @@
 #    under the License.
 require 'test_helper'
 
+class McUtils
+  def self.find_hosts
+    return ["localhost"]
+  end
+end
+
 class NodeCandidatesControllerTest < ActionController::TestCase
   test "should get index" do
     get :index, :format => :json

@@ -15,6 +15,30 @@
 #    under the License.
 require 'test_helper'
 
+class MessageQueueClient
+  def initialize
+  end
+
+  def subscribe
+  end
+
+  def publish(msg_obj)
+    proposal_id = msg_obj[:params][:proposal_id]
+    operation = msg_obj[:operation]
+
+    proposal = Proposal.find proposal_id
+    proposal.state = "#{operation}ed"
+    proposal.state = "init" if operation == "uninstall"
+    proposal.save
+  end
+
+  def unsubscribe
+  end
+
+  def close
+  end
+end
+
 class ProposalsControllerTest < ActionController::TestCase
   # called before every single test
   def setup
@@ -196,8 +220,7 @@ class ProposalsControllerTest < ActionController::TestCase
 
     get :install, :id => @proposal.id
     assert_redirected_to proposals_path
-    assert_not_nil WaitingProposal.find(@proposal.id)
-    assert_equal :install.id2name, WaitingProposal.find(@proposal.id).operation
+    assert_equal "installed", Proposal.find(@proposal.id).state
 
   end
 
@@ -205,8 +228,7 @@ class ProposalsControllerTest < ActionController::TestCase
 
     get :uninstall, :id => @proposal.id
     assert_redirected_to proposals_path
-    assert_not_nil WaitingProposal.find(@proposal.id)
-    assert_equal :uninstall.id2name, WaitingProposal.find(@proposal.id).operation
+    assert_equal "init", Proposal.find(@proposal.id).state
 
   end
 
@@ -214,8 +236,7 @@ class ProposalsControllerTest < ActionController::TestCase
 
     get :test, :id => @proposal.id
     assert_redirected_to proposals_path
-    assert_not_nil WaitingProposal.find(@proposal.id)
-    assert_equal :test.id2name, WaitingProposal.find(@proposal.id).operation
+    assert_equal "tested", Proposal.find(@proposal.id).state
 
   end
 

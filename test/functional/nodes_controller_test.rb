@@ -15,6 +15,18 @@
 #    under the License.
 require 'test_helper'
 
+class McUtils
+  def self.find_hosts
+    return ["localhost"]
+  end
+end
+
+class IPSocket
+  def self.getaddress(name)
+    "10.0.0.1"
+  end
+end
+
 class NodesControllerTest < ActionController::TestCase
   # called before every single test
   def setup
