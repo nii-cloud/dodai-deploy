@@ -6,7 +6,7 @@ gem 'rails', '3.0.9'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'sqlite3'
-gem 'stomp'
+gem 'stomp', '1.1.10'
 gem 'json'
 gem 'jquery-rails', '>= 1.0.12'
 gem 'ruby-debug'
