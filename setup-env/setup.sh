@@ -37,7 +37,7 @@ function install_mcollective_client {
   dpkg -i mcollective*.deb
   rm -f mcollective*.deb
 
-  gem install stomp 
+  gem install stomp -v 1.1.10 
 
   cp mcollective/client.cfg /etc/mcollective/
   host=`hostname -f`
@@ -134,7 +134,7 @@ function install_mcollective_server {
   dpkg -i mcollective*.deb
   rm -f mcollective*.deb
 
-  gem install stomp
+  gem install stomp -v 1.1.10
 
   hostname=`hostname -f`
 
