@@ -12,6 +12,7 @@ bin/hadoop fs -copyFromLocal inputs inputs
 ret=$?
 if [ $ret != 0 ]; then
   echo "Cannot copy folder."
+  bin/hadoop fs -rmr inputs
   rm -rf inputs
   exit $ret
 fi
