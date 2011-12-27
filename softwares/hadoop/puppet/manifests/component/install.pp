@@ -1,11 +1,9 @@
 define hadoop::component::install() {
-    $hadoop_home = "/opt/hadoop"
-
     include hadoop::common::install
 
     if $title == "namenode" {
         exec {
-            "echo Y | $hadoop_home/bin/hadoop namenode -format":
+            "echo Y | $hadoop::home/bin/hadoop namenode -format":
                 require => File["core-site", "hdfs-site", "mapred-site", "hadoop-env"],
                 notify => Service["hadoop-$title"];
         }
