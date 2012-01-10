@@ -2,7 +2,7 @@ export ec2_access_key_id=
 export ec2_secret_access_key=
 export ec2_key_pair=
 export ec2_security_group=default
-export ec2_image_id=ami-fa9723fb
+export ec2_image_id=ami-7c90277d
 export ec2_instance_type=m1.large
 
 #The following variables are optional.
