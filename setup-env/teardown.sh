@@ -86,8 +86,6 @@ function uninstall_server {
 }
 
 function uninstall_node {
-  apt-get update
-
   soft="$1"
   if [ "$soft" != "" ]; then
     uninstall $soft
@@ -103,12 +101,35 @@ function print_usage {
   name=`basename $0`
   echo "Usage: $name TYPE
 
-TYPE: server or node
+TYPE: 
+  The type of deploy host. It is server or node.
+
+OPTIONS
+  -x: The http proxy, such as http://proxy.domain:8080.
 "
 }
 
 server_softwares=(activemq_server mcollective_client puppet_server memcached deployment_app ruby_rubygems)
 node_softwares=(mcollective_server puppet_client openstack_repository sge_repository ruby_rubygems)
+
+while getopts "x:": opt
+do
+  case $opt in
+    \?) OPT_ERROR=1; break;;
+    x) proxy="$OPTARG";;
+  esac
+done
+
+if [ $OPT_ERROR ]; then      # option error
+  echo >&2
+  print_usage
+  exit 1
+fi
+shift $(( $OPTIND - 1 ))
+
+if [ "$proxy" != "" ]; then
+  export http_proxy="$proxy"
+fi
 
 type=$1
 if [ "$type" = "server" ]; then

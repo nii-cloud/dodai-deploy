@@ -76,6 +76,9 @@ function install_puppet_server {
     mv hadoop-$version.tar.gz $target_file
   fi
 
+  #change web server from webrick to mongrel
+  sed -i -e "s/^SERVERTYPE.*$/SERVERTYPE=mongrel/" /etc/default/puppetmaster
+
   service puppetmaster stop
   sleep 5
   service puppetmaster start
@@ -226,6 +229,7 @@ TYPE:
 OPTIONS:
   -s: The fqdn of deploy server. It should be specified if the TYPE is node.
   -p: The port number of the rails server on deploy server. It will be used only if the TYPE is server and SOFTWARE is puppet_server.
+  -x: The http proxy, such as http://proxy.domain:8080.
 
 SOFTWARE:
   The name of the software which will be installed.
@@ -247,12 +251,13 @@ For examples,
 server_softwares=(ruby_rubygems activemq_server mcollective_client puppet_server memcached deployment_app)
 node_softwares=(ruby_rubygems mcollective_server puppet_client openstack_repository sge_repository)
 
-while getopts "s:p:": opt
+while getopts "s:p:x:": opt
 do
   case $opt in
     \?) OPT_ERROR=1; break;;
     s) server="$OPTARG";;
     p) port="$OPTARG";;
+    x) proxy="$OPTARG";;
   esac
 done
 
@@ -262,6 +267,12 @@ if [ $OPT_ERROR ]; then      # option error
   exit 1
 fi
 shift $(( $OPTIND - 1 ))
+
+if [ "$proxy" != "" ]; then
+  export http_proxy="$proxy"
+  echo "Acquire::http::Proxy \"$proxy\";" > /etc/apt/apt.conf.d/proxy
+  echo "http_proxy=$proxy" > ~/.wgetrc
+fi
 
 type=$1
 if [ "$type" = "server" ]; then
