@@ -45,6 +45,7 @@ EOF
   namespace :ec2 do
     def get_erb_template_from_file_content(path)
       path = File.dirname(__FILE__) + "/templates/" + path if Pathname.new(path).relative?
+      puts path
       file = open path
       template = ERB.new file.read
       file.close
@@ -175,6 +176,7 @@ EOF
       end
 
       path = ENV.fetch "dodai_setup_node_script_file", "dodai_setup_node.sh.erb"
+      path = "dodai_setup_node.sh.erb" if path == ""
       user_data = get_erb_template_from_file_content(path).result(binding)
       result = ec2.run_instances image_id, nodes_size, nodes_size, [security_group], key_pair, user_data, nil, instance_type
       instance_ids = result.collect{|i| i[:aws_instance_id]}
@@ -213,6 +215,7 @@ EOF
 
       server_port = ENV.fetch "server_port", "3000"
       path = ENV.fetch "dodai_setup_server_script_file", "dodai_setup_server.sh.erb"
+      path = "dodai_setup_server.sh.erb" if path == ""
       user_data = get_erb_template_from_file_content(path).result(binding)
       result = ec2.run_instances image_id, 1, 1, [security_group], key_pair, user_data, nil, instance_type
       instance_id = result[0][:aws_instance_id]
