@@ -76,9 +76,6 @@ function install_puppet_server {
     mv hadoop-$version.tar.gz $target_file
   fi
 
-  #change web server from webrick to mongrel
-  sed -i -e "s/^SERVERTYPE.*$/SERVERTYPE=mongrel/" /etc/default/puppetmaster
-
   service puppetmaster stop
   sleep 5
   service puppetmaster start
