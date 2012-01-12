@@ -133,9 +133,9 @@ fi
 
 type=$1
 if [ "$type" = "server" ]; then
-  uninstall_server
+  uninstall_server "$2"
 elif [ "$type" = "node" ]; then
-  uninstall_node
+  uninstall_node "$2"
 else
   print_usage
 fi
