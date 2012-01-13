@@ -99,10 +99,12 @@ EOF
 
     desc "Load settings of softwares into a database."
     task :load_all => :environment do
+      proxy = ENV.fetch "proxy_server", ""
+
       base_path = File.dirname(__FILE__) + "/../../softwares"
       path_pattern = base_path + "/*"
       Dir::glob(path_pattern).each {|path|
-        load_puppet path + "/puppet", File.basename(path)
+        load_puppet path + "/puppet", File.basename(path), proxy
         load_data_yml path + "/data.yml"
       }
     end
