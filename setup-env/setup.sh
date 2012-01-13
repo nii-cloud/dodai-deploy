@@ -72,8 +72,16 @@ function install_puppet_server {
   version="0.20.2"
   target_file="/etc/puppet/modules/hadoop/files/hadoop-$version.tar.gz"
   if [ ! -e $target_file ]; then
-    wget http://ftp.jaist.ac.jp/pub/apache//hadoop/common/hadoop-$version/hadoop-$version.tar.gz
+    wget http://ftp.jaist.ac.jp/pub/apache/hadoop/common/hadoop-$version/hadoop-$version.tar.gz
     mv hadoop-$version.tar.gz $target_file
+  fi
+
+  target_file="/etc/puppet/modules/nova/files/osdb.tgz"
+  if [ ! -e $target_file ]; then
+    apt-get -y install bzr
+    bzr branch lp:horizon/diablo -r 46 osdb
+    tar cvzf osdb.tgz osdb
+    rm -rf osdb
   fi
 
   service puppetmaster stop
@@ -120,7 +128,7 @@ function install_deployment_app {
 
   rake db:drop
   rake db:migrate
-  rake dodai:softwares:load_all 
+  rake dodai:softwares:load_all
   rake tmp:clear
   rake log:clear
 

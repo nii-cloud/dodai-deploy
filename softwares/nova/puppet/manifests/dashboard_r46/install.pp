@@ -2,14 +2,18 @@ class nova::dashboard_r46::install {
     $dashboard_home = "/opt/osdb/openstack-dashboard"
 
     package {
-        [bzr, python-virtualenv]:
+        python-virtualenv:
     }
 
     file {
+        "/opt/osdb.tgz":
+            alias => osdb,
+            source => "puppet:///modules/nova/osdb.tgz";
+
         "/opt/dashboard-install.sh":
             alias => "dashboard-install",
             source => "puppet:///modules/nova/dashboard-install.sh",
-            require => Package[bzr, python-virtualenv];
+            require => [Package[python-virtualenv], File[osdb]];
 
         "$dashboard_home/dashboard-init.sh":
             alias => "dashboard-init",
