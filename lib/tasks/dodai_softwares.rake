@@ -62,13 +62,14 @@ namespace :dodai do
       `cp -r #{path}/* /etc/puppet/modules/#{software_name}`
       current_path = File.dirname(__FILE__)
       puppet_init = "#{current_path}/scripts/#{software_name}-puppet-init.sh"
+      puts puppet_init
 
       return unless File.exist? puppet_init
 
       if proxy == ""
-        puts `#{puppet-init} 2>&1`
+        puts `#{puppet_init} 2>&1`
       else
-        puts `https_proxy=#{proxy} http_proxy=#{proxy} #{puppet-init} 2>&1`
+        puts `https_proxy=#{proxy} http_proxy=#{proxy} #{puppet_init} 2>&1`
       end
     end
 
