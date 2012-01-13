@@ -61,10 +61,14 @@ namespace :dodai do
     def load_puppet(path, software_name, proxy)
       `cp -r #{path}/* /etc/puppet/modules/#{software_name}`
       current_path = File.dirname(__FILE__)
+      puppet_init = "#{current_path}/scripts/#{software_name}-puppet-init.sh"
+
+      return unless File.exist? puppet_init
+
       if proxy == ""
-        `#{current_path}/scripts/#{software_name}-puppet-init.sh"`
+        puts `#{puppet-init} 2>&1`
       else
-        `https_proxy=#{proxy} http_proxy=#{proxy} #{current_path}/scripts/#{software_name}-puppet-init.sh`
+        puts `https_proxy=#{proxy} http_proxy=#{proxy} #{puppet-init} 2>&1`
       end
     end
 
