@@ -64,7 +64,7 @@ namespace :dodai do
       if proxy == ""
         `#{current_path}/scripts/#{software_name}-puppet-init.sh"`
       else
-        `https_proxy=#{proxy} http_proxy=#{proxy} #{current_path}/scripts/#{software_name}-puppet-init.sh"`
+        `https_proxy=#{proxy} http_proxy=#{proxy} #{current_path}/scripts/#{software_name}-puppet-init.sh`
       end
     end
 
