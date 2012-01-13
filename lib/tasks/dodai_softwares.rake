@@ -58,13 +58,22 @@ namespace :dodai do
       }
     end
 
+    def load_puppet(path, software_name, proxy)
+      `cp -r #{path}/* /etc/puppet/modules/#{software_name}`
+      current_path = File.dirname(__FILE__)
+      if proxy == ""
+        `#{current_path}/scripts/#{software_name}-puppet-init.sh"`
+      else
+        `https_proxy=#{proxy} http_proxy=#{proxy} #{current_path}/scripts/#{software_name}-puppet-init.sh"`
+      end
+    end
 
     desc "Create scaffold for a software." 
     task :create do
       name = ENV.fetch "name", ""
       if name == ""
         puts <<EOF
-Usage: rake dodai:softwares:create name=NAME
+Usage: rake dodai:softwares:create name=NAME 
 
 NAME: the name of software.
 EOF
@@ -93,6 +102,7 @@ EOF
       base_path = File.dirname(__FILE__) + "/../../softwares"
       path_pattern = base_path + "/*"
       Dir::glob(path_pattern).each {|path|
+        load_puppet path + "/puppet", File.basename(path)
         load_data_yml path + "/data.yml"
       }
     end
@@ -100,15 +110,18 @@ EOF
     desc "Load settings of a software into a database."
     task :load => :environment do
       name = ENV.fetch "name", ""
+      proxy = ENV.fetch "proxy_server", ""
       if name == ""
         puts <<EOF
-Usage: rake dodai:softwares:load name=NAME
+Usage: rake dodai:softwares:load name=NAME [proxy_server=PROXY_SERVER]
 
 NAME: the name of software.
+PROXY_SERVER: the proxy server. It's optional.
 EOF
         break
       end
 
+      load_puppet  "#{File.dirname(__FILE__)}/../../softwares/#{name}/puppet" , name, proxy
       load_data_yml "#{File.dirname(__FILE__)}/../../softwares/#{name}/data.yml"
     end
   end

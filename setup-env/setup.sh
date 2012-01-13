@@ -61,29 +61,6 @@ function install_puppet_server {
   fi
   sed -i -e "s/PORT/$port/g" /etc/puppet/external_nodes.rb
 
-  #download kvm image
-  target_file="/etc/puppet/modules/nova/files/image_kvm.tgz"
-  if [ ! -e $target_file ]; then
-    image="ttylinux-uec-amd64-12.1_2.6.35-22_1.tar.gz"
-    wget http://smoser.brickies.net/ubuntu/ttylinux-uec/$image
-    mv $image $target_file 
-  fi
-
-  version="0.20.2"
-  target_file="/etc/puppet/modules/hadoop/files/hadoop-$version.tar.gz"
-  if [ ! -e $target_file ]; then
-    wget http://ftp.jaist.ac.jp/pub/apache/hadoop/common/hadoop-$version/hadoop-$version.tar.gz
-    mv hadoop-$version.tar.gz $target_file
-  fi
-
-  target_file="/etc/puppet/modules/nova/files/osdb.tgz"
-  if [ ! -e $target_file ]; then
-    apt-get -y install bzr
-    bzr branch lp:horizon/diablo -r 46 osdb
-    tar cvzf osdb.tgz osdb
-    rm -rf osdb
-  fi
-
   service puppetmaster stop
   sleep 5
   service puppetmaster start
@@ -128,7 +105,7 @@ function install_deployment_app {
 
   rake db:drop
   rake db:migrate
-  rake dodai:softwares:load_all
+  rake dodai:softwares:load_all proxy_server="$http_proxy"
   rake tmp:clear
   rake log:clear
 
