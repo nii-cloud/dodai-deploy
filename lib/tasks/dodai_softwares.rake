@@ -62,7 +62,6 @@ namespace :dodai do
       `cp -r #{path}/* /etc/puppet/modules/#{software_name}`
       current_path = File.dirname(__FILE__)
       puppet_init = "#{current_path}/scripts/#{software_name}-puppet-init.sh"
-      puts puppet_init
 
       return unless File.exist? puppet_init
 
