@@ -99,7 +99,7 @@ function uninstall_node {
 
 function print_usage {
   name=`basename $0`
-  echo "Usage: $name TYPE
+  echo "Usage: $name [OPTIONS] TYPE
 
 TYPE: 
   The type of deploy host. It is server or node.
