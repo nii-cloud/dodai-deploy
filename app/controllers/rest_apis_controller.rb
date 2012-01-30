@@ -27,7 +27,12 @@ class RestApisController < ApplicationController
             :actions => [{:name => "list"}, {:name => "show", :parameters => ["id"]}]
           }, {
             :name => "node",
-            :actions => [{:name => "list"}, {:name => "create", :parameters => ["name"]}, {:name => "destroy", :parameters => ["id"]}]
+            :actions => [
+              {:name => "list"}, 
+              {:name => "create", :parameters => ["name"]}, 
+              {:name => "destroy", :parameters => ["id"]}
+              {:name => "update", :parameters => ["name", "ip"]},
+            ]
           }, {
             :name => "node_candidate",
             :actions => [{:name => "list"}]

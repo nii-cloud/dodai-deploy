@@ -50,6 +50,19 @@ class NodesController < ApplicationController
     end
   end
 
+  def update
+    node_hash = parmas[:node]
+    name = node_hash["name"]
+    ip = node_hash["ip"]
+    node = Node.find_by_name(name)
+    node.ip = ip
+    if node.save
+      format.json { render :json => JSON.pretty_generate(@node.as_json) }
+    else
+      format.json { render :json => JSON.pretty_generate({:errors => @node.errors}.as_json) }
+    end
+  end
+
   def destroy
     @node = Node.find(params[:id])
     if @node.node_configs.find(:first)
