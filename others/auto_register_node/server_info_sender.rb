@@ -10,7 +10,7 @@ def get_hostname_and_ip(subnet)
 
   subnet_short = parts.join(".")
   puts subnet_short
-  matches  = `ifconfig | grep "inet addr" | grep "#{subnet_short}"`.match(/[0-9\.]+/)
+  matches  = `/sbin/ifconfig | grep "inet addr" | grep "#{subnet_short}"`.match(/[0-9\.]+/)
   if matches
     ip = matches[0]
   else
