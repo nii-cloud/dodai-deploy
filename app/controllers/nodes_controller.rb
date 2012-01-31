@@ -51,15 +51,15 @@ class NodesController < ApplicationController
   end
 
   def update
-    node_hash = parmas[:node]
-    name = node_hash["name"]
-    ip = node_hash["ip"]
-    node = Node.find_by_name(name)
-    node.ip = ip
-    if node.save
-      format.json { render :json => JSON.pretty_generate(@node.as_json) }
+    @node = Node.find(params[:id])
+    if @node.update_attributes(params[:node])
+      respond_to do |format|
+        format.json { render :json => JSON.pretty_generate(@node.as_json) }
+      end
     else
-      format.json { render :json => JSON.pretty_generate({:errors => @node.errors}.as_json) }
+      respond_to do |format|
+        format.json { render :json => JSON.pretty_generate({:errors => @node.errors}.as_json) }
+      end
     end
   end
 

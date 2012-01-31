@@ -49,6 +49,6 @@ def send_to_client(host_ip, broadcast, port)
 end
 
 subnet = ARGV.shift
-port = ARGV.shift
+port = 12345 
 
 send_to_client get_hostname_and_ip(subnet), get_broadcast_net(subnet), port
