@@ -12,7 +12,8 @@ def add_host(name, ip)
 end
 
 def update_host(name, ip)
-  `sed -i -e 's/^.*#{name}.*$/#{ip} #{name}/' /etc/hosts`
+  `sed -i -e '/#{name}/d' /etc/hosts`
+  `echo "#{ip} #{name}" >> /etc/hosts`
 end
 
 

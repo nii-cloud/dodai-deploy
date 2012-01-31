@@ -18,7 +18,6 @@ sed -i -e "s/HOST/$host_name/" $target_dir/etc/mcollective/facts.yaml
 
 if [ $type = "server" ]; then
   # add to cron
-  cp utils.rb $target_dir/usr/local/sbin/
   cp server_info_sender.rb $target_dir/usr/local/sbin/
   echo "*/1 * * * *  root ruby /usr/local/sbin/server_info_sender.rb $network >> /var/log/server_info_sender.log 2>&1" > $target_dir/etc/cron.d/server_info_sender
 
@@ -28,5 +27,6 @@ if [ $type = "server" ]; then
   echo '/usr/local/src/dodai-deploy/script/start-servers production 80' > $target_dir/etc/dodai/init.sh
 fi
 
+cp utils.rb $target_dir/usr/local/sbin/
 cp server_info_listener.rb $target_dir/usr/local/sbin/
 cp server_info_listener.conf $target_dir/etc/init/
