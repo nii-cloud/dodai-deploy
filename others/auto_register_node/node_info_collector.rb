@@ -2,18 +2,26 @@
 
 require 'json'
 require File.dirname(__FILE__) + '/utils'
-
+require "mcollective"
+include MCollective::RPC
 
 def get_node_infos(network)
-  split_str="---node_info---"
-  node_infos = []
-  node_info_strs=`mco rpc node info network=#{network} -v`.split("\n")
-  node_info_strs.each {|node_info_str|
-    if node_info_str.match(split_str)
-      node_infos.push(node_info_str.split(split_str)[1])
-    end
-  } 
-  return node_infos
+  options = {:filter=>{"identity"=>[], "fact"=>[], "agent"=>[], "cf_class"=>[]},
+     :collective=>nil,
+     :config=>"/etc/mcollective/client.cfg",
+     :disctimeout=>5,
+     :verbose=>true,
+     :progress_bar=>false,
+     :timeout=>60
+  }
+
+  mc = rpcclient "node", :options => options
+  output = mc.info :network => network
+  mc.disconnect
+
+  p output
+
+  output.collect {|item| item.results[:data]}
 end
 
 network = ARGV.shift

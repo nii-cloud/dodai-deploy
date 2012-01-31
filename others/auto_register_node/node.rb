@@ -21,7 +21,7 @@ module MCollective
 
                  name = `hostname -f`.strip
                  if ip then
-                   retval="---node_info---#{name}:#{ip}---node_info---"
+                   retval="#{name}:#{ip}"
                  end
                  reply.data = retval
              end
