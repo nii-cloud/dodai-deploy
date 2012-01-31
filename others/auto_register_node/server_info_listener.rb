@@ -28,13 +28,11 @@ loop do
   old_ip = get_ip name
   puts "old_ip: " + old_ip
 
-  if old_ip == ""
-    add_host name, ip
-  else
+  if old_ip != ip
     update_host name, ip
   end
 
-  if system("grep SERVER /etc/mcollective/server.cfg")
+  if system("grep SERVER /etc/mcollective/server.cfg") or old_ip != ip
     update_settings name
     restart_services
   end
