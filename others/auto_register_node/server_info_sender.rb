@@ -3,38 +3,29 @@
 require 'socket'
 
 def get_hostname_and_ip(subnet)
-  parts = subnet.split(".")
-  while parts.length > 0 and parts[-1] == "0"
-    parts.pop
-  end
+  ips = `/sbin/ifconfig | grep "inet addr"`.split("\n").collect{|i| i.match(/addr:([0-9\.]+) /)[1]}
+  min_ip = `TERM=xterm ipcalc #{subnet} -b -n | grep HostMin`.match(/[0-9\.]+/)[0]
+  max_ip = `TERM=xterm ipcalc #{subnet} -b -n | grep HostMax`.match(/[0-9\.]+/)[0]
 
-  subnet_short = parts.join(".")
-  puts subnet_short
-  matches  = `/sbin/ifconfig | grep "inet addr" | grep "#{subnet_short}"`.match(/[0-9\.]+/)
-  if matches
-    ip = matches[0]
-  else
-    ip = nil
-  end
-   
+  ip = nil
+  ips.each {|i|
+    if i >= min_ip and i <= max_ip
+      ip = i
+      break
+    end
+  }
+
   return [`hostname -f`.strip, ip]
 end
 
 def get_broadcast_net(subnet)
-  parts = subnet.split(".")
-  subnet_parts = []
-  while parts.length > 0 and parts[-1] == "0"
-    subnet_parts.push "255"
-    parts.pop 
-  end
-
-  (parts + subnet_parts).join(".")
+  `TERM=xterm ipcalc #{subnet} -b -n | grep Broadcast`.strip.match(/[0-9\.]+/)[0]
 end
 
 def send_to_client(host_ip, broadcast, port)
   host, ip = host_ip
   if not host or not ip then
-    puts "host or ip is empty!" 
+    puts "host or ip is empty!"
     return
   end
 

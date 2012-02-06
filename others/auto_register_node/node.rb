@@ -5,20 +5,18 @@ module MCollective
                  validate :network, String
 
                  network = request[:network]
-                 parts = network.split(".")
-                 while parts.length > 0 and parts[-1] == "0"
-                   parts.pop
-                 end
-               
-                 subnet_short = parts.join(".")
-                 puts subnet_short
-                 matches  = `ifconfig | grep "inet addr" | grep "#{subnet_short}"`.match(/[0-9\.]+/)
-                 if matches
-                   ip = matches[0]
-                 else
-                   ip = nil 
-                 end
 
+                 ips = `ifconfig | grep "inet addr"`.split("\n").collect{|i| i.match(/addr:([0-9\.]+) /)[1]}
+                 min_ip = `ipcalc #{network} -b -n | grep HostMin`.match(/[0-9\.]+/)[0]
+                 max_ip = `ipcalc #{network} -b -n | grep HostMax`.match(/[0-9\.]+/)[0]
+
+                 ip = nil
+                 ips.each {|i|
+                     if i >= min_ip and i <= max_ip
+                         ip = i
+                         break
+                     end
+                 }
                  name = `hostname -f`.strip
                  if ip then
                    retval="#{name}:#{ip}"
