@@ -11,13 +11,13 @@ class glance::glance::install {
             content => template("$proposal_id/etc/glance/glance-api.conf.erb"),
             mode => 644,
             alias => "glance-api",
-            require => Package[glance];
+            require => Package[glance, python-swift];
 
         "/etc/glance/glance-registry.conf":
             content => template("$proposal_id/etc/glance/glance-registry.conf.erb"),
             mode => 644,
             alias => "glance-registry",
-            require => Package[glance];
+            require => Package[glance, python-swift];
     }
 
     exec {
