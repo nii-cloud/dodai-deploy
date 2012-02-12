@@ -52,7 +52,7 @@ function install_puppet_server {
     echo "deb http://security.ubuntu.com/ubuntu natty-security main" >> /etc/apt/sources.list
     echo "deb-src http://security.ubuntu.com/ubuntu natty-security main" >> /etc/apt/sources.list
     apt-get update
-    apt-get -y install puppetmaster-common=2.6* puppetmaster=2.6*
+    apt-get -y install puppet-common=2.6* puppetmaster-common=2.6* puppetmaster=2.6*
   else
     apt-get -y install puppetmaster
   fi
