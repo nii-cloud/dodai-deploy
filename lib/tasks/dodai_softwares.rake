@@ -104,7 +104,7 @@ EOF
       }
     end
 
-    desc "Load settings of softwares into a database."
+    desc "Load settings of softwares into a database and puppet."
     task :load_all => :environment do
       proxy = ENV.fetch "proxy_server", ""
 
@@ -116,7 +116,7 @@ EOF
       }
     end
 
-    desc "Load settings of a software into a database."
+    desc "Load settings of a software into a database and puppet."
     task :load => :environment do
       name = ENV.fetch "name", ""
       proxy = ENV.fetch "proxy_server", ""
@@ -132,6 +132,40 @@ EOF
 
       load_puppet  "#{File.dirname(__FILE__)}/../../softwares/#{name}/puppet" , name, proxy
       load_data_yml "#{File.dirname(__FILE__)}/../../softwares/#{name}/data.yml"
+    end
+
+    def unload_data(name)
+      Software.find_by_name(name).destroy
+    end
+
+    def unload_puppet(name)
+      `rm -rf /etc/puppet/modules/#{name}`
+    end
+
+    desc "Remove records of a software from database and manifests from puppet."
+    task :unload => :environment do
+      name = ENV.fetch "name", ""
+      proxy = ENV.fetch "proxy_server", ""
+      if name == ""
+        puts <<EOF
+Usage: rake dodai:softwares:unload name=NAME
+
+NAME: the name of software.
+EOF
+        break
+      end
+
+      unload_puppet name
+      unload_data name
+
+      "Software #{name} is unloaded."
+    end
+
+    desc "List softwares."
+    task :list => :environment do
+      Software.all.each {|software|
+        puts "#{software.name}\t\t#{software.desc}"
+      }
     end
   end
 end
