@@ -50,12 +50,6 @@ function install_puppet_server {
 
   cp -r puppet/* /etc/puppet/
 
-  for software in `ls ../softwares/`
-  do
-    mkdir -p /etc/puppet/modules/$software
-    cp -r ../softwares/$software/puppet/* /etc/puppet/modules/$software/
-  done
-
   if [ "$port" = "" ]; then
     port=3000
   fi
