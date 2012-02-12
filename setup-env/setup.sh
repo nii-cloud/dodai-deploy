@@ -51,6 +51,7 @@ function install_puppet_server {
     sed -i -e '/natty/d' /etc/apt/sources.list
     echo "deb http://security.ubuntu.com/ubuntu natty-security main" >> /etc/apt/sources.list
     echo "deb-src http://security.ubuntu.com/ubuntu natty-security main" >> /etc/apt/sources.list
+    apt-get update
     apt-get -y install puppetmaster-common=2.6* puppetmaster=2.6*
   else
     apt-get -y install puppetmaster
@@ -149,6 +150,7 @@ function install_puppet_client {
     sed -i -e '/natty/d' /etc/apt/sources.list
     echo "deb http://security.ubuntu.com/ubuntu natty-security main" >> /etc/apt/sources.list
     echo "deb-src http://security.ubuntu.com/ubuntu natty-security main" >> /etc/apt/sources.list
+    apt-get update
     apt-get -y install puppet-common=2.6* puppet=2.6*
   else
     apt-get -y install puppet
