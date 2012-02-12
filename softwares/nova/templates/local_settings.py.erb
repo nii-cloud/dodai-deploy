@@ -23,7 +23,5 @@ CACHE_BACKEND = 'dummy://'
 
 NOVA_DEFAULT_ENDPOINT = 'http://<%= nova_api %>:8773/services/Cloud'
 NOVA_DEFAULT_REGION = 'nova'
-NOVA_ACCESS_KEY = os.environ.get("EC2_ACCESS_KEY", "")
-NOVA_SECRET_KEY = os.environ.get("EC2_SECRET_KEY", "")
 NOVA_ADMIN_USER = '<%= user %>'
 NOVA_PROJECT = '<%= project %>'
