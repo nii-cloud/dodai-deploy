@@ -9,10 +9,20 @@ module MCollective
                  ips = `ifconfig | grep "inet addr"`.split("\n").collect{|i| i.match(/addr:([0-9\.]+) /)[1]}
                  min_ip = `ipcalc #{network} -b -n | grep HostMin`.match(/[0-9\.]+/)[0]
                  max_ip = `ipcalc #{network} -b -n | grep HostMax`.match(/[0-9\.]+/)[0]
+                 min_ip_parts = min_ip.split(".").collect{|i| i.to_i}
+                 max_ip_parts = max_ip.split(".").collect{|i| i.to_i}
 
                  ip = nil
                  ips.each {|i|
-                     if i >= min_ip and i <= max_ip
+                     parts = i.split(".").collect{|part| part.to_i}
+                     in_range = true
+                     parts.each_index{|index|
+                         if parts[index] < min_ip_parts[index] or parts[index] > max_ip_parts[index]
+                             in_range = false
+                             break
+                         end
+                     }
+                     if in_range
                          ip = i
                          break
                      end
