@@ -16,6 +16,10 @@ component_dependencies:
     dest_component: name_node
   - source_component: task_tracker
     dest_component: name_node
+  - source_component: data_node
+    dest_component: job_tracker 
+  - source_component: task_tracker
+    dest_component: job_tracker
 
 config_item_defaults:
 
