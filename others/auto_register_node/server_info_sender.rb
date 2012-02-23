@@ -53,13 +53,12 @@ def send_to_client(host_ip, broadcast, port)
 
   host_ips = ["#{host}:#{ip}"] + get_node_host_ips
 
-  puts "host: #{host}"
-  puts "ip: #{ip}"
+  p host_ips
   puts "broadcast: #{broadcast}"
   udp = UDPSocket.open()
   sockaddr = Socket.pack_sockaddr_in(port, broadcast)
   udp.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, 1)
-  udp.send(host_ip.join(","), 0, sockaddr)
+  udp.send(host_ips.join(","), 0, sockaddr)
   udp.close
 end
 
