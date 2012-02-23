@@ -17,8 +17,38 @@ def get_node_host_ips()
   node_infos
 end
 
-def send_to_client(broadcast, port)
+def get_hostname_and_ip(subnet)
+  ips = `/sbin/ifconfig | grep "inet addr"`.split("\n").collect{|i| i.match(/addr:([0-9\.]+) /)[1]}
+  min_ip = `TERM=xterm ipcalc #{subnet} -b -n | grep HostMin`.match(/[0-9\.]+/)[0]
+  max_ip = `TERM=xterm ipcalc #{subnet} -b -n | grep HostMax`.match(/[0-9\.]+/)[0]
+
+  min_ip_parts = min_ip.split(".").collect{|i| i.to_i}
+  max_ip_parts = max_ip.split(".").collect{|i| i.to_i}
+
+  ip = nil
+  ips.each {|i|
+    parts = i.split(".").collect{|part| part.to_i}
+    in_range = true
+    parts.each_index{|index|
+      if parts[index] < min_ip_parts[index] or parts[index] > max_ip_parts[index]
+        in_range = false
+        break
+      end
+    }
+    if in_range
+      ip = i
+      break
+    end
+  }
+
+  "#{`hostname -f`.strip}:#{ip}"
+end
+
+def send_to_client(subnet, broadcast, port)
   host_ips = get_node_host_ips
+
+  server_host_ip = get_hostname_and_ip subnet
+  host_ips << server_host_ip unless host_ips.include? server_host_ip
 
   p host_ips
   puts "broadcast: #{broadcast}"
@@ -33,4 +63,4 @@ end
 subnet = ARGV.shift
 port = 12345 
 
-send_to_client get_broadcast_address(subnet), port
+send_to_client subnet, get_broadcast_address(subnet), port
