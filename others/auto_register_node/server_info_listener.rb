@@ -20,22 +20,31 @@ end
 udps = UDPSocket.open()
 udps.bind("0.0.0.0", port)
 
+is_server = true
 loop do
-  name, ip = udps.recv(65535).split(":")
-  puts name
-  puts ip
+  name_ips = udps.recv(65535).split(",")
+  name_ips.each {|name_ip|
+    name, ip = name_ip.split ":"
 
-  old_ip = get_ip name
-  puts "old_ip: " + old_ip
+    puts name
+    puts ip
+  
+    old_ip = get_ip name
+    puts "old_ip: " + old_ip
 
-  if old_ip != ip
-    update_host name, ip
-  end
+    if old_ip != ip
+      update_host name, ip
+    end
 
-  if system("grep SERVER /etc/mcollective/server.cfg") or old_ip != ip
-    update_settings name
-    restart_services
-  end
+    next unless is_server
+
+    # the first noe is dodai-deploy server's name and ip.
+    if system("grep SERVER /etc/mcollective/server.cfg") or old_ip != ip
+      update_settings name
+      restart_services
+    end
+    is_server = false
+  }
 end
 
 udps.close

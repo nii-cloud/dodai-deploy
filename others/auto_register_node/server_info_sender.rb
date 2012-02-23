@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'json'
 require 'socket'
 
 def get_hostname_and_ip(subnet)
@@ -33,6 +34,16 @@ def get_broadcast_net(subnet)
   `TERM=xterm ipcalc #{subnet} -b -n | grep Broadcast`.strip.match(/[0-9\.]+/)[0]
 end
 
+def get_node_host_ips()
+  return [] unless File.exists? "/etc/dodai/node_infos"
+
+  f = open "/etc/dodai/node_infos"
+  node_infos = JSON.parse(f.read)
+  f.close
+
+  node_infos
+end
+
 def send_to_client(host_ip, broadcast, port)
   host, ip = host_ip
   if not host or not ip then
@@ -40,13 +51,15 @@ def send_to_client(host_ip, broadcast, port)
     return
   end
 
+  host_ips = ["#{host}:#{ip}"] + get_node_host_ips
+
   puts "host: #{host}"
   puts "ip: #{ip}"
   puts "broadcast: #{broadcast}"
   udp = UDPSocket.open()
   sockaddr = Socket.pack_sockaddr_in(port, broadcast)
   udp.setsockopt(Socket::SOL_SOCKET, Socket::SO_BROADCAST, 1)
-  udp.send(host_ip.join(":"), 0, sockaddr)
+  udp.send(host_ip.join(","), 0, sockaddr)
   udp.close
 end
 

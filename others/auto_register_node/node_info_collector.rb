@@ -27,7 +27,9 @@ end
 network = ARGV.shift
 cli = "ruby /usr/local/src/dodai-deploy/script/cli.rb --port 80"
 node_infos = get_node_infos network
-name_nodes = {}
+node_infos_str = JSON.pretty_generate node_infos
+File.open("/etc/dodai/node_infos", 'w') {|f| f.write(node_infos_str)}
+
 JSON.parse(`#{cli} localhost node list`).each{|node| name_nodes[node["node"]["name"]] = node["node"]}
 node_infos.each {|node_info|
   name, ip = node_info.split ":"
