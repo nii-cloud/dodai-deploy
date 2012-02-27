@@ -8,12 +8,12 @@ def get_ip(name)
 end
 
 def add_host(name, ip)
-  `echo "#{ip} #{name}" >> /etc/hosts`
+  short_name = name.split(".")[0]
+  `echo "#{ip} #{name} #{short_name}" >> /etc/hosts`
 end
 
 def update_host(name, ip)
   `sed -i -e '/#{name}/d' /etc/hosts`
-  `echo "#{ip} #{name}" >> /etc/hosts`
+
+  add_host name, ip
 end
-
-
