@@ -48,7 +48,8 @@ def send_to_client(subnet, broadcast, port)
   host_ips = get_node_host_ips
 
   server_host_ip = get_hostname_and_ip subnet
-  host_ips << server_host_ip unless host_ips.include? server_host_ip
+  host_ips = [server_host_ip] + host_ips
+  host_ips.uniq!
 
   p host_ips
   puts "broadcast: #{broadcast}"

@@ -38,7 +38,7 @@ loop do
 
     next unless is_server
 
-    # the first noe is dodai-deploy server's name and ip.
+    # the first one is dodai-deploy server's name and ip.
     if system("grep SERVER /etc/mcollective/server.cfg") or old_ip != ip
       update_settings name
       restart_services

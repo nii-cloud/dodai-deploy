@@ -29,4 +29,3 @@ fi
 cp utils.rb $target_dir/usr/local/sbin/
 cp server_info_listener.rb $target_dir/usr/local/sbin/
 cp server_info_listener.conf $target_dir/etc/init/
-echo 'start server_info_listener' >> $target_dir/etc/dodai/init.sh
