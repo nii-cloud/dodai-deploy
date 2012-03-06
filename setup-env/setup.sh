@@ -248,7 +248,7 @@ if [ "$proxy" != "" ]; then
   export http_proxy="$proxy"
   export https_proxy="$proxy"
   echo "Acquire::http::Proxy \"$proxy\";" > /etc/apt/apt.conf.d/proxy
-  echo "Acquire::https::Proxy \"$proxy\";" > /etc/apt/apt.conf.d/proxy
+  echo "Acquire::https::Proxy \"$proxy\";" >> /etc/apt/apt.conf.d/proxy
 fi
 
 type=$1
