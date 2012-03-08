@@ -93,7 +93,7 @@ function install_deployment_app {
 
   RAILS_ENV=production rake db:drop
   RAILS_ENV=production rake db:migrate
-  RAILS_ENV=production rake dodai:softwares:load_all 
+  RAILS_ENV=production rake dodai:softwares:load_all proxy_server="$http_proxy" 
   RAILS_ENV=production rake tmp:clear
   RAILS_ENV=production rake log:clear
 
