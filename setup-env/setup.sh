@@ -46,7 +46,7 @@ function install_mcollective_client {
 }
 
 function install_puppet_server {
-  apt-get -y install puppetmaster
+  apt-get -y install puppetmaster=2.6.9
 
   cp -r puppet/* /etc/puppet/
 
@@ -136,7 +136,7 @@ function install_mcollective_server {
 }
 
 function install_puppet_client {
-  apt-get -y install puppet
+  apt-get -y install puppet=2.6.9
 
   #rm ec2 facter
   rm -f /usr/lib/ruby/1.8/facter/ec2.rb
