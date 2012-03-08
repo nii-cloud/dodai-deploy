@@ -6,11 +6,3 @@ if [ ! -e $target_file ]; then
   wget http://smoser.brickies.net/ubuntu/ttylinux-uec/$image
   mv $image $target_file 
 fi
-
-target_file="/etc/puppet/modules/nova/files/osdb.tgz"
-if [ ! -e $target_file ]; then
-  apt-get -y install bzr
-  bzr branch lp:horizon/diablo -r 46 osdb
-  tar cvzf $target_file osdb > /dev/null
-  rm -rf osdb
-fi
