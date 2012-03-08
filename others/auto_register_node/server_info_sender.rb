@@ -18,7 +18,7 @@ def get_node_host_ips()
 end
 
 def get_hostname_and_ip(subnet)
-  ips = `/sbin/ifconfig | grep "inet addr"`.split("\n").collect{|i| i.match(/addr:([0-9\.]+) /)[1]}
+  ips = `cat /etc/network/interfaces | grep "address"`.split("\n").collect{|i| i.match(/[0-9\.]+/)[0]}
   min_ip = `TERM=xterm ipcalc #{subnet} -b -n | grep HostMin`.match(/[0-9\.]+/)[0]
   max_ip = `TERM=xterm ipcalc #{subnet} -b -n | grep HostMax`.match(/[0-9\.]+/)[0]
 

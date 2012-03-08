@@ -6,7 +6,7 @@ module MCollective
 
                  network = request[:network]
 
-                 ips = `ifconfig | grep "inet addr"`.split("\n").collect{|i| i.match(/addr:([0-9\.]+) /)[1]}
+                 ips = `cat /etc/network/interfaces | grep "address"`.split("\n").collect{|i| i.match(/[0-9\.]+/)[0]}
                  min_ip = `ipcalc #{network} -b -n | grep HostMin`.match(/[0-9\.]+/)[0]
                  max_ip = `ipcalc #{network} -b -n | grep HostMax`.match(/[0-9\.]+/)[0]
                  min_ip_parts = min_ip.split(".").collect{|i| i.to_i}
