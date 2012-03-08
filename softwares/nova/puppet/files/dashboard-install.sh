@@ -3,7 +3,7 @@
 home=`dirname $0`
 cd $home
 
-tar xzvf osdb.tgz
+tar xzvf osdb.tgz > /dev/null
 cd osdb
 
 if [ -f /etc/apt/apt.conf.d/proxy ]; then

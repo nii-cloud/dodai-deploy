@@ -33,6 +33,7 @@ function uninstall_mcollective_client {
 function uninstall_puppet_server {
   service puppetmaster stop
 
+  sleep 5
   apt-get -y --purge remove puppetmaster
   rm -rf /etc/puppet/*
   rm -rf /var/lib/puppet/*
@@ -62,8 +63,8 @@ function uninstall_openstack_repository {
 }
 
 function uninstall_sge_repository {
-  sed -i -e "/lucid partner/d" /etc/apt/sources.list 
-
+  rm -f /etc/apt/sources.list.d/ferramroberto-java*
+  
   apt-get update
 }
 
