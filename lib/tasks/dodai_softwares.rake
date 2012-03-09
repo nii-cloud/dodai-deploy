@@ -19,7 +19,13 @@ namespace :dodai do
       check_save_result software.save, software
       software = Software.find_by_name name
 
-      data.each {|table_name, records|
+      #move components to the first
+      table_names = data.keys
+      table_names.delete "components"
+      table_names.unshift "components"
+
+      table_names.each {|table_name|
+        records = data[table_name]
         cls_name = table_name.classify
 
         next unless records
