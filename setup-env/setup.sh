@@ -47,7 +47,7 @@ function install_mcollective_client {
 
 function install_puppet_server {
   lsb_release -r | grep 11.10
-  if [ $? != 0  ]; then
+  if [ $? = 0  ]; then
     sed -i -e '/natty/d' /etc/apt/sources.list
     echo "deb http://security.ubuntu.com/ubuntu natty-security main" >> /etc/apt/sources.list
     echo "deb-src http://security.ubuntu.com/ubuntu natty-security main" >> /etc/apt/sources.list
@@ -145,7 +145,7 @@ function install_mcollective_server {
 
 function install_puppet_client {
   lsb_release -r | grep 11.10
-  if [ $? != 0  ]; then
+  if [ $? = 0  ]; then
     sed -i -e '/natty/d' /etc/apt/sources.list
     echo "deb http://security.ubuntu.com/ubuntu natty-security main" >> /etc/apt/sources.list
     echo "deb-src http://security.ubuntu.com/ubuntu natty-security main" >> /etc/apt/sources.list
