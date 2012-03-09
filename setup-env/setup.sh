@@ -46,7 +46,15 @@ function install_mcollective_client {
 }
 
 function install_puppet_server {
-  apt-get -y install puppetmaster=2.6.9
+  lsb_release -r | grep 11.10
+  if [ $? != 0  ]; then
+    sed -i -e '/natty/d' /etc/apt/sources.list
+    echo "deb http://security.ubuntu.com/ubuntu natty-security main" >> /etc/apt/sources.list
+    echo "deb-src http://security.ubuntu.com/ubuntu natty-security main" >> /etc/apt/sources.list
+    apt-get -y install puppetmaster-common=2.6* puppetmaster=2.6*
+  else
+    apt-get -y install puppetmaster
+  fi
 
   cp -r puppet/* /etc/puppet/
 
@@ -136,7 +144,15 @@ function install_mcollective_server {
 }
 
 function install_puppet_client {
-  apt-get -y install puppet=2.6.9
+  lsb_release -r | grep 11.10
+  if [ $? != 0  ]; then
+    sed -i -e '/natty/d' /etc/apt/sources.list
+    echo "deb http://security.ubuntu.com/ubuntu natty-security main" >> /etc/apt/sources.list
+    echo "deb-src http://security.ubuntu.com/ubuntu natty-security main" >> /etc/apt/sources.list
+    apt-get -y install puppet-common=2.6* puppet=2.6*
+  else
+    apt-get -y install puppet
+  fi
 
   #rm ec2 facter
   rm -f /usr/lib/ruby/1.8/facter/ec2.rb
