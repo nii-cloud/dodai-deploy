@@ -169,7 +169,10 @@ function install_openstack_repository {
 
 function install_sge_repository {
   apt-get -y install python-software-properties
-  add-apt-repository ppa:ferramroberto/java -y 
+  add-apt-repository ppa:ferramroberto/java -y #-y option cannot be used in old version
+  if [ $? != 0 ]; then
+    add-apt-repository ppa:ferramroberto/java
+  fi
   apt-get update
 }
 
