@@ -16,7 +16,7 @@ namespace :dodai do
       puts "Add a record to softwares table."
 
       software = Software.new(:name => name, :desc => desc)
-      software.save
+      check_save_result software.save, software
       software = Software.find_by_name name
 
       data.each {|table_name, records|
@@ -32,14 +32,6 @@ namespace :dodai do
               next
             end
 
-            if field_name =~ /_ref/
-              file = open "#{base_path}/templates/#{field_value}"
-              field_value = file.read
-              file.close
-
-              field_name = field_name[0, field_name.size - 4]
-            end
-
             eval("obj.#{field_name} = field_value")
           }
 
@@ -51,11 +43,19 @@ namespace :dodai do
           end
 
           obj.software = software if cls_name != "ComponentConfigDefault"
-          obj.save
+          check_save_result obj.save, obj
 
           puts "Add a record to #{table_name} table."
         }
       }
+    end
+
+    def check_save_result(result, obj)
+      unless result
+        puts "Failed"
+        p obj
+        p obj.errors
+      end
     end
 
     def load_puppet(path, software_name, proxy)

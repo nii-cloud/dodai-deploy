@@ -6,7 +6,7 @@ components:
 
 component_dependencies:
   - source_component: swift_storage
-  - dest_component: swift_proxy
+    dest_component: swift_proxy
 
 config_item_defaults:
   - name: storage_path
