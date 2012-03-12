@@ -13,6 +13,6 @@ class nova::nova_network::install {
 
     exec {
         "stop nova-network; start nova-network":
-            require => [Package[nova-network, iptables, radvd, bridge-utils], Service[dnsmasq]]
+            require => [Package[nova-network, iptables, radvd, bridge-utils], Service[dnsmasq], File["/etc/nova/nova.conf"]]
     }
 }

@@ -16,4 +16,9 @@ class nova::nova_compute::install {
             mode => 644,
             require => Package[nova-compute];
     }
+
+    exec {
+        "stop nova-compute; start nova-compute":
+            require => File["/etc/nova/nova.conf", "/etc/nova/nova-compute.conf"]
+    }
 }
