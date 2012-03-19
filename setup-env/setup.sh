@@ -89,11 +89,7 @@ function install_deployment_app {
 
   lsb_release -r | grep 11.10
   if [ $? = 0  ]; then
-    echo "Change /var/lib/gems/1.8/specifications/json-1.6.1.gemspec date format for ubuntu 11.10"
-    sed -i -e 's/ 00:00:00.000000000Z//g' /var/lib/gems/1.8/specifications/json-1.6.1.gemspec
-
-    echo "Change /var/lib/gems/1.8/specifications/jquery-rails-1.0.19.gemspec date format for ubuntu 11.10"
-    sed -i -e 's/ 00:00:00.000000000Z//g' /var/lib/gems/1.8/specifications/jquery-rails-1.0.19.gemspec
+    sed -i -e 's/ 00:00:00.000000000Z//g' /var/lib/gems/1.8/specifications/*.gemspec
     bundle install
   fi
 
