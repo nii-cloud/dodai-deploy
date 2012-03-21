@@ -7,7 +7,7 @@ class nova::nova_network::uninstall {
     }
 
     exec {
-        "killall dnsmasq; exit 0":
+        "sysctl -w net.ipv4.ip_forward=0; killall dnsmasq; exit 0":
             require => Package[dnsmasq]
     }
 }

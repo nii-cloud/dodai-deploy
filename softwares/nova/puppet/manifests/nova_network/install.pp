@@ -12,7 +12,7 @@ class nova::nova_network::install {
     include nova::bridge
 
     exec {
-        "stop nova-network; start nova-network":
+        "sysctl -w net.ipv4.ip_forward=1; stop nova-network; start nova-network":
             require => [Package[nova-network, iptables, radvd, bridge-utils], Service[dnsmasq], File["/etc/nova/nova.conf"]]
     }
 }
