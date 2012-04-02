@@ -109,6 +109,7 @@ function install_deployment_app {
   rake log:clear
 
   # install puppet vim addon.
+  apt-get vim-addon-manager -y
   apt-get install vim-puppet -y
   vim-addons install puppet -w 
 
