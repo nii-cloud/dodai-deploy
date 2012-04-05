@@ -69,8 +69,7 @@ namespace :dodai do
       `mkdir -p #{dest_path}` unless File.exist? dest_path
 
       `cp -r #{path}/* #{dest_path}`
-      current_path = File.dirname(__FILE__)
-      puppet_init = "#{current_path}/scripts/#{software_name}-puppet-init.sh"
+      puppet_init = "#{path}/../puppet-init.sh"
 
       return unless File.exist? puppet_init
 
