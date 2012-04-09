@@ -1,0 +1,70 @@
+# Description of the software, such as the following example.
+#
+#description: openstack nova diablo
+description: openstack keystone essex
+
+# Components of the software, such as the following example.
+#
+#components:
+#  - name: nova_compute
+#  - name: nova_api
+components:
+  - name: keystone
+
+# Dependencies of components, such as the following example.
+#
+#component_dependencies:
+#  # nova_compute will depend on nova_api when installing.
+#  # operation's default value is install.
+#  - source_component: nova_compute
+#    dest_component: nova_api
+#  # nova_compute will depend on nova_api when uninstalling.
+#  - source_component: nova_compute
+#    dest_component: nova_api
+#    operation: uninstall
+component_dependencies:
+
+# Default values of config items, such as the following example.
+#
+#config_item_defaults:
+#  # The default value of config item libvirt_type is qemu.
+#  - name: libvirt_type
+#    value: qemu
+#  # The default value of config item user is admin.
+#  - name: user
+#    value: admin
+config_item_defaults:
+  - name: admin_token
+    value: ADMIN
+  - name: admin_password 
+    value: admin
+  - name: service_password 
+    value: service
+
+# Default contents of component config files, such as the following example.
+#
+#component_config_defaults:
+#  # The default content of config file /etc/nova/nova-compute.conf 
+#  # for component nova_compute will be defined at 
+#  # $home/softwares/$software/templates/nova-compute.conf.erb
+#  - path: /etc/nova/nova-compute.conf
+#    component: nova_compute
+component_config_defaults:
+
+# Default contents of software config files, such as the following example.
+#
+#software_config_defaults:
+#  # The default content of config file /etc/nova/nova.conf for the software
+#  # will be defined at $home/softwares/$software/templates/nova.conf.erb.
+#  - path: /etc/nova/nova.conf
+software_config_defaults:
+  - path: /etc/keystone/keystone.conf
+  - path: /etc/keystone/default_catalog.templates
+
+# The component which is installed on a node where a test script will be executed.
+#
+#test_components:
+#  # The test will be done on the node where nova_api is installed.
+#  - component: nova_api
+test_components:
+  - component: keystone
