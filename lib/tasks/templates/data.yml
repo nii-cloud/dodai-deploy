@@ -29,8 +29,8 @@ component_dependencies:
 #  # The default value of config item libvirt_type is qemu.
 #  - name: libvirt_type
 #    value: qemu
-#  # The default value of config item admin is admin.
-#  - user: admin
+#  # The default value of config item user is admin.
+#  - name: user
 #    value: admin
 config_item_defaults:
 
