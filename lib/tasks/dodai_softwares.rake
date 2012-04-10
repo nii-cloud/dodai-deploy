@@ -34,7 +34,7 @@ namespace :dodai do
           obj = eval(cls_name).new
           record.each{|field_name, field_value|
             if field_name =~ /component/
-              eval("obj.#{field_name} = Component.find_by_name field_value")
+              eval("obj.#{field_name} = Component.find_by_name_and_software_id field_value, software.id")
               next
             end
 
