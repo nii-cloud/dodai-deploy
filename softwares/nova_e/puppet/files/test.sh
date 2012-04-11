@@ -16,7 +16,7 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-HOME="/tmp/nova"
+HOME=`dirname $0`
 
 cd $HOME
 
@@ -26,15 +26,25 @@ if [ "`which nova-manage`" = ""  ]; then
 fi
 
 image_file="$1"
-project=$2
-user=$3
+nova_objectstore="$2"
 
-rm nova.zip
-nova-manage project zipfile $project $user
+export OS_TENANT_NAME=$3
+export OS_USERNAME=$4
+export OS_PASSWORD=$5
+export OS_AUTH_URL="http://localhost:5000/v2.0/"
 
-rm -rf env
-unzip -d env/ nova.zip
-. env/novarc
+nova x509-create-cert
+nova x509-get-root-cert
+
+export EC2_URL=$(keystone catalog --service ec2 | awk '/ publicURL / { print $4 }')
+export CREDS=$(keystone ec2-credentials-create)
+export EC2_ACCESS_KEY=$(echo "$CREDS" | awk '/ access / { print $4 }')
+export EC2_SECRET_KEY=$(echo "$CREDS" | awk '/ secret / { print $4 }')
+export EC2_USER_ID=$(echo "$CREDS" | awk '/ user_id / { print $4 }')
+export EC2_CERT="$HOME/cert.pem"
+export EC2_PRIVATE_KEY="$HOME/pk.pem"
+export EUCALYPTUS_CERT="$HOME/cacert.pem"
+export S3_URL="http://$nova_objectstore:3333"
 
 euca-authorize -P icmp -t -1:-1 default
 euca-authorize -P tcp -p 22 default

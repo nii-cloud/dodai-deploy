@@ -12,7 +12,7 @@ class nova_e::nova_api::test {
     }
 
     exec {
-        "/var/lib/nova/test.sh $image_file_name $project $user 2>&1":
+        "/var/lib/nova/test.sh $image_file_name $nova_objectstore $admin_tenant_name $admin_user $admin_password 2>&1":
             alias => "test.sh",
             require => File["test.sh", "$image_file_name"];
     }

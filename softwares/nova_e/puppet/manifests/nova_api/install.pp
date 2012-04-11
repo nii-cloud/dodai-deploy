@@ -1,6 +1,6 @@
 class nova_e::nova_api::install {
     nova_e::component {
-        ["nova-api", "python-libvirt", euca2ools, unzip, gawk]:
+        ["nova-api", "nova-cert", "python-libvirt", euca2ools, unzip, gawk]:
     }
 
     file {
@@ -11,7 +11,7 @@ class nova_e::nova_api::install {
     }
 
     exec {
-        "stop nova-api; start nova-api":
+        "stop nova-api; start nova-api; stop nova-cert; start nova-cert":
             require => Exec["nova-init.sh"];
 
         "/var/lib/nova/nova-init.sh $network_ip_range 2>&1":

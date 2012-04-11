@@ -33,4 +33,16 @@ if [ $pid1 != $pid2 ]; then
     exit 1
 fi
 
+export OS_TENANT_NAME=$1
+export OS_USERNAME=$2
+export OS_PASSWORD=$3
+export OS_AUTH_URL="http://localhost:5000/v2.0/"
+
+glance index
+if [ $? != 0 ]; then
+    echo "Image list can't be retrieved."
+    exit 1
+fi
+
+
 echo "Test finished. It is OK."
