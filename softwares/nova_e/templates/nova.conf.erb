@@ -1,0 +1,48 @@
+--dhcpbridge_flagfile=/etc/nova/nova.conf
+--dhcpbridge=/usr/bin/nova-dhcpbridge
+--logdir=/var/log/nova
+--state_path=/var/lib/nova
+--lock_path=/var/lock/nova
+--allow_admin_api=true
+--use_deprecated_auth=false
+--auth_strategy=keystone
+--scheduler_driver=nova.scheduler.simple.SimpleScheduler
+--s3_host=<%= nova_objectstore %>
+--ec2_host=<%= nova_api %>
+--rabbit_host=<%= rabbitmq %>
+--cc_host=<%= nova_api %>
+--nova_url=http://<%= nova_api %>:8774/v1.1/
+--routing_source_ip=<%= nova_api %>
+--glance_api_servers=<%= glance_host %>:9292
+--image_service=nova.image.glance.GlanceImageService
+--iscsi_ip_prefix=192.168.22
+--sql_connection=mysql://root:nova@<%= mysql %>/nova
+--ec2_url=http://<%= nova_api %>:8773/services/Cloud
+--keystone_ec2_url=http://127.0.0.1:5000/v2.0/ec2tokens
+--api_paste_config=/etc/nova/api-paste.ini
+--libvirt_type=<%= libvirt_type %>
+--libvirt_use_virtio_for_bridges=true
+--start_guests_on_host_boot=true
+--resume_guests_state_on_host_boot=true
+--vnc_enabled=true
+--vncproxy_url=http://<%= nova_api %>:6080
+--vnc_console_proxy_url=http://<%= nova_api %>:6080
+
+ # network specific settings
+
+--network_manager=nova.network.manager.VlanManager
+--public_interface=eth0
+--flat_interface=eth0
+--vlan_interface=eth0
+--flat_network_bridge=br100
+#--fixed_range=192.168.22.32/27
+#--floating_range=10.42.0.32/27 
+--network_size=32
+#--flat_network_dhcp_start=192.168.22.33
+--flat_injected=False
+--force_dhcp_release
+--iscsi_helper=tgtadm
+--connection_type=libvirt
+--root_helper=sudo nova-rootwrap
+#--verbose
+--verbose=False
