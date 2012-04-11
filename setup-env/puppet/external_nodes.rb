@@ -15,6 +15,8 @@ url = "http://localhost:PORT/node_configs/#{hostname}/puppet.json?" + parameters
 data = Net::HTTP.get_response(URI.parse(url)).body
 
 obj = JSON.parse data
+File.open("/var/log/puppet/puppet.yml", "w") {|f| f.write JSON.pretty_generate obj}
+
 puts YAML.dump obj 
 
 exit 0 

@@ -125,6 +125,8 @@ class Operations
     params = params.each{|key, value| params[key] = params[key][0] if params[key].size == 1}
     eruby = Erubis::Eruby.new template 
     eruby.result params
+
+    template
   end
 
   def _save_puppet_parameters parameters

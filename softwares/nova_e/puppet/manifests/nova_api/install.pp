@@ -6,7 +6,8 @@ class nova_e::nova_api::install {
     file {
         "/var/lib/nova/nova-init.sh":
             source => "puppet:///modules/nova_e/nova-init.sh",
-            alias => "nova-init.sh";
+            alias => "nova-init.sh", 
+            require => Package[nova-common];
     }
 
     exec {

@@ -9,6 +9,6 @@ class nova_e::nova_network::uninstall {
 
     exec {
         "killall dnsmasq; exit 0":
-            require => Package[dnsmasq]
+            require => Package[dnsmasq];
     }
 }
