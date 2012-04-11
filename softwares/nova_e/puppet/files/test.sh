@@ -46,6 +46,15 @@ export EC2_PRIVATE_KEY="$HOME/pk.pem"
 export EUCALYPTUS_CERT="$HOME/cacert.pem"
 export S3_URL="http://$nova_objectstore:3333"
 
+echo "export EC2_URL=$EC2_URL" > novarc
+echo "export EC2_ACCESS_KEY=$EC2_ACCESS_KEY" >> novarc
+echo "export EC2_SECRET_KEY=$EC2_SECRET_KEY" >> novarc
+echo "export EC2_USER_ID=$EC2_USER_ID" >> novarc
+echo "export EC2_CERT=$EC2_CERT" >> novarc
+echo "export EC2_PRIVATE_KEY=$EC2_PRIVATE_KEY" >> novarc
+echo "export EUCALYPTUS_CERT=$EUCALYPTUS_CERT" >> novarc
+echo "export S3_URL=$S3_URL" >> novarc
+
 euca-authorize -P icmp -t -1:-1 default
 euca-authorize -P tcp -p 22 default
 
