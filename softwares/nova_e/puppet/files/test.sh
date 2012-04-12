@@ -46,7 +46,13 @@ export EC2_PRIVATE_KEY="$HOME/pk.pem"
 export EUCALYPTUS_CERT="$HOME/cacert.pem"
 export S3_URL="http://$nova_objectstore:3333"
 
-echo "export EC2_URL=$EC2_URL" > novarc
+rm novarc
+
+echo "export OS_TENANT_NAME=$OS_TENANT_NAME" >> novarc
+echo "export OS_USERNAME=$OS_USERNAME" >> novarc
+echo "export OS_PASSWORD=$OS_PASSWORD" >> novarc
+echo "export OS_AUTH_URL=$OS_AUTH_URL" >> novarc
+echo "export EC2_URL=$EC2_URL" >> novarc
 echo "export EC2_ACCESS_KEY=$EC2_ACCESS_KEY" >> novarc
 echo "export EC2_SECRET_KEY=$EC2_SECRET_KEY" >> novarc
 echo "export EC2_USER_ID=$EC2_USER_ID" >> novarc

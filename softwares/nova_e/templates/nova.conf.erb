@@ -25,8 +25,7 @@
 --start_guests_on_host_boot=true
 --resume_guests_state_on_host_boot=true
 --vnc_enabled=true
---vncproxy_url=http://<%= nova_api %>:6080
---vnc_console_proxy_url=http://<%= nova_api %>:6080
+--novncproxy_base_url=http://<%= nova_api %>:6080/vnc_auto.html
 
  # network specific settings
 

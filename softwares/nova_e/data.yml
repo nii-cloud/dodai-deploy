@@ -7,6 +7,8 @@ components:
   - name: nova_scheduler
   - name: nova_volume
   - name: nova_objectstore
+  - name: nova_cert
+  - name: novnc
   - name: rabbitmq
   - name: mysql
   - name: dashboard
@@ -25,6 +27,10 @@ component_dependencies:
   - source_component: nova_network
     dest_component: nova_api
   - source_component: nova_compute
+    dest_component: nova_api
+  - source_component: nova_cert
+    dest_component: nova_api
+  - source_component: novnc
     dest_component: nova_api
   - source_component: dashboard 
     dest_component: nova_api

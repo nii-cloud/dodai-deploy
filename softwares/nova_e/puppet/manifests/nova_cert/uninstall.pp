@@ -1,8 +1,8 @@
-class nova_e::nova_api::uninstall {
+class nova_e::nova_cert::uninstall {
     include nova_e::common::uninstall
 
     package {
-        [nova-api, python-libvirt, euca2ools]:
+        nova-cert:
             ensure => purged
     }
 }
