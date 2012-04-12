@@ -1,7 +1,7 @@
 # Description of the software, such as the following example.
 #
 #description: openstack nova diablo
-description: openstack keystone essex
+description: openstack essex keystone
 
 # Components of the software, such as the following example.
 #

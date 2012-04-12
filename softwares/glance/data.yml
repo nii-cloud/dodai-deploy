@@ -1,4 +1,4 @@
-description: openstack glance diablo
+description: openstack diablo glance
 
 components:
   - name: glance

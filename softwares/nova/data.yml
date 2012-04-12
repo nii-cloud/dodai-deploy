@@ -1,4 +1,4 @@
-description: openstack nova diablo
+description: openstack diablo nova
 
 components:
   - name: nova_api

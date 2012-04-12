@@ -1,4 +1,4 @@
-description: openstack nova essex 
+description: openstack essex nova
 
 components:
   - name: nova_api
@@ -9,10 +9,13 @@ components:
   - name: nova_objectstore
   - name: rabbitmq
   - name: mysql
+  - name: dashboard
 
 component_dependencies:
   - source_component: nova_api
     dest_component: mysql
+  - source_component: nova_api
+    dest_component: rabbitmq
   - source_component: nova_scheduler
     dest_component: nova_api
   - source_component: nova_objectstore
@@ -23,8 +26,8 @@ component_dependencies:
     dest_component: nova_api
   - source_component: nova_compute
     dest_component: nova_api
-  - source_component: nova_api
-    dest_component: rabbitmq
+  - source_component: dashboard 
+    dest_component: nova_api
 
 config_item_defaults:
   - name: network_ip_range
@@ -43,6 +46,10 @@ config_item_defaults:
 component_config_defaults:
   - path: /etc/nova/nova-compute.conf
     component: nova_compute
+  - path: /etc/apache2/conf.d/openstack-dashboard.conf
+    component: dashboard
+  - path: /etc/openstack-dashboard/local_settings.py
+    component: dashboard
 
 software_config_defaults:
   - path: /etc/nova/nova.conf

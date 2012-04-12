@@ -1,4 +1,4 @@
-description: openstack swift diablo
+description: openstack diablo swift
 
 components:
   - name: swift_proxy

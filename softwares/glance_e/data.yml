@@ -1,4 +1,4 @@
-description: openstack glance essex
+description: openstack essex glance
 
 components:
   - name: glance
