@@ -12,6 +12,10 @@ config_item_defaults:
     value: admin
   - name: admin_password
     value: admin 
+  - name: keystone 
+    value: localhost
+  - name: swift_proxy 
+    value: localhost
 
 component_config_defaults:
 

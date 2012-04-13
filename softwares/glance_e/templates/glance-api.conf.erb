@@ -132,30 +132,30 @@ filesystem_store_datadir = /var/lib/glance/images/
 
 # Version of the authentication service to use
 # Valid versions are '2' for keystone and '1' for swauth and rackspace
-swift_store_auth_version = 2
+swift_store_auth_version = 1 
 
 # Address where the Swift authentication service lives
 # Valid schemes are 'http://' and 'https://'
 # If no scheme specified,  default to 'https://'
 # For swauth, use something like '127.0.0.1:8080/v1.0/'
-swift_store_auth_address = 127.0.0.1:35357/v2.0/
+swift_store_auth_address = <%= swift_proxy %>:8080/auth/v1.0/
 
 # User to authenticate against the Swift authentication service
 # If you use Swift authentication service, set it to 'account':'user'
 # where 'account' is a Swift storage account and 'user'
 # is a user in that account
-swift_store_user = jdoe:jdoe
+swift_store_user = system:root
 
 # Auth key for the user authenticating against the
 # Swift authentication service
-swift_store_key = a86850deb2742ec3cb41518e26aa2d89
+swift_store_key = testpass
 
 # Container within the account that the account should use
 # for storing images in Swift
 swift_store_container = glance
 
 # Do we create the container if it does not exist?
-swift_store_create_container_on_put = False
+swift_store_create_container_on_put = True
 
 # What size, in MB, should Glance start chunking image files
 # and do a large object manifest in Swift? By default, this is

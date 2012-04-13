@@ -20,34 +20,37 @@
 # ENABLED_SERVICES - stack.sh's list of services to start
 # DEVSTACK_DIR - Top-level DevStack directory
 
-ADMIN_PASSWORD=$1
-SERVICE_PASSWORD=$3
-export SERVICE_TOKEN=$2
-export SERVICE_ENDPOINT="http://localhost:35357/v2.0"
-SERVICE_TENANT_NAME=${SERVICE_TENANT_NAME:-service}
+ADMIN_TENANT_NAME=<%= admin_tenant_name %>
+ADMIN_USER_NAME=<%= admin_user %>
+ADMIN_PASSWORD=<%= admin_password %>
+ADMIN_EMAIL=<%= admin_email %>
+export SERVICE_TOKEN=<%= admin_token %>
+export SERVICE_ENDPOINT="http://127.0.0.1:35357/v2.0"
+SERVICE_TENANT_NAME="service"
+SERVICE_PASSWORD="service"
 
 function get_id () {
     echo `$@ | awk '/ id / { print $4 }'`
 }
 
 # Tenants
-ADMIN_TENANT=$(get_id keystone tenant-create --name=admin)
+ADMIN_TENANT=$(get_id keystone tenant-create --name=$ADMIN_TENANT_NAME)
 SERVICE_TENANT=$(get_id keystone tenant-create --name=$SERVICE_TENANT_NAME)
 DEMO_TENANT=$(get_id keystone tenant-create --name=demo)
 INVIS_TENANT=$(get_id keystone tenant-create --name=invisible_to_admin)
 
 
 # Users
-ADMIN_USER=$(get_id keystone user-create --name=admin \
+ADMIN_USER=$(get_id keystone user-create --name=$ADMIN_USER_NAME \
                                          --pass="$ADMIN_PASSWORD" \
-                                         --email=admin@nii.ac.jp)
+                                         --email=$ADMIN_EMAIL)
 DEMO_USER=$(get_id keystone user-create --name=demo \
                                         --pass="$ADMIN_PASSWORD" \
                                         --email=demo@nii.ac.jp)
 
 
 # Roles
-ADMIN_ROLE=$(get_id keystone role-create --name=admin)
+ADMIN_ROLE=$(get_id keystone role-create --name=$ADMIN_USER_NAME)
 KEYSTONEADMIN_ROLE=$(get_id keystone role-create --name=KeystoneAdmin)
 KEYSTONESERVICE_ROLE=$(get_id keystone role-create --name=KeystoneServiceAdmin)
 # ANOTHER_ROLE demonstrates that an arbitrary role may be created and used
@@ -60,7 +63,6 @@ keystone user-role-add --user $ADMIN_USER --role $ADMIN_ROLE --tenant_id $ADMIN_
 keystone user-role-add --user $ADMIN_USER --role $ADMIN_ROLE --tenant_id $DEMO_TENANT
 keystone user-role-add --user $DEMO_USER --role $ANOTHER_ROLE --tenant_id $DEMO_TENANT
 
-# TODO(termie): these two might be dubious
 keystone user-role-add --user $ADMIN_USER --role $KEYSTONEADMIN_ROLE --tenant_id $ADMIN_TENANT
 keystone user-role-add --user $ADMIN_USER --role $KEYSTONESERVICE_ROLE --tenant_id $ADMIN_TENANT
 

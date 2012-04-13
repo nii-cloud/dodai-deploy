@@ -33,10 +33,10 @@ if [ $pid1 != $pid2 ]; then
     exit 1
 fi
 
-export OS_TENANT_NAME=$1
-export OS_USERNAME=$2
-export OS_PASSWORD=$3
-export OS_AUTH_URL="http://localhost:5000/v2.0/"
+export OS_TENANT_NAME="<%= admin_tenant_name %>"
+export OS_USERNAME="<%= admin_user %>"
+export OS_PASSWORD="<%= admin_password %>"
+export OS_AUTH_URL="http://<%= keystone %>:5000/v2.0/"
 
 glance index
 if [ $? != 0 ]; then

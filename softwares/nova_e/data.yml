@@ -46,7 +46,9 @@ config_item_defaults:
     value: admin
   - name: admin_password
     value: admin
-  - name: glance_host
+  - name: glance
+    value: localhost
+  - name: keystone
     value: localhost
 
 component_config_defaults:

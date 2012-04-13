@@ -4,7 +4,7 @@ class nova_e::nova_api::test {
     file {
         "/var/lib/nova/test.sh":
             alias => "test.sh",
-            source => "puppet:///modules/nova_e/test.sh";
+            content => template("nova_e/test.sh.erb");
 
         "/var/lib/nova/$image_file_name":
             alias => "$image_file_name",
@@ -12,7 +12,7 @@ class nova_e::nova_api::test {
     }
 
     exec {
-        "/var/lib/nova/test.sh $image_file_name $nova_objectstore $admin_tenant_name $admin_user $admin_password 2>&1":
+        "/var/lib/nova/test.sh $image_file_name 2>&1":
             alias => "test.sh",
             require => File["test.sh", "$image_file_name"];
     }

@@ -26,12 +26,11 @@ if [ "`which nova-manage`" = ""  ]; then
 fi
 
 image_file="$1"
-nova_objectstore="$2"
 
-export OS_TENANT_NAME=$3
-export OS_USERNAME=$4
-export OS_PASSWORD=$5
-export OS_AUTH_URL="http://localhost:5000/v2.0/"
+export OS_TENANT_NAME="<%= admin_tenant_name %>"
+export OS_USERNAME="<%= admin_user %>"
+export OS_PASSWORD="<%= admin_password %>"
+export OS_AUTH_URL="http://<%= keystone %>:5000/v2.0/"
 
 nova x509-create-cert
 nova x509-get-root-cert
@@ -44,7 +43,7 @@ export EC2_USER_ID=$(echo "$CREDS" | awk '/ user_id / { print $4 }')
 export EC2_CERT="$HOME/cert.pem"
 export EC2_PRIVATE_KEY="$HOME/pk.pem"
 export EUCALYPTUS_CERT="$HOME/cacert.pem"
-export S3_URL="http://$nova_objectstore:3333"
+export S3_URL="http://<%= nova_objectstore %>:3333"
 
 rm novarc
 

@@ -17,7 +17,7 @@ class keystone_e::keystone::install {
             require => Package[keystone, python-keystone];
 
         "/var/lib/keystone/keystone-init.sh":
-            source => "puppet:///modules/keystone_e/keystone-init.sh",
+            content => template("keystone_e/keystone-init.sh.erb"),
             require => Exec[restart_keystone];
     }
 
@@ -26,7 +26,7 @@ class keystone_e::keystone::install {
             alias => "restart_keystone",
             require => File["keystone", "default_catalog"];
 
-        "/var/lib/keystone/keystone-init.sh $admin_password $admin_token $service_password":
+        "/var/lib/keystone/keystone-init.sh":
             require => File["/var/lib/keystone/keystone-init.sh"];
     }
 }
