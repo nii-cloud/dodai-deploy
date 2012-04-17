@@ -1,6 +1,6 @@
 class glance_e::glance::install {
     package {
-        [glance, glance-api, glance-client, glance-common, glance-registry, python-glance]:
+        [glance, glance-api, glance-client, glance-common, glance-registry, python-glance, python-keystone]:
     }
 
     file {

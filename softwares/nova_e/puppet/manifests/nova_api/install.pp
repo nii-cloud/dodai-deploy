@@ -1,6 +1,6 @@
 class nova_e::nova_api::install {
     nova_e::component {
-        ["nova-api", "python-libvirt", euca2ools, unzip, gawk]:
+        ["nova-api", "python-libvirt", euca2ools, unzip, gawk, "python-keystone"]:
     }
 
     file {
