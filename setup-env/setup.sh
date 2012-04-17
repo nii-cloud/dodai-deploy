@@ -46,7 +46,7 @@ function install_mcollective_client {
 }
 
 function install_puppet_server {
-  lsb_release -r | grep 11.10
+  in_os_vers 11.10
   if [ $? = 0  ]; then
     sed -i -e '/natty/d' /etc/apt/sources.list
     echo "deb http://security.ubuntu.com/ubuntu natty-security main" >> /etc/apt/sources.list
@@ -87,7 +87,7 @@ function install_deployment_app {
   apt-get -y install ruby-dev libsqlite3-dev
   bundle install
 
-  lsb_release -r | grep 11.10
+  in_os_vers 11.10
   if [ $? = 0  ]; then
     sed -i -e 's/ 00:00:00.000000000Z//g' /var/lib/gems/1.8/specifications/*.gemspec
     bundle install
@@ -142,7 +142,7 @@ function install_mcollective_server {
 }
 
 function install_puppet_client {
-  lsb_release -r | grep 11.10
+  in_os_vers 11.10
   if [ $? = 0  ]; then
     sed -i -e '/natty/d' /etc/apt/sources.list
     echo "deb http://security.ubuntu.com/ubuntu natty-security main" >> /etc/apt/sources.list
@@ -158,7 +158,7 @@ function install_puppet_client {
 }
 
 function install_openstack_repository {
-  lsb_release -r | grep 11.10
+  in_os_vers 11.10 12.04
   if [ $? != 0  ]; then
     apt-get -y install python-software-properties
     add-apt-repository ppa:openstack-release/2011.3
@@ -167,12 +167,15 @@ function install_openstack_repository {
 }
 
 function install_sge_repository {
-  apt-get -y install python-software-properties
-  add-apt-repository ppa:ferramroberto/java -y #-y option cannot be used in old version
+  in_os_vers 12.04
   if [ $? != 0 ]; then
-    add-apt-repository ppa:ferramroberto/java
+    apt-get -y install python-software-properties
+    add-apt-repository ppa:ferramroberto/java -y #-y option cannot be used in old version
+    if [ $? != 0 ]; then
+      add-apt-repository ppa:ferramroberto/java
+    fi
+    apt-get update
   fi
-  apt-get update
 }
 
 function install_memcached {
@@ -210,6 +213,17 @@ function install_node {
   for soft in ${node_softwares[@]} ; do
     install $soft
   done
+}
+
+function in_os_vers {
+  for i in $@; do
+    if [ `lsb_release -s -r` = "$i" ]; then
+      echo $i
+      return 0
+    fi
+  done
+
+  return 1
 }
 
 function print_usage {
