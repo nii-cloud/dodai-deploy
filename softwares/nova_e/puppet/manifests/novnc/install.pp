@@ -17,7 +17,7 @@ class nova_e::novnc::install {
         "rm -rf novnc; tar xzvf novnc.tgz":
             cwd => "/var/lib",
             alias => "novnc.tgz",
-            require => File["novnc.tgz"];
+            require => [File["novnc.tgz"], Package[python-numpy]];
 
         "stop novnc; start novnc":
             require => [File["novnc.conf"], Exec["novnc.tgz"]];
