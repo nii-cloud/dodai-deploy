@@ -49,14 +49,12 @@ class Operations
     #write templates to puppet
     @proposal.software_configs.each do |software_config|
       path = software_config.software_config_default.path
-      content = _evaluate_template software_config.content, @proposal.node_configs, @proposal.config_items
-      _save_template_to_puppet @proposal.id, path, content
+      _save_template_to_puppet @proposal.id, path, software_config.content 
     end
 
     @proposal.component_configs.each do |component_config|
         path = component_config.component_config_default.path
-        content = _evaluate_template component_config.content, @proposal.node_configs, @proposal.config_items
-        _save_template_to_puppet @proposal.id, path, content
+        _save_template_to_puppet @proposal.id, path, component_config.content 
     end
 
     #save proposal id and operation to files
@@ -110,24 +108,6 @@ class Operations
   end
 
   private
-
-  def _evaluate_template(template, node_configs, config_items)
-    params = {}
-    node_configs.each do |node_config|
-      params[node_config.component.name] = [] unless params.has_key? node_config.component.name
-      params[node_config.component.name] << node_config.node.name
-    end
-
-    config_items.each do |config_item|
-      params[config_item.config_item_default.name] = config_item.value
-    end
-
-    params = params.each{|key, value| params[key] = params[key][0] if params[key].size == 1}
-    eruby = Erubis::Eruby.new template 
-    eruby.result params
-
-    template
-  end
 
   def _save_puppet_parameters parameters
     File.open(Settings.puppet.etc + "/parameters", "w") {|f| f.write parameters.to_yaml}
