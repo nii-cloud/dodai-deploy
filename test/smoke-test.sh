@@ -27,9 +27,9 @@ cd $current_dir/..
 cli="script/cli.rb --port $port $server"
 
 echo "Create proposals."
-$cli proposal create nova "openstack nova diablo" 
-$cli proposal create glance "openstack glance diablo" 
-$cli proposal create swift "openstack swift diablo"
+$cli proposal create nova "openstack diablo nova" 
+$cli proposal create glance "openstack diablo glance" 
+$cli proposal create swift "openstack diablo swift"
 $cli proposal create hadoop "hadoop 0.20.2"
 $cli proposal create sge "sun grid engine 6.2u5"
 
