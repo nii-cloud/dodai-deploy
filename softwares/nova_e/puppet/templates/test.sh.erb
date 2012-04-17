@@ -32,6 +32,8 @@ export OS_USERNAME="<%= admin_user %>"
 export OS_PASSWORD="<%= admin_password %>"
 export OS_AUTH_URL="http://<%= keystone %>:5000/v2.0/"
 
+rm *.pem
+
 nova x509-create-cert
 nova x509-get-root-cert
 
@@ -93,6 +95,7 @@ sleep 60
 
 echo "image: [$image]"
 
+euca-delete-keypair mykey
 euca-add-keypair mykey > mykey.priv
 chmod 400 mykey.priv
 
