@@ -7,4 +7,4 @@ if [ "$1" != "" ]; then
   port=$1
 fi
 
-./ec2-test-image.sh $ec2_image_id
+./ec2-test-image.sh maverick $ec2_image_id

@@ -1,9 +1,10 @@
 #!/bin/bash
 
 function test_image {
-  echo "Begin to test image $1."
+  echo "Begin to test image $1 - $2."
 
-  export ec2_image_id=$1
+  export ec2_image_id=$2
+  os_ver=$1
 
   output="`rake dodai:ec2 nodes_size=1 server_port=$port`"
   if [ $? != 0 ]; then
@@ -17,7 +18,7 @@ function test_image {
 
   instance_ids=(`echo "$output" | grep "instance id" | awk '{print $4}'` )
 
-  test/smoke-test.sh $dns_name $port
+  test/smoke-test.sh $os_ver $dns_name $port
   result=$?
 
   if [ $result != 0 ]; then
@@ -29,11 +30,11 @@ function test_image {
     rake dodai:ec2:terminate instance=$instance_id
   done
   if [ $result != 0 ]; then
-    echo "Test failed."
+    echo "Test for image[$1 - $2] failed."
     exit 1
   fi
 
-  echo "Test of image $1 finished."
+  echo "Test of image[$1 - $2] finished."
   echo ""
 }
 
@@ -42,4 +43,4 @@ if [ "$port" = ""  ]; then
 fi
 
 cd `dirname $0`/..
-test_image $1
+test_image $@
