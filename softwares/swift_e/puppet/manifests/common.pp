@@ -13,12 +13,12 @@ class swift_e::common {
             require => User[swift];
 
         "/etc/swift/cert.crt":
-            source => "puppet:///modules/swift/cert.crt",
+            source => "puppet:///modules/swift_e/cert.crt",
             mode => 644,
             require => File["/etc/swift"];
 
         "/etc/swift/cert.key":
-            source => "puppet:///modules/swift/cert.key",
+            source => "puppet:///modules/swift_e/cert.key",
             mode => 644,
             require => File["/etc/swift"];
 

@@ -7,7 +7,7 @@ class swift_e::swift_storage::uninstall {
 
     file {
        "/tmp/swift/storage-uninit.sh":
-           source => "puppet:///modules/swift/storage-uninit.sh"
+           source => "puppet:///modules/swift_e/storage-uninit.sh"
     }
 
     exec {

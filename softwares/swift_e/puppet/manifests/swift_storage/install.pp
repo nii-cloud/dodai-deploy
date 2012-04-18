@@ -13,7 +13,7 @@ class swift_e::swift_storage::install {
             require => Package[rsync];
 
        "/tmp/swift/rsync-init.sh":
-           source => "puppet:///modules/swift/rsync-init.sh",
+           source => "puppet:///modules/swift_e/rsync-init.sh",
            require => File["/etc/rsyncd.conf", "/tmp/swift"];
 
         "/etc/swift/account-server.conf":
@@ -35,7 +35,7 @@ class swift_e::swift_storage::install {
             require => Package[swift-object];
 
         "/tmp/swift/storage-init.sh":
-            source => "puppet:///modules/swift/storage-init.sh",
+            source => "puppet:///modules/swift_e/storage-init.sh",
             require => File["account-server.conf", "container-server.conf", "object-server.conf", "/tmp/swift"];
     }
 

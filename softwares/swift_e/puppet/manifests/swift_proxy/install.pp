@@ -1,10 +1,10 @@
 class swift_e::swift_proxy::install {
     include swift_e::common
 
-    package { swift: }
+    package { 
+        [swauth, memcached, swift]:;
 
-    package {
-        [swift-proxy, memcached]:
+        swift-proxy:
             require => [File["/etc/swift/swift.conf"], Package[swift]]
     }
 
@@ -15,19 +15,15 @@ class swift_e::swift_proxy::install {
             require => Package[swift-proxy];
 
         "/tmp/swift/storage-servers":
-            content => template("swift/storage-servers.erb");
+            content => template("swift_e/storage-servers.erb");
 
         "/tmp/swift/proxy-init.sh":
-            source => "puppet:///modules/swift/proxy-init.sh",
+            source => "puppet:///modules/swift_e/proxy-init.sh",
             require => File["/etc/swift/proxy-server.conf", "/tmp/swift"];
-
-        "/tmp/swift/python-swauth.deb":
-            source => "puppet:///modules/swift/python-swauth_1.0.2-1_all.deb",
-            require => File["/tmp/swift"];
     }
 
     exec {
         "/tmp/swift/proxy-init.sh $storage_dev $ring_builder_replicas 2>&1":
-            require => File["/tmp/swift/proxy-init.sh", "/tmp/swift/storage-servers", "/tmp/swift/python-swauth.deb"]
+            require => File["/tmp/swift/proxy-init.sh", "/tmp/swift/storage-servers"]
     }
 }

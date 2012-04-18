@@ -1,13 +1,13 @@
 class swift_e::swift_proxy::uninstall {
     package {
-        [swift, swift-proxy]:
+        [swift, swift-proxy, swauth]:
             ensure => purged,
             require => Exec["proxy-uninit"]
     }
 
     file {
        "/tmp/swift/proxy-uninit.sh":
-           source => "puppet:///modules/swift/proxy-uninit.sh"
+           source => "puppet:///modules/swift_e/proxy-uninit.sh"
     }
 
     exec {

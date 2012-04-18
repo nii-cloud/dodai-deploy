@@ -6,8 +6,6 @@ if [ $? = 0 ]; then
     exit 0
 fi
 
-dpkg -i /tmp/swift/python-swauth.deb
-
 cd /etc/swift
 
 dev=$1
