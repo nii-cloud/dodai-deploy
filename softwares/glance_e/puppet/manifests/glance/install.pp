@@ -1,6 +1,6 @@
 class glance_e::glance::install {
     package {
-        [glance, glance-api, glance-client, glance-common, glance-registry, python-glance, python-keystone]:
+        [glance, glance-api, glance-client, glance-common, glance-registry, python-glance, python-keystone, python-swift]:
     }
 
     file {
@@ -31,6 +31,6 @@ class glance_e::glance::install {
 
     exec {
         "stop glance-api; stop glance-registry; start glance-api; start glance-registry":
-             require => File["glance-api", "glance-registry", "glance-api-paste", "glance-registry-paste"];
+             require => [File["glance-api", "glance-registry", "glance-api-paste", "glance-registry-paste"], Package[python-swift]];
     }
 }
