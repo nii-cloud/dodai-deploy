@@ -6,7 +6,7 @@ Welcome to the **dodai-deploy project**
 
 ## Introduction
 The dodai-deploy is a software management tool. It supports the following softwares.
-* OpenStack Essex(Nova, Glance, Keystone)
+* OpenStack Essex(Nova, Glance, Swift, Keystone)
 * OpenStack Diablo(Nova, Glance, Swift) 
 * hadoop 0.20.2
 * sun grid engine 6.2u5
@@ -30,7 +30,7 @@ The following OSes are supported.
        <td>ubuntu 12.04</td>
    </tr>
    <tr>
-       <td>OpenStack Essex(Nova, Glance, Keystone)</td>
+       <td>OpenStack Essex(Nova, Glance, Swift, Keystone)</td>
        <td></td>
        <td></td>
        <td></td>
