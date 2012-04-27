@@ -6,8 +6,5 @@ class nova_e::nova_volume::install {
             require => File["/etc/nova/nova.conf"]
     }
 
-    if $is_virtual and $operatingsystem == "Ubuntu" {
-    } else {
-        include nova_e::iscsitarget::install
-    }
+    include nova_e::tgt::install
 }
