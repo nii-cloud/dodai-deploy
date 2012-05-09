@@ -65,10 +65,15 @@ namespace :dodai do
     end
 
     def load_puppet(path, software_name, proxy)
-      dest_path = "/etc/puppet/modules/#{software_name}"
-      `mkdir -p #{dest_path}` unless File.exist? dest_path
+      puts ""
+      puts "------------------------------------------------"
+      puts "-------Load puppet files for software #{software_name}.--"
+      puts "------------------------------------------------"
 
-      `cp -r #{path}/* #{dest_path}`
+      dest_path = "/etc/puppet/modules/#{software_name}"
+      puts `mkdir -v -p #{dest_path}` unless File.exist? dest_path
+
+      puts `cp -v -r #{path}/* #{dest_path}`
       puppet_init = "#{path}/../puppet-init.sh"
 
       return unless File.exist? puppet_init
