@@ -77,7 +77,7 @@ euca-bundle-image -i *-vmlinuz -p kernel --kernel true
 euca-upload-bundle -m /tmp/kernel.manifest.xml -b mybucket
 kernel=`euca-register mybucket/kernel.manifest.xml | gawk '{print $2}'`
 
-euca-bundle-image -i *-initrd -p ramdisk --ramdisk true
+euca-bundle-image -i *-loader -p ramdisk --ramdisk true
 euca-upload-bundle -m /tmp/ramdisk.manifest.xml -b mybucket
 ramdisk=`euca-register mybucket/ramdisk.manifest.xml | gawk '{print $2}'`
 
