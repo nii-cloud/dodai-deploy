@@ -2,10 +2,12 @@ Welcome to the **dodai-deploy project**
 
 ## News 
 * [2012/04/13] Add supports for Openstack Essex. Please refer the following blog for how-to.
- * [Install openstack nova essex with dodai-deploy.](http://www.guanxiaohua2k6.com/2012/04/install-openstack-nova-essex-with-dodai.html)
+ * [Install nova essex(all-in-one) with dodai-deploy on ubuntu 12.04](http://www.guanxiaohua2k6.com/2012/04/install-openstack-nova-essex-with-dodai.html)
+ * [Install nova essex(multiple machines) with dodai-deploy on ubuntu 12.04](http://www.guanxiaohua2k6.com/2012/04/install-openstack-nova-essexmultiple.html)
 
 ## Introduction
 The dodai-deploy is a software management tool. It supports the following softwares.
+
 * OpenStack Essex(Nova, Glance, Swift, Keystone)
 * OpenStack Diablo(Nova, Glance, Swift) 
 * hadoop 0.20.2
