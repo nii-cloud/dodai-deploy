@@ -7,7 +7,11 @@
 
 # The java implementation to use.  Required.
 # export JAVA_HOME=/usr/lib/j2sdk1.5-sun
-export JAVA_HOME=/usr/lib/jvm/java-6-openjdk
+if [ "`facter lsbdistcodename`" = "precise" ]; then
+  export JAVA_HOME=/usr/lib/jvm/java-6-openjdk-`facter architecture`
+else
+  export JAVA_HOME=/usr/lib/jvm/java-6-openjdk
+fi
 
 # Extra Java CLASSPATH elements.  Optional.
 # export HADOOP_CLASSPATH=

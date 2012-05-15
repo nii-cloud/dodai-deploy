@@ -2,7 +2,7 @@ class hadoop::common::install {
     package { openjdk-6-jre: }
 
     file {
-        "$hadoop::home-$hadoop::version.tar.gz":
+        "${hadoop::home}-${hadoop::version}.tar.gz":
             source => "puppet:///modules/hadoop/hadoop-$hadoop::version.tar.gz",
             mode => 644,
             alias => tarball,
