@@ -27,11 +27,12 @@ function test_oneiric {
 }
 
 function test_precise {
-  $cli proposal create nova "openstack essex keystone"
+  $cli proposal create keystone "openstack essex keystone"
   $cli proposal create glance "openstack essex glance"
   $cli proposal create nova "openstack essex nova"
   $cli proposal create swift "openstack essex swift"
-  return 4 
+  $cli proposal create hadoop "hadoop 0.20.2"
+  return 5 
 }
 
 if [ "$1" = "" ]; then
