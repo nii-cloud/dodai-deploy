@@ -1,6 +1,7 @@
 Welcome to the **dodai-deploy project**
 
 ## News 
+* [2012/05/16] hadoop can be installed on **ubuntu 12.04**.
 * [2012/04/13] Add supports for Openstack Essex. Please refer the following blog for how-to.
  * [Install nova essex(all-in-one) with dodai-deploy on ubuntu 12.04](http://www.guanxiaohua2k6.com/2012/04/install-openstack-nova-essex-with-dodai.html)
  * [Install nova essex(multiple machines) with dodai-deploy on ubuntu 12.04](http://www.guanxiaohua2k6.com/2012/04/install-openstack-nova-essexmultiple.html)
@@ -36,27 +37,27 @@ The following OSes are supported.
        <td></td>
        <td></td>
        <td></td>
-       <td>○</td>
+       <td>:)</td>
    </tr>
    <tr>
        <td>OpenStack Diablo(Nova, Glance, Swift)</td>
-       <td>○</td>
-       <td>○</td>
-       <td>○</td>
+       <td>:)</td>
+       <td>:)</td>
+       <td>:)</td>
        <td></td>
    </tr>
    <tr>
        <td>hadoop 0.20.2</td>
-       <td>○</td>
-       <td>○</td>
-       <td>○</td>
-       <td></td>
+       <td>:)</td>
+       <td>:)</td>
+       <td>:)</td>
+       <td>:)</td>
    </tr>
    <tr>
        <td>sun grid engine 6.2u5</td>
-       <td>○</td>
-       <td>○</td>
-       <td>○</td>
+       <td>:)</td>
+       <td>:)</td>
+       <td>:)</td>
        <td></td>
    </tr>
 </table>
