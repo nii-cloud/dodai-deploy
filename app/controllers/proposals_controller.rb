@@ -239,6 +239,7 @@ class ProposalsController < ApplicationController
 
       component_config["component_config_default_id"] = ComponentConfigDefault.find_by_path(component_config["path"]).id
       component_config.delete "path"
+      component_config["content"].gsub! "\r", ""
     }
 
     proposal_hash.fetch("software_configs_attributes", []).each {|index, software_config|
@@ -246,6 +247,7 @@ class ProposalsController < ApplicationController
 
       software_config["software_config_default_id"] = SoftwareConfigDefault.find_by_path(software_config["path"]).id
       software_config.delete "path"
+      software_config["content"].gsub! "\r", ""
     }
 
     logger.debug proposal_hash.inspect
