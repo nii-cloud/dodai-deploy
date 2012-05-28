@@ -100,7 +100,7 @@ euca-add-keypair mykey > mykey.priv
 chmod 400 mykey.priv
 
 echo "euca-run-instances $image -k mykey -t m1.tiny" 
-euca-run-instances $image -k mykey -t m1.tiny
+instance_id=`euca-run-instances $image -k mykey -t m1.tiny | grep INSTANCE | gawk '{print $2}'`
 if [ $? -ne 0 ]; then
     echo "Executing command euca-run-instances failed."
     exit 1
@@ -108,9 +108,10 @@ fi
 
 # if the status doesn't become lauching after 12 * 10 seconds, running instance will be failed.
 launching_time=12
-instance_status=`euca-describe-instances | grep "INSTANCE" | gawk '{print $6}'`
+echo "instance: [$instance_id]"
+instance_status=`euca-describe-instances | gawk '{print $2 " "$6}' | grep "$instance_id" | gawk '{print $2}'`
 if [ $instance_status = "(IRT," ]; then
-    instance_status=`euca-describe-instances | grep "INSTANCE" | gawk '{print $4}'`
+    instance_status=`euca-describe-instances | gawk '{print $2 " "$4}' | grep "$instance_id" | gawk '{print $2}'`
 fi
 echo "Instance status: $instance_status"
 while [ "$instance_status" != "running" ]
@@ -124,9 +125,9 @@ do
     launching_time=`expr $launching_time - 1`
     sleep 10
 
-    instance_status=`euca-describe-instances | grep "INSTANCE" | gawk '{print $6}'`
+    instance_status=`euca-describe-instances | gawk '{print $2 " "$6}' | grep "$instance_id" | gawk '{print $2}'`
     if [ "$instance_status" = "(IRT," ]; then
-        instance_status=`euca-describe-instances | grep "INSTANCE" | gawk '{print $4}'`
+        instance_status=`euca-describe-instances | gawk '{print $2 " "$4}' | grep "$instance_id" | gawk '{print $2}'`
     fi
     echo "Instance status: $instance_status"
 done
