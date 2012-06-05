@@ -108,12 +108,18 @@ function install_deployment_app {
   rake tmp:clear
   rake log:clear
 
-  # install puppet vim addon.
+  #install puppet vim addon.
   apt-get install vim-addon-manager -y
   apt-get install vim-puppet vim-rails -y
   sleep 5
   vim-addons install puppet -w 
-  vim-addons install rails -w 
+  vim-addons install rails -w
+
+  #add folder view for vim.
+  wget -O opsplorer.zip http://www.vim.org/scripts/download_script.php?src_id=10271
+  unzip opsplorer.zip
+  mv opsplorer.vim /var/lib/vim/addons/plugin/
+  mv opsplorer.txt /var/lib/vim/addons/doc/
 
   cd $home_path 
 }
