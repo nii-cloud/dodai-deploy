@@ -110,8 +110,10 @@ function install_deployment_app {
 
   # install puppet vim addon.
   apt-get install vim-addon-manager -y
-  apt-get install vim-puppet -y
+  apt-get install vim-puppet vim-rails -y
+  sleep 5
   vim-addons install puppet -w 
+  vim-addons install rails -w 
 
   cd $home_path 
 }
