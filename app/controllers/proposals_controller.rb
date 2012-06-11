@@ -16,7 +16,9 @@
 class ProposalsController < ApplicationController
 
   def index
-    @proposals = Proposal.all
+    @proposals = Proposal.find_all_by_user_id current_user.id
+
+    logger.debug request.session_options[:id]
 
     respond_to do |format|
       format.html
@@ -72,7 +74,8 @@ class ProposalsController < ApplicationController
 
     _strip_contents_in_params
     @proposal = Proposal.new(params[:proposal])
-    @proposal.state = "init" 
+    @proposal.state = "init"
+    @proposal.user_id = current_user.id 
     if @proposal.save
       respond_to do |format|
         format.html { redirect_to(proposals_url) }
@@ -263,8 +266,11 @@ class ProposalsController < ApplicationController
     waiting_proposal.operation = operation
     waiting_proposal.save
 
+    current_user.ensure_authentication_token!
     mq = MessageQueueClient.new
-    mq.publish({:operation => operation, :params => {:proposal_id => proposal_id}})
+    mq.publish({:operation => operation, 
+      :user_email => current_user.email, 
+      :params => {:proposal_id => proposal_id, :auth_token => current_user.authentication_token }})
     mq.close
 
     respond_to do |format|

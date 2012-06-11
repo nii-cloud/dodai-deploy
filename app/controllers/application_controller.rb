@@ -15,5 +15,12 @@
 #    under the License.
 class ApplicationController < ActionController::Base
   protect_from_forgery
-end
 
+  layout :layout
+  before_filter :authenticate_user!, :except => [:layout]
+
+  def layout
+    devise_controller? ? false : "application"
+  end
+
+end

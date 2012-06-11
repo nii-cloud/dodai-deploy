@@ -17,9 +17,14 @@ class LogsController < ApplicationController
 
   def index
     if params.has_key? "proposal_id"
-      @logs = Proposal.find(params[:proposal_id]).logs
+      proposal = Proposal.find(params[:proposal_id])
+      if proposal.user_id == current_user.id
+        @logs = proposal.logs
+      else
+        @logs = []
+      end
     else
-      @logs = Log.all
+      @logs = Log.joins(:proposal).where('proposals.user_id' => current_user.id)
     end
 
     respond_to do |format|

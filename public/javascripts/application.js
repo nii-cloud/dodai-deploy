@@ -17,7 +17,7 @@ if (!window['console']){
 
 $(function () {
   $("body").height($(window).height());
-  $('body').layout({
+  $("body").layout({
     closable: false,
     resizable: false,
     slidable: false
@@ -25,4 +25,3 @@ $(function () {
 
   $(":text").attr("size", 60);
 });
-

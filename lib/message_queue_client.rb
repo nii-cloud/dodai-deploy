@@ -20,14 +20,14 @@ class MessageQueueClient
   end
 
   def subscribe
-    @client.subscribe "/topic/deploy" do |msg|
+    @client.subscribe "/queue/deploy" do |msg|
       msg_obj = YAML.load msg.body
       yield msg_obj
     end
   end
 
   def publish(msg_obj)
-    @client.publish "/topic/deploy", msg_obj.to_yaml
+    @client.publish "/queue/deploy", msg_obj.to_yaml
   end 
 
   def unsubscribe

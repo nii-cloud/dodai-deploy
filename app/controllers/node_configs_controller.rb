@@ -16,9 +16,14 @@
 class NodeConfigsController < ApplicationController
   def index
     if params.has_key? :node_id
-      @node_configs = Node.find(params[:node_id]).node_configs
+      node = Node.find(params[:node_id])
+      if node.user_id == current_user.id
+        @node_configs = node.node_configs
+      else
+        @node_configs = []
+      end
     else
-      @node_configs = NodeConfig.all
+      @node_configs = NodeConfig.joins(:node).where('nodes.user_id' => current_user.id)
     end
   end
 

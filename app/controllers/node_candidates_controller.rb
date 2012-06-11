@@ -20,7 +20,7 @@ class NodeCandidatesController < ApplicationController
         candidates = []
         names = McUtils.find_hosts - Node.all.map(&:name)
         names.each {|name|
-          candidates << {:name => name, :ip_address => IPSocket.getaddress(name)}
+          candidates << {:name => name}
         }
         render :json => JSON.pretty_generate(candidates.as_json)  
       }

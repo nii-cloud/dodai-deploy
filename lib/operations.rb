@@ -14,34 +14,41 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 class Operations
-  def invoke(name, params)
+  def initialize(name, user_email)
+    @name = name
+    @user_email = user_email
+  end
+
+  def invoke(params)
     begin
       @proposal = Proposal.find params[:proposal_id]
-      @proposal.state = "#{name}ing"
+      @proposal.state = "#{@name}ing"
       @proposal.save
+
+      @auth_token = params[:auth_token]
 
       waiting_proposal = WaitingProposal.find_by_proposal_id @proposal.id
       waiting_proposal.destroy 
 
-      puts "Start #{name}[proposal - #{@proposal.id}]"
+      puts "Start #{@name}[proposal - #{@proposal.id}]"
 
-      result = self.method(name).call
+      result = self.method(@name).call
     rescue => exc
       puts exc.inspect
       puts exc.backtrace      
       result = false
     ensure
       if result
-        @proposal.state = "#{name}ed"
-        @proposal.state = "init" if name == "uninstall"
+        @proposal.state = "#{@name}ed"
+        @proposal.state = "init" if @name == "uninstall"
       else
-        @proposal.state = "#{name} failed"
+        @proposal.state = "#{@name} failed"
       end
       @proposal.save
 
-      Scheduler.delete @proposal if name == "install"
+      Scheduler.delete @proposal if @name == "install"
 
-      puts "#{name}[proposal - #{@proposal.id}] finished"
+      puts "#{@name}[proposal - #{@proposal.id}] finished"
     end
   end
 
@@ -58,7 +65,7 @@ class Operations
     end
 
     #save proposal id and operation to files
-    _save_puppet_parameters({"proposal_id" => @proposal.id, "operation" => "install"})
+    _save_puppet_parameters({"proposal_id" => @proposal.id, "operation" => "install", "auth_token" => @auth_token})
 
     #install component one by one
     Scheduler.schedule @proposal
@@ -74,7 +81,7 @@ class Operations
 
   def uninstall
     #save proposal id and operation to files
-    _save_puppet_parameters({"proposal_id" => @proposal.id, "operation" => "uninstall"})
+    _save_puppet_parameters({"proposal_id" => @proposal.id, "operation" => "uninstall", "auth_token" => @auth_token})
 
     #uninstall component one by one
     Scheduler.schedule @proposal, "uninstall"
@@ -99,8 +106,8 @@ class Operations
       end
     end
 
-    _save_puppet_parameters({"proposal_id" => @proposal.id, "operation" => "test"})
-    results = McUtils.puppetd_runonce [test_node_name]
+    _save_puppet_parameters({"proposal_id" => @proposal.id, "operation" => "test", "auth_token" => @auth_token})
+    results = McUtils.puppetd_runonce [test_node_name], @user_email
     result = results[test_node_name]
     _save_puppet_message_to_log @proposal.id, Node.find_by_name(test_node_name).id, result[:message], "test"
 
@@ -137,7 +144,7 @@ class Operations
       node_name_configs_map[node_config.node.name] << node_config
     }
 
-    results = McUtils.puppetd_runonce node_name_configs_map.keys
+    results = McUtils.puppetd_runonce node_name_configs_map.keys, @user_email
 
     success = true
     node_name_configs_map.each do |node_name, node_configs|

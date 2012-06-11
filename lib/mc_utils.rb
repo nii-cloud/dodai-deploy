@@ -16,16 +16,26 @@
 require "mcollective"
 include MCollective::RPC
 
+module MCollective
+  class Config
+    attr_writer :topicprefix 
+  end
+end
+
+
 class McUtils
 
-  def self.find_hosts
-    mc = rpcclient "rpcutil", :options => self._rpcoptions 
+  def self.find_hosts(user_email)
+    mc = rpcclient "rpcutil", :options => self._rpcoptions
+    config = MCollective::Config.instance
+    hash = Digest::SHA1.hexdigest user_email
+    config.topicprefix = "/topic/#{hash}."
     result = mc.discover
     mc.disconnect
     result
   end
   
-  def self.puppetd_runonce(node_names)
+  def self.puppetd_runonce(node_names, user_email)
     options = self._rpcoptions
     options[:filter]["fact"] = [{:fact => "hostname", :value => node_names.join("|"), :operator => "=~"}]
     options[:verbose] = true
@@ -33,6 +43,10 @@ class McUtils
     options[:disctimeout] = Settings.mcollective.discovery_timeout
 
     mc = rpcclient "puppetd", :options => options
+    config = MCollective::Config.instance
+    puts user_email
+    hash = Digest::SHA1.hexdigest user_email
+    config.topicprefix = "/topic/#{hash}."
     output = mc.runonce :server => `hostname -f`.strip
     mc.disconnect
   

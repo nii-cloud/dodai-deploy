@@ -31,7 +31,6 @@ class RestApisController < ApplicationController
               {:name => "list"}, 
               {:name => "create", :parameters => ["name"]}, 
               {:name => "destroy", :parameters => ["id"]},
-              {:name => "update", :parameters => ["id", "ip"]},
             ]
           }, {
             :name => "node_candidate",

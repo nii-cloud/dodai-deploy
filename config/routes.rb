@@ -14,6 +14,10 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 Deployment::Application.routes.draw do
+  get "current_user/index"
+
+  devise_for :users
+
   get "getting_started/index"
   get "rest_apis/index"
 

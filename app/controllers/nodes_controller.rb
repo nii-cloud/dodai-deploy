@@ -16,7 +16,7 @@
 class NodesController < ApplicationController
 
   def index
-    @nodes = Node.all
+    @nodes = Node.find_all_by_user_id current_user.id
 
     respond_to do |format|
       format.html
@@ -32,8 +32,8 @@ class NodesController < ApplicationController
 
   def create
     @node = Node.new(params[:node])
-    @node.ip = IPSocket.getaddress(@node.name) if @node.name
     @node.state = "available"
+    @node.user_id = current_user.id
     if @node.save
       respond_to do |format|
         format.html { redirect_to nodes_url }
@@ -85,7 +85,7 @@ class NodesController < ApplicationController
   end
 
   def _get_new_node_names
-    McUtils.find_hosts - Node.all.map(&:name)
+    McUtils.find_hosts(current_user.email) - Node.all.map(&:name)
   end
 end
 

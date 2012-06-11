@@ -1,0 +1,17 @@
+<h1>Current user</h1>
+
+<table>
+<tr>
+  <th>Email</th>
+  <td><%= current_user.email %></td>
+</tr>
+<tr>
+  <th>MCollective topic prefix</th>
+  <td>/topic/<%= Digest::SHA1.hexdigest current_user.email %>.</td>
+</tr>
+<tr>
+  <th>Authentication token</th>
+  <% current_user.ensure_authentication_token! %>
+  <td>auth_token=<%= current_user.authentication_token %></td>
+</tr>
+</table>
