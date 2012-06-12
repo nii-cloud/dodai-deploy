@@ -18,11 +18,12 @@ class NodeCandidatesController < ApplicationController
     respond_to do |format| 
       format.json { 
         candidates = []
-        names = McUtils.find_hosts - Node.all.map(&:name)
+        current_user.ensure_authentication_token!
+        names = McUtils.find_hosts(current_user.authentication_token) - Node.all.map(&:name)
         names.each {|name|
           candidates << {:name => name}
         }
-        render :json => JSON.pretty_generate(candidates.as_json)  
+        render :json => JSON.pretty_generate(candidates.as_json)
       }
     end
   end
