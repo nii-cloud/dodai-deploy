@@ -19,7 +19,7 @@ function install_activemq_server {
   apt-get -y install openjdk-6-jre
 
   activemq="apache-activemq-5.4.3"
-  wget "http://ftp.riken.jp/net/apache//activemq/apache-activemq/5.4.3/$activemq-bin.tar.gz"
+  wget "http://ftp.riken.jp/net/apache/activemq/apache-activemq/5.4.3/$activemq-bin.tar.gz"
   tar xzvf $activemq-bin.tar.gz > /dev/null
   rm $activemq-bin.tar.gz
   mv $activemq /opt/
@@ -40,7 +40,11 @@ function install_mcollective_client {
   gem install stomp -v 1.1.10 
 
   cp mcollective/client.cfg /etc/mcollective/
-  host=`hostname -f`
+  if [ "$server" != "" ]; then
+    host=$server
+  else
+    host=`hostname -f`
+  fi
   sed -i -e "s/HOST/$host/g" /etc/mcollective/client.cfg
   sed -i -e "s/IDENTITY/$host/g" /etc/mcollective/client.cfg
 }
@@ -63,6 +67,12 @@ function install_puppet_server {
     port=3000
   fi
   sed -i -e "s/PORT/$port/g" /etc/puppet/external_nodes.rb
+
+  if [ "$server" != "" ]; then
+    sed -i -s "/certname/d" /etc/puppet/puppet.conf
+    echo "" >> /etc/puppet/puppet.conf
+    echo "certname=$server" >> /etc/puppet/puppet.conf
+  fi
 
   service puppetmaster stop
   sleep 5
@@ -138,6 +148,7 @@ function install_mcollective_server {
   cp mcollective/server.cfg /etc/mcollective/
   sed -i -e "s/HOST/$server/g" /etc/mcollective/server.cfg
   sed -i -e "s/IDENTITY/$hostname/g" /etc/mcollective/server.cfg
+  sed -i -e "s/TOKEN/$token/g" /etc/mcollective/server.cfg
 
   #add puppet agent
   cp mcollective/agent/* /usr/share/mcollective/plugins/mcollective/agent/
@@ -146,7 +157,6 @@ function install_mcollective_server {
   echo "hostname: $hostname" >> /etc/mcollective/facts.yaml
 
   service mcollective restart
-
   sysv-rc-conf mcollective on
 }
 
@@ -246,6 +256,7 @@ OPTIONS:
   -s: The fqdn of deploy server. It should be specified if the TYPE is node.
   -p: The port number of the rails server on deploy server. It will be used only if the TYPE is server and SOFTWARE is puppet_server.
   -x: The http proxy, such as http://proxy.domain:8080.
+  -t: The user token.
 
 SOFTWARE:
   The name of the software which will be installed.
@@ -267,13 +278,14 @@ For examples,
 server_softwares=(ruby_rubygems activemq_server mcollective_client puppet_server memcached deploy_app)
 node_softwares=(ruby_rubygems mcollective_server puppet_client openstack_repository sge_repository)
 
-while getopts "s:p:x:": opt
+while getopts "s:p:x:t:": opt
 do
   case $opt in
     \?) OPT_ERROR=1; break;;
     s) server="$OPTARG";;
     p) port="$OPTARG";;
     x) proxy="$OPTARG";;
+    t) token="$OPTARG";;
   esac
 done
 
@@ -293,6 +305,11 @@ fi
 
 type=$1
 if [ "$type" = "server" ]; then
+  if [ "$token" = "" ]; then
+    echo "Please specify the user token."
+    print_usage
+    exit 1
+  fi
   install_server "$2"
 elif [ "$type" = "node" ]; then
   if [ "$server" = ""  ]; then

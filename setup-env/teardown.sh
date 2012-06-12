@@ -37,6 +37,7 @@ function uninstall_puppet_server {
   apt-get -y --purge remove puppetmaster puppetmaster-common
   rm -rf /etc/puppet/*
   rm -rf /var/lib/puppet/*
+  rm -rf /var/run/puppet
 }
 
 function uninstall_deployment_app {
