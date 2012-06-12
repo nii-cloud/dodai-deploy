@@ -15,6 +15,6 @@
 #    under the License.
 class WaitingProposalsController < ApplicationController
   def index
-    @waiting_proposals = WaitingProposal.all.select{|proposal| proposal.user_id == current.id}
+    @waiting_proposals = WaitingProposal.all.select{|waiting_proposal| waiting_proposal.proposal.user_id == current_user.id}
   end
 end
