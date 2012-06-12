@@ -70,7 +70,6 @@ function install_puppet_server {
 
   if [ "$server" != "" ]; then
     sed -i -s "/certname/d" /etc/puppet/puppet.conf
-    echo "" >> /etc/puppet/puppet.conf
     echo "certname=$server" >> /etc/puppet/puppet.conf
   fi
 
@@ -108,9 +107,9 @@ function install_deploy_app {
 
   cp setup-env/settings.local.yml config/settings.local.yml
   if [ "$server" = "" ]; then
-    host=$server
-  else
     host=`hostname -f`
+  else
+    host=$server
   fi
   sed -i -e "s/SERVER/$host/" config/settings.local.yml
 
