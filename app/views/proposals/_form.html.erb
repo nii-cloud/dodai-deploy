@@ -49,7 +49,7 @@
         <tr class="node_config_tr"><td>
           <%= field.hidden_field :component_id, :value => field.object.component.id %>
           <%= field.hidden_field :state, :value => field.object.state %>
-          <%= field.collection_select :node_id, Node.all, :id, :name %>
+          <%= field.collection_select :node_id, Node.find_all_by_user_id(current_user.id), :id, :name %>
           <input type="button" class="delete_btn" value="delete">
         </td></tr>
     <% prev_component_name = field.object.component.name%>
