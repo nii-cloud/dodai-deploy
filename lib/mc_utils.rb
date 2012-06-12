@@ -29,6 +29,7 @@ class McUtils
     mc = rpcclient "rpcutil", :options => self._rpcoptions
     config = MCollective::Config.instance
     config.topicprefix = "/topic/#{auth_token}."
+    Rails.logger.debug config.topicprefix
     result = mc.discover
     mc.disconnect
     result
