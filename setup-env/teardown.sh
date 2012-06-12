@@ -58,14 +58,10 @@ function uninstall_puppet_client {
 
 function uninstall_openstack_repository {
   rm -f /etc/apt/sources.list.d/openstack-release-2011_3-*
-
-  apt-get update
 }
 
 function uninstall_sge_repository {
   rm -f /etc/apt/sources.list.d/ferramroberto-java*
-  
-  apt-get update
 }
 
 function uninstall_memcached {
