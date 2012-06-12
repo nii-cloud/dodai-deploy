@@ -21,8 +21,7 @@ class JobDaemon < DaemonSpawn::Base
       begin 
         p msg_obj
         operation_name = msg_obj[:operation]
-        user_email = msg_obj[:user_email]
-        Operations.new(operation_name, user_email).invoke msg_obj[:params]
+        Operations.new(operation_name).invoke msg_obj[:params]
       rescue Exception => exc
         puts exc.inspect
         puts exc.backtrace

@@ -25,17 +25,16 @@ end
 
 class McUtils
 
-  def self.find_hosts(user_email)
+  def self.find_hosts(auth_token)
     mc = rpcclient "rpcutil", :options => self._rpcoptions
     config = MCollective::Config.instance
-    hash = Digest::SHA1.hexdigest user_email
-    config.topicprefix = "/topic/#{hash}."
+    config.topicprefix = "/topic/#{auth_token}."
     result = mc.discover
     mc.disconnect
     result
   end
   
-  def self.puppetd_runonce(node_names, user_email)
+  def self.puppetd_runonce(node_names, auth_token)
     options = self._rpcoptions
     options[:filter]["fact"] = [{:fact => "hostname", :value => node_names.join("|"), :operator => "=~"}]
     options[:verbose] = true
@@ -44,10 +43,8 @@ class McUtils
 
     mc = rpcclient "puppetd", :options => options
     config = MCollective::Config.instance
-    puts user_email
-    hash = Digest::SHA1.hexdigest user_email
-    config.topicprefix = "/topic/#{hash}."
-    output = mc.runonce :server => `hostname -f`.strip
+    config.topicprefix = "/topic/#{auth_token}."
+    output = mc.runonce :server => Settings.puppet.server 
     mc.disconnect
   
     ret = {}

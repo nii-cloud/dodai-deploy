@@ -269,7 +269,6 @@ class ProposalsController < ApplicationController
     current_user.ensure_authentication_token!
     mq = MessageQueueClient.new
     mq.publish({:operation => operation, 
-      :user_email => current_user.email, 
       :params => {:proposal_id => proposal_id, :auth_token => current_user.authentication_token }})
     mq.close
 

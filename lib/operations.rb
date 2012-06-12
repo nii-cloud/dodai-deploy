@@ -14,9 +14,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 class Operations
-  def initialize(name, user_email)
+  def initialize(name)
     @name = name
-    @user_email = user_email
   end
 
   def invoke(params)
@@ -107,7 +106,7 @@ class Operations
     end
 
     _save_puppet_parameters({"proposal_id" => @proposal.id, "operation" => "test", "auth_token" => @auth_token})
-    results = McUtils.puppetd_runonce [test_node_name], @user_email
+    results = McUtils.puppetd_runonce [test_node_name], @auth_token
     result = results[test_node_name]
     _save_puppet_message_to_log @proposal.id, Node.find_by_name(test_node_name).id, result[:message], "test"
 
@@ -144,7 +143,7 @@ class Operations
       node_name_configs_map[node_config.node.name] << node_config
     }
 
-    results = McUtils.puppetd_runonce node_name_configs_map.keys, @user_email
+    results = McUtils.puppetd_runonce node_name_configs_map.keys, @auth_token
 
     success = true
     node_name_configs_map.each do |node_name, node_configs|

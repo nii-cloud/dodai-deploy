@@ -69,7 +69,7 @@ function install_puppet_server {
   service puppetmaster start
 }
 
-function install_deployment_app {
+function install_deploy_app {
   cd ..
 
   gem_dir=`gem environment gemdir`
@@ -95,6 +95,14 @@ function install_deployment_app {
 
   cp $gem_dir/bin/rails /usr/bin/
   cp $gem_dir/bin/rake /usr/bin/
+
+  cp setup-env/settings.local.yml config/settings.local.yml
+  if [ "$server" = "" ]; then
+    host=$server
+  else
+    host=`hostname -f`
+  fi
+  sed -i -e "s/SERVER/$host/" config/settings.local.yml
 
   RAILS_ENV=production rake db:drop
   RAILS_ENV=production rake db:migrate
@@ -256,7 +264,7 @@ For examples,
 "
 }
 
-server_softwares=(ruby_rubygems activemq_server mcollective_client puppet_server memcached deployment_app)
+server_softwares=(ruby_rubygems activemq_server mcollective_client puppet_server memcached deploy_app)
 node_softwares=(ruby_rubygems mcollective_server puppet_client openstack_repository sge_repository)
 
 while getopts "s:p:x:": opt
