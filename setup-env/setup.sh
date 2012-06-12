@@ -305,15 +305,15 @@ fi
 
 type=$1
 if [ "$type" = "server" ]; then
-  if [ "$token" = "" ]; then
-    echo "Please specify the user token."
-    print_usage
-    exit 1
-  fi
   install_server "$2"
 elif [ "$type" = "node" ]; then
   if [ "$server" = ""  ]; then
     echo "Please specify the fqdn of deploy server."
+    print_usage
+    exit 1
+  fi
+  if [ "$token" = "" ]; then
+    echo "Please specify the user token."
     print_usage
     exit 1
   fi
