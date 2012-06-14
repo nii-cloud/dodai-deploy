@@ -28,7 +28,10 @@ Bundle 'git://git.wincent.com/command-t.git'
 
 " ...
 
-filetype plugin on     " required!
+filetype plugin indent on     " required!
+
+setl sw=2 sts=2 et
+
 "
 " Brief help
 " :BundleList          - list configured bundles
