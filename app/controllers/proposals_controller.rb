@@ -50,7 +50,7 @@ class ProposalsController < ApplicationController
       component.component_config_defaults.each do |component_config_default|
         component_config = ComponentConfig.new
         component_config.component = component
-        component_config.component_config_default = component_config_default
+        component_config.component_config_default_id = component_config_default.id
         component_config.content = component_config_default.content
         @proposal.component_configs << component_config
       end
@@ -266,7 +266,6 @@ class ProposalsController < ApplicationController
     waiting_proposal.operation = operation
     waiting_proposal.save
 
-    current_user.ensure_authentication_token!
     mq = MessageQueueClient.new
     mq.publish({:operation => operation, 
       :params => {:proposal_id => proposal_id, :auth_token => current_user.authentication_token }})

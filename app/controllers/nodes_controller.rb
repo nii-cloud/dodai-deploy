@@ -85,7 +85,6 @@ class NodesController < ApplicationController
   end
 
   def _get_new_node_names
-    current_user.ensure_authentication_token!
     McUtils.find_hosts(current_user.authentication_token) - Node.all.map(&:name)
   end
 end
