@@ -24,4 +24,6 @@ $(function () {
   });
 
   $(":text").attr("size", 60);
+
+  $("body").show();
 });

@@ -15,10 +15,12 @@
 #    under the License.
 module ApplicationHelper
 
-  def javascript_include_tag_if_exists(source)
-    path = "#{config.javascripts_dir}#{File::SEPARATOR}#{source}.js"
+  def javascript_include_tag_if_exists(file_name)
+    pos = file_name.index File::SEPARATOR
+    file_name = file_name.slice 0, pos if pos
+    path = "#{config.javascripts_dir}#{File::SEPARATOR}#{file_name}.js"
     if File.exists? path
-      javascript_include_tag source
+      javascript_include_tag file_name 
     else
       ""
     end

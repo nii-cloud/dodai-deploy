@@ -1,5 +1,5 @@
 body {
-  visibility: hidden;
+/*  visibility: hidden;*/
 }
 
 td, th {
@@ -52,8 +52,35 @@ th.component_th {
   margin: 0;
 }
 
+#center-div.ui-dialog-content {
+  font-size: 14px;
+}
+
+#center-div.ui-dialog-content label {
+  font-weight: bold;
+}
+
+#center-div.ui-dialog-content a:hover {
+  color: #FFFFFF;
+}
+
+#center-div.ui-dialog-content input {
+  margin-bottom: 10px;
+}
 .ui-layout-north {
-  height: 20px;
+  height: 100px;
+}
+
+.ui-layout-north #program-name {
+  font-size: 28px;
+  font-weight: bold;
+  float: left;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.ui-layout-north #sign-in {
+  float: right;
 }
 
 h1, h2, h4 {
