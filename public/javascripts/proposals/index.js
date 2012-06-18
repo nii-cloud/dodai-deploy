@@ -9,21 +9,21 @@ $(function() {
 });
 
 function start_polling(state_span, proposal_id) {
-	$("#processing_img_" + proposal_id).show();
+  $("#processing_img_" + proposal_id).show();
   $.timer(10000, function (timer) {
-		$.ajax({
-			url: "/proposals/" + proposal_id + ".json",
-			dataType: 'json',
-			data: {},
-			async: false,
-			success: function(data) {
-				state_span.html(data.proposal.state);
-				if (!data.proposal.state.match(/ing/)) {
-					timer.stop();
-					$("#processing_img_" + proposal_id).hide();
+    $.ajax({
+      url: "/proposals/" + proposal_id + ".json",
+      dataType: 'json',
+      data: {},
+      async: false,
+      success: function(data) {
+        state_span.html(data.proposal.state);
+        if (!data.proposal.state.match(/ing/)) {
+          timer.stop();
+          $("#processing_img_" + proposal_id).hide();
           location = "";
-				}
-			}
-		});
-	});
+        }
+      }
+    });
+  });
 }

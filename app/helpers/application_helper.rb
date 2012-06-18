@@ -16,8 +16,7 @@
 module ApplicationHelper
 
   def javascript_include_tag_if_exists(file_name)
-    pos = file_name.index File::SEPARATOR
-    file_name = file_name.slice 0, pos if pos
+    file_name = "devise" if file_name.index("devise")
     path = "#{config.javascripts_dir}#{File::SEPARATOR}#{file_name}.js"
     if File.exists? path
       javascript_include_tag file_name 

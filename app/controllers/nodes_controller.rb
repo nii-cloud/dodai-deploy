@@ -22,7 +22,6 @@ class NodesController < ApplicationController
       format.html
       format.json { render :json => JSON.pretty_generate(@nodes.as_json) }
     end 
-
   end
 
   def new
@@ -77,6 +76,7 @@ class NodesController < ApplicationController
       return
     end 
     if @node.destroy
+      `puppetca --clean #{@node.name}`
       respond_to do |format|
         format.html { redirect_to(nodes_url) }
         format.json { render :json => "".as_json }
@@ -88,4 +88,3 @@ class NodesController < ApplicationController
     McUtils.find_hosts(current_user.authentication_token) - Node.all.map(&:name)
   end
 end
-
