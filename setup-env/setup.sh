@@ -142,18 +142,22 @@ function install_mcollective_server {
 
   gem install stomp -v 1.1.10
 
-  hostname=`hostname -f`
+  if [ "$ip" = "" ]; then
+    ip=`ruby get_ip.rb`
+  fi
+
+  fqdn=`facter fqdn`
 
   cp mcollective/server.cfg /etc/mcollective/
   sed -i -e "s/HOST/$server/g" /etc/mcollective/server.cfg
-  sed -i -e "s/IDENTITY/$hostname/g" /etc/mcollective/server.cfg
+  sed -i -e "s/IDENTITY/$ip:$fqdn/g" /etc/mcollective/server.cfg
   sed -i -e "s/TOKEN/$token/g" /etc/mcollective/server.cfg
 
   #add puppet agent
   cp mcollective/agent/* /usr/share/mcollective/plugins/mcollective/agent/
 
-  #add hostname fact
-  echo "hostname: $hostname" >> /etc/mcollective/facts.yaml
+  #add ip fact
+  echo "ip: $ip" >> /etc/mcollective/facts.yaml
 
   service mcollective restart
   sysv-rc-conf mcollective on
@@ -256,6 +260,7 @@ OPTIONS:
   -p: The port number of the rails server on deploy server. It will be used only if the TYPE is server and SOFTWARE is puppet_server.
   -x: The http proxy, such as http://proxy.domain:8080.
   -t: The user token.
+  -i: The ip address of node. It is optional.
 
 SOFTWARE:
   The name of the software which will be installed.
@@ -277,7 +282,7 @@ For examples,
 server_softwares=(ruby_rubygems activemq_server mcollective_client puppet_server memcached deploy_app)
 node_softwares=(ruby_rubygems mcollective_server puppet_client openstack_repository sge_repository)
 
-while getopts "s:p:x:t:": opt
+while getopts "s:p:x:t:i:": opt
 do
   case $opt in
     \?) OPT_ERROR=1; break;;
@@ -285,6 +290,7 @@ do
     p) port="$OPTARG";;
     x) proxy="$OPTARG";;
     t) token="$OPTARG";;
+    i) ip="$OPTARG";;
   esac
 done
 
@@ -316,6 +322,7 @@ elif [ "$type" = "node" ]; then
     print_usage
     exit 1
   fi
+
   install_node "$2"
 else
   echo "Please specify the TYPE. It should be server or node."

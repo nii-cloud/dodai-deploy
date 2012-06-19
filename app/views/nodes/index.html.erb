@@ -2,6 +2,7 @@
 <%= render 'nodeMsgArea' %>
 <table>
   <tr>
+    <th>IP</th>
     <th>Name</th>
     <th>State</th>
     <th></th>
@@ -10,6 +11,7 @@
 
 <% @nodes.each do |node| %>
   <tr>
+    <td><%= node.ip %></td>
     <td><%= node.name %></td>
     <td><%= node.state %></td>
     <td><%= link_to 'Node configs', node_node_configs_path(node) %></td>

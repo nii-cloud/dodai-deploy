@@ -26,7 +26,8 @@ class NodesController < ApplicationController
 
   def new
     @node = Node.new
-    @names = self._get_new_node_names
+    @node_candidates = self._get_new_node_candidates
+    logger.debug @node_candidates
   end
 
   def create
@@ -41,7 +42,7 @@ class NodesController < ApplicationController
     else
       respond_to do |format|
         format.html {
-          @names = self._get_new_node_names
+          @node_candidates = self._get_new_node_candidates
           render :action => "new"
         }
         format.json { render :json => JSON.pretty_generate({:errors => @node.errors}.as_json) }
@@ -84,7 +85,12 @@ class NodesController < ApplicationController
     end
   end
 
-  def _get_new_node_names
-    McUtils.find_hosts(current_user.authentication_token) - Node.all.map(&:name)
+  def _get_new_node_candidates
+    ips = Node.find_all_by_user_id(current_user.id).map(&:ip)
+    logger.debug ips
+    McUtils.find_hosts(current_user.authentication_token).select{|node_candidate|
+      logger.debug node_candidate
+      not ips.include? node_candidate[:ip]
+    }
   end
 end

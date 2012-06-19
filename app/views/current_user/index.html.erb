@@ -11,10 +11,10 @@
 </tr>
 <tr>
   <th>Set up command for dodai-deploy node</th>
-  <td>setup-env/setup.sh -s <%= Settings.puppet.server %> -t <%= current_user.authentication_token %> node</td>
+  <td>setup-env/setup.sh -s <%= Settings.puppet.server %> -t <%= current_user.authentication_token %> [-i XXX.XXX.XXX.XXX] node</td>
 </tr>
 <tr>
   <th>Set up command for dodai-deploy node via proxy</th>
-  <td>setup-env/setup.sh -x PROXY_SERVER -s <%= Settings.puppet.server %> -t <%= current_user.authentication_token %> node</td>
+  <td>setup-env/setup.sh -x PROXY_SERVER -s <%= Settings.puppet.server %> -t <%= current_user.authentication_token %> [-i XXX.XXX.XXX.XXX] node</td>
 </tr>
 </table>

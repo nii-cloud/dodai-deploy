@@ -81,6 +81,7 @@ ActiveRecord::Schema.define(:version => 20120524021315) do
 
   create_table "nodes", :force => true do |t|
     t.string   "name"
+    t.string   "ip"
     t.string   "state"
     t.datetime "created_at"
     t.datetime "updated_at"
