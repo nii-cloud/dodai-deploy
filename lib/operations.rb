@@ -96,12 +96,10 @@ class Operations
   end
 
   def test
-    test_node_ip = ""
     test_node_name = ""
     test_component_id = @proposal.software.test_component.component_id
     @proposal.node_configs.each do |node_config|
       if test_component_id == node_config.component_id
-        test_node_ip = node_config.node.ip
         test_node_name = node_config.node.name
         break
       end
@@ -109,7 +107,7 @@ class Operations
 
     _save_puppet_parameters({"proposal_id" => @proposal.id, "operation" => "test", "auth_token" => @auth_token})
     results = McUtils.puppetd_runonce [test_node_name], @auth_token
-    result = results["#{test_node_ip}:#{test_node_name}"]
+    result = results["#{test_node_name}"]
     _save_puppet_message_to_log @proposal.id, Node.find_by_name(test_node_name).id, result[:message], "test"
 
     result[:status_code] == 0

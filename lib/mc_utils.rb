@@ -64,7 +64,8 @@ class McUtils
         message = item.results[:statusmsg]
       end
 
-      ret[item.results[:sender]] = {:status_code => status_code, :message => message}
+      name = item.results[:sender].split(":")[1]
+      ret[name] = {:status_code => status_code, :message => message}
     end
 
     node_names.each do |node_name|

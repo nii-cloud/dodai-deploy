@@ -157,7 +157,7 @@ function install_mcollective_server {
   cp mcollective/agent/* /usr/share/mcollective/plugins/mcollective/agent/
 
   #add ip fact
-  echo "ip: $ip" >> /etc/mcollective/facts.yaml
+  echo "hostname: $fqdn" >> /etc/mcollective/facts.yaml
 
   service mcollective restart
   sysv-rc-conf mcollective on
