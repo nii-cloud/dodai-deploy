@@ -16,12 +16,12 @@
 
   <table>
   <tr>
-    <th><%= node_form.label :ip %></th>
-    <td><%= node_form.select :ip, @node_candidates.collect{|node_candidate| [node_candidate[:ip], node_candidate[:ip]]}%></td>
+    <th><%= node_form.label :name %></th>
+    <td><%= node_form.select :name, @node_candidates.collect{|node_candidate| [node_candidate[:name], node_candidate[:name]]}%></td>
   </tr>
   <tr>
-    <th><%= node_form.label :name %></th>
-    <td><%= node_form.text_field :name, :readonly => true%></td>
+    <th><%= node_form.label :ip %></th>
+    <td><%= node_form.text_field :ip, :readonly => true%></td>
   </tr>
   </table> 
 

@@ -1,16 +1,16 @@
 $(function() {
-  $("#node_ip").change(function() {
+  $("#node_name").change(function() {
     set_node_name($(this));
   });
 
-  set_node_name($("#node_ip"));
+  set_node_name($("#node_name"));
 });
 
-function set_node_name(ip_sel) {
-  var current_ip = ip_sel.val();
+function set_node_name(name_sel) {
+  var current_name = name_sel.val();
   $.each(node_candidates, function() {
-    if(this.ip == current_ip) {
-      $("#node_name").val(this.name);
+    if(this.name == current_name) {
+      $("#node_ip").val(this.ip);
       return false;
     }
   });

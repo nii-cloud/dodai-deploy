@@ -108,9 +108,9 @@ class Operations
     end
 
     _save_puppet_parameters({"proposal_id" => @proposal.id, "operation" => "test", "auth_token" => @auth_token})
-    results = McUtils.puppetd_runonce [test_node_ip], @auth_token
+    results = McUtils.puppetd_runonce [test_node_name], @auth_token
     result = results["#{test_node_ip}:#{test_node_name}"]
-    _save_puppet_message_to_log @proposal.id, Node.find_by_ip(test_node_ip).id, result[:message], "test"
+    _save_puppet_message_to_log @proposal.id, Node.find_by_name(test_node_name).id, result[:message], "test"
 
     result[:status_code] == 0
   end

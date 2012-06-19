@@ -38,9 +38,9 @@ class McUtils
     }
   end
   
-  def self.puppetd_runonce(node_ips, auth_token)
+  def self.puppetd_runonce(node_names, auth_token)
     options = self._rpcoptions
-    options[:filter]["fact"] = [{:fact => "ip", :value => node_ips.join("|"), :operator => "=~"}]
+    options[:filter]["fact"] = [{:fact => "hostname", :value => node_names.join("|"), :operator => "=~"}]
     options[:verbose] = true
     options[:timeout] = Settings.mcollective.timeout 
     options[:disctimeout] = Settings.mcollective.discovery_timeout
