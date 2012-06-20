@@ -146,7 +146,7 @@ function install_mcollective_server {
     ip=`ruby get_ip.rb`
   fi
 
-  fqdn=`facter fqdn`
+  fqdn=`hostname -f`
 
   cp mcollective/server.cfg /etc/mcollective/
   sed -i -e "s/HOST/$server/g" /etc/mcollective/server.cfg
