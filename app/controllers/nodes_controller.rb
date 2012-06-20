@@ -77,7 +77,7 @@ class NodesController < ApplicationController
       return
     end 
     if @node.destroy
-      `puppetca --clean #{@node.name}`
+      `puppetca --clean #{current_user.authentication_token}_#{@node.name}`
       respond_to do |format|
         format.html { redirect_to(nodes_url) }
         format.json { render :json => "".as_json }

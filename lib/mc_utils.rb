@@ -48,7 +48,7 @@ class McUtils
     mc = rpcclient "puppetd", :options => options
     config = MCollective::Config.instance
     config.topicprefix = "/topic/#{auth_token}."
-    output = mc.runonce :server => Settings.puppet.server 
+    output = mc.runonce :server => Settings.puppet.server, auth_token 
     mc.disconnect
   
     ret = {}
