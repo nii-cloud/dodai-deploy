@@ -30,7 +30,10 @@ class NodeConfigsController < ApplicationController
   def puppet
     proposal_id = params[:proposal_id]
     proposal = Proposal.find proposal_id
-    node = Node.find_by_name params[:node_name]
+    parts = params[:node_name].split("_")
+    parts.shift
+    name = parts.join "_"
+    node = Node.find_by_name name
     if params[:operation] == "install" or params[:operation] == "uninstall"
       @node_configs = Scheduler.current proposal, params[:operation] 
     else
