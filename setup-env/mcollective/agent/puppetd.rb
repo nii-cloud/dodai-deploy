@@ -92,7 +92,7 @@ module MCollective
                     reply.fail "Lock file exists, puppetd is already running or it's disabled"
                 else
                     fqdn = `hostname -f`
-                    cmd = [@puppetd, "--test --server #{server} --certname #{auth_token}_#{fqdn}"]
+                    cmd = [@puppetd, "--test --server #{server} --certname #{auth_token.downcase}_#{fqdn}"]
 
                     unless request[:forcerun]
                         if @splaytime > 0
