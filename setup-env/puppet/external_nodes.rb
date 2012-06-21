@@ -8,6 +8,7 @@ require 'active_support/core_ext'
 require 'socket'
 
 hostname = ARGV[0]
+hostname = hostname.partition("_")[2]
 
 path = "/etc/puppet/parameters"
 parameters = YAML.load_file path
