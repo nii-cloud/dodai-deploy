@@ -49,6 +49,7 @@ class McUtils
   end
   
   def self.puppetd_runonce(node_names, auth_token)
+    output = ""
     node_names_str = node_names.join "|"
     cmd = self.create_cmd "rpc puppetd runonce server=#{Settings.puppet.server} auth_token=#{auth_token} -t #{Settings.mcollective.timeout} --wf 'hostname=~" + node_names_str + "'", auth_token
     PTY.spawn(cmd) do |r, w|
