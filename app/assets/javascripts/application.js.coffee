@@ -4,14 +4,11 @@ String::replaceAll = (org, dest) ->
 unless window["console"]
   window.console =
     info: ->
-
     log: ->
-
     warn: ->
-
     error: ->
-
     debug: ->
+
 
 $ ->
   $("body").height $(window).height()

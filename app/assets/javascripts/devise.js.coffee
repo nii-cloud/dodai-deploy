@@ -8,6 +8,4 @@ $ ->
       $(".ui-dialog-titlebar-close").hide()
       title = $(this).find("h2").remove().html()
       $(this).dialog "option", "title", title
-      $(".ui-widget-overlay").offset
-        top: -2
-        left: -2
+      $(".ui-widget-overlay").offset {top: -2, left: -2}

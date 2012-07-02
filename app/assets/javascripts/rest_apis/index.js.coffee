@@ -2,6 +2,7 @@ create_update_params = (proposal_id) ->
   $.getJSON "/proposals/" + proposal_id + ".json", (proposal) ->
     create_update_html_str proposal.proposal
 
+
 create_update_html_str = (proposal) ->
   params = {}
   params["proposal[name]"] = proposal.name
@@ -31,11 +32,13 @@ create_update_html_str = (proposal) ->
   html_str = "<td colspan=2><textarea rows=" + (line_number + 10) + ">" + json_str + "</textarea></td>"
   $("#update_proposal_parameters_table").find("tr:eq(1)").html html_str
 
+
 create_params = (software_id) ->
   $.getJSON "/nodes.json", (nodes) ->
     $.getJSON "/softwares/" + software_id + ".json", (data) ->
       create_html_str data.software, nodes
-      
+
+
 create_html_str = (software, nodes) ->
   node_name = (if nodes.length > 0 then nodes[0].node.name else "")
   params = {}
@@ -65,6 +68,7 @@ create_html_str = (software, nodes) ->
   line_number = json_str.match(/\n/g).length
   html_str = "<tr><td><textarea rows=" + (line_number + 10) + ">" + json_str + "</textarea></td></tr>"
   $("#create_proposal_parameters_table").find("tbody").html html_str
+
 
 do_click_exec_btn = (btn) ->
   action = btn.id.substr(0, btn.id.length - 4)
@@ -107,6 +111,7 @@ do_click_exec_btn = (btn) ->
     complete: ->
       $(":button").attr "disabled", false
       $(btn).next().hide()
+
 
 validate_parameters = (parameter_trs) ->
   succeeded = true
