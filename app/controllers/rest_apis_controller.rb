@@ -29,7 +29,7 @@ class RestApisController < ApplicationController
             :name => "node",
             :actions => [
               {:name => "list"}, 
-              {:name => "create", :parameters => ["name"]}, 
+              {:name => "create", :parameters => ["name", "ip"]}, 
               {:name => "destroy", :parameters => ["id"]},
             ]
           }, {

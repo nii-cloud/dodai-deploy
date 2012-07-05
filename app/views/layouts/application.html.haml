@@ -1,0 +1,38 @@
+!!!
+%html
+  %head
+    %title dodai-deploy
+    = stylesheet_link_tag :all
+    = stylesheet_link_tag "lib/layout-default-latest"
+    = stylesheet_link_tag "lib/smoothness/jquery-ui-1.8.16.custom"
+    = stylesheet_link_tag "application"
+    = javascript_include_tag "lib/jquery"
+    = javascript_include_tag "lib/jquery_ujs"
+    = javascript_include_tag 'lib/jquery.layout-latest'
+    = javascript_include_tag 'lib/jquery.timer'
+    = javascript_include_tag 'lib/jquery-ui-1.8.16.custom.min'
+    = javascript_include_tag "application"
+    = javascript_include_tag_if_exists "#{params[:controller]}"
+    = javascript_include_tag_if_exists "#{params[:controller]}/#{params[:action]}"
+    = csrf_meta_tag
+  %body
+    .ui-layout-north
+      #program-name
+        dodai-deploy
+      #sign-in
+        - if user_signed_in?
+          Signed in as
+          = succeed "." do
+            %b= current_user.email
+          Not you?
+          \#{link_to "Sign out", destroy_user_session_path, :method => :delete}
+        - else
+          / <haml:loud> link_to &amp;quot;Sign up&amp;quot;, new_user_registration_path </haml:loud> or <haml:loud> link_to &amp;quot;sign in&amp;quot;, new_user_session_path </haml:loud>
+      /
+        <p class="notice"><haml:loud> notice </haml:loud></p>
+        <p class="alert"><haml:loud> alert </haml:loud></p>
+    .ui-layout-center
+      #center-div
+        = yield
+    .ui-layout-west
+      = render(:file => "layouts/_menu")

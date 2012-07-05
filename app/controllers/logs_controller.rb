@@ -16,21 +16,22 @@
 class LogsController < ApplicationController
 
   def index
+    @logs = nil
     if params.has_key? "proposal_id"
-      proposal = Proposal.find(params[:proposal_id])
-      if proposal.user_id == current_user.id
-        @logs = proposal.logs
-      else
-        @logs = []
-      end
+      proposal = Proposal.find_by_id_and_user_id(params[:proposal_id], current_user.id)
+      @logs = proposal.logs if proposal
     else
       @logs = Log.joins(:proposal).where('proposals.user_id' => current_user.id)
     end
 
     respond_to do |format|
-      format.html
-      format.json { render :json => JSON.pretty_generate(@logs.as_json) }
+      if @logs
+        format.html
+        format.json { render :json => JSON.pretty_generate(@logs.as_json) }
+      else
+        format.html { redirect_to(proposals_url) }
+        format.json { render :json => {:errors => "You don't have permission or the proposal does not exist."}.as_json }
+      end
     end
   end
 end
-

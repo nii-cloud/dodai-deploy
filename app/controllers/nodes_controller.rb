@@ -51,36 +51,50 @@ class NodesController < ApplicationController
   end
 
   def update
-    @node = Node.find(params[:id])
-    if @node.update_attributes(params[:node])
-      respond_to do |format|
-        format.json { render :json => JSON.pretty_generate(@node.as_json) }
+    @node = Node.find_by_id_and_user_id(params[:id], current_user.id)
+    if @node
+      if @node.update_attributes(params[:node])
+        respond_to do |format|
+          format.json { render :json => JSON.pretty_generate(@node.as_json) }
+        end
+      else
+        respond_to do |format|
+          format.json { render :json => JSON.pretty_generate({:errors => @node.errors}.as_json) }
+        end
       end
     else
       respond_to do |format|
-        format.json { render :json => JSON.pretty_generate({:errors => @node.errors}.as_json) }
+        format.html { redirect_to(nodes_url) }
+        format.json { render :json => {:errors => "You don't have permission or the node does not exist."}.as_json }
       end
     end
   end
 
   def destroy
-    @node = Node.find(params[:id])
-    if @node.node_configs.find(:first)
-      @_errorMsg = "Added proposals must be destroyed first."
-      respond_to do |format|
-        format.html { 
-          flash[:_errorMsg] = @_errorMsg
-          redirect_to (nodes_url)
-        }
-        format.json { render :json => JSON.pretty_generate({:errors => @_errorMsg}.as_json) }
+    @node = Node.find_by_id_and_user_id(params[:id], current_user.id)
+    if @node
+      if @node.node_configs.find(:first)
+        @_errorMsg = "Added proposals must be destroyed first."
+        respond_to do |format|
+          format.html { 
+            flash[:_errorMsg] = @_errorMsg
+            redirect_to (nodes_url)
+          }
+          format.json { render :json => JSON.pretty_generate({:errors => @_errorMsg}.as_json) }
+        end
+        return
+      end 
+      if @node.destroy
+        `puppetca --clean #{current_user.authentication_token}_#{@node.name}`
+        respond_to do |format|
+          format.html { redirect_to(nodes_url) }
+          format.json { render :json => "".as_json }
+        end
       end
-      return
-    end 
-    if @node.destroy
-      `puppetca --clean #{current_user.authentication_token}_#{@node.name}`
+    else
       respond_to do |format|
         format.html { redirect_to(nodes_url) }
-        format.json { render :json => "".as_json }
+        format.json { render :json => {:errors => "You don't have permission or the node does not exist."}.as_json }
       end
     end
   end

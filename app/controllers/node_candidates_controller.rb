@@ -16,11 +16,10 @@
 class NodeCandidatesController < ApplicationController
   def index
     respond_to do |format| 
-      format.json { 
-        candidates = []
-        names = McUtils.find_hosts(current_user.authentication_token) - Node.all.map(&:name)
-        names.each {|name|
-          candidates << {:name => name}
+      format.json {
+        ips = Node.find_all_by_user_id(current_user.id).map(&:ip)
+        candidates = McUtils.find_hosts(current_user.authentication_token).select{|node_candidate|
+          not ips.include? node_candidate[:ip]
         }
         render :json => JSON.pretty_generate(candidates.as_json)
       }

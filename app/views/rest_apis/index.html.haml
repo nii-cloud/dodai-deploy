@@ -1,0 +1,54 @@
+%h1 Rest APIs
+#accordion
+  %h3
+    %a{:href => "#"} Software
+  %div
+    %h4 Listing softwares
+    = raw rest_api_table "list_softwares", "/softwares.json"
+    %h4 Showing a software
+    = raw rest_api_table "show_software", "/softwares/:id.json", "get", ["id"]
+
+  %h3
+    %a{:href => "#"} Component
+  %div
+    %h4 Listing components
+    = raw rest_api_table "list_components", "/components.json"
+    %h4 Showing a component
+    = raw rest_api_table "show_component", "/components/:id.json", "get", ["id"]
+
+  %h3
+    %a{:href => "#"} Node
+  %div
+    %h4 Listing node candidates
+    = raw rest_api_table "list_node_candidates", "/node_candidates.json"
+    %h4 Listing nodes
+    = raw rest_api_table "list_nodes", "/nodes.json"
+    %h4 Creating a node
+    = raw rest_api_table "create_node", "/nodes.json", "post", ["node[name]", "node[ip]"]
+    %h4 Destroying a node
+    = raw rest_api_table "destroy_node", "/nodes/:id.json", "delete", ["id"]
+
+  %h3
+    %a{:href => "#"} Proposal
+  %div
+    %h4 Listing proposals
+    = raw rest_api_table "list_proposals", "/proposals.json"
+    %h4 Showing a proposal
+    = raw rest_api_table "show_proposal", "/proposals/:id.json", "get", ["id"]
+    %h4 Creating a proposal
+    %table
+      %tr
+        %th software
+        %td= select_tag "software_sel", options_from_collection_for_select(Software.all.sort{|a,b| a.desc <=> b.desc}, :id, :desc)
+    %br/
+    = raw rest_api_table "create_proposal", "/proposals.json", "post", ["proposal[name]"]
+    %h4 Updating a proposal
+    = raw rest_api_table "update_proposal", "/proposals/:id.json", "put", ["id", "proposal[name]"]
+    %h4 Destroying a proposal
+    = raw rest_api_table "destroy_proposal", "/proposals/:id.json", "delete", ["id"]
+    %h4 Installing a proposal
+    = raw rest_api_table "install_proposal", "/proposals/:id/install.json", "get", ["id"]
+    %h4 Uninstalling a proposal
+    = raw rest_api_table "uninstall_proposal", "/proposals/:id/uninstall.json", "get", ["id"]
+    %h4 Testing a proposal
+    = raw rest_api_table "test_proposal", "/proposals/:id/test.json", "get", ["id"]

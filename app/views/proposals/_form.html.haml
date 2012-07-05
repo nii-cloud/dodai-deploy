@@ -1,0 +1,92 @@
+= form_for(@proposal) do |proposal_form|
+  - if @proposal.errors.any?
+    #errorExplanation
+      %h2
+        = pluralize(@proposal.errors.count, "error")
+        prohibited this proposal from being saved:
+      %ul
+        - @proposal.errors.full_messages.each do |msg|
+          %li= msg
+  %table
+    %tr
+      %th= proposal_form.label :name
+      %td= proposal_form.text_field :name
+    %tr
+      %th= proposal_form.label :software
+      %td= proposal_form.collection_select :software_id, Software.all.sort{|a, b| a.desc <=> b.desc}, :id, :desc
+
+  - if proposal_form.object.config_items.size != 0
+    %h2 Config items
+
+  %table
+    = proposal_form.fields_for :config_items do |field|
+      %tr
+        %th
+          = field.label :config_item, field.object.config_item_default.name
+          = field.hidden_field :config_item_default_id, :value => field.object.config_item_default_id
+        %td= field.text_field :value
+
+  %h2 Node configs
+  - prev_component_name = ""
+  %table
+    = proposal_form.fields_for :node_configs do |field|
+      - if prev_component_name != "" && prev_component_name != field.object.component.name
+        =raw "</table></td>"
+        %td
+          %input.add_btn{:type => "button", :value => "add"}
+
+      - if prev_component_name != field.object.component.name
+        =raw "<tr>"
+        %th= field.label :component, field.object.component.name unless prev_component_name == field.object.component.name
+        =raw '<td><table class="node_config_table>"'
+
+      %tr.node_config_tr
+        %td
+          = field.hidden_field :component_id, :value => field.object.component.id
+          = field.hidden_field :state, :value => field.object.state
+          = field.collection_select :node_id, Node.find_all_by_user_id(current_user.id), :id, :name
+          %input.delete_btn{:type => "button", :value => "delete"}
+      
+      - prev_component_name = field.object.component.name
+
+    =raw "</table></td>"
+    %td
+      %input.add_btn{:type => "button", :value => "add"}
+    =raw "</tr>"
+
+
+  - if proposal_form.object.component_configs.size != 0
+    %h2 Component configs
+
+
+  %table
+    - prev_component_name = ""
+    = proposal_form.fields_for :component_configs do |field|
+      - unless prev_component_name == field.object.component.name
+        %tr
+          %th.component_th{:colspan => "2"}= prev_component_name = field.object.component.name
+
+      %tr
+        %th
+          = field.label :component, field.object.component_config_default.path
+          = field.hidden_field :component_id, :value => field.object.component.id
+          = field.hidden_field :component_config_default_id, :value => field.object.component_config_default.id
+
+        %td= field.text_area :content, :cols => "80", :rows => "#{line_number(field.object.content) + 1}"
+
+
+  - if proposal_form.object.software_configs.size != 0
+    %h2 Software configs
+
+
+  %table
+    = proposal_form.fields_for :software_configs do |field|
+      %tr
+        %th
+          = field.label :software, field.object.software_config_default.path
+          = field.hidden_field :software_id, :value => field.object.software.id
+          = field.hidden_field :software_config_default_id, :value => field.object.software_config_default.id
+        %td= field.text_area :content, :cols => "80", :rows => "#{line_number(field.object.content) + 1}"
+
+  .actions
+    = proposal_form.submit

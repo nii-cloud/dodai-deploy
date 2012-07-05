@@ -1,0 +1,21 @@
+%h1 Listing nodes
+
+= render 'nodeMsgArea'
+
+%table
+  %tr
+    %th Name
+    %th IP
+    %th State
+    %th
+    %th
+  - @nodes.each do |node|
+    %tr
+      %td= node.name
+      %td= node.ip
+      %td= node.state
+      %td= link_to 'Node configs', node_node_configs_path(node)
+      %td= link_to 'Destroy', node, :confirm => 'Are you sure?', :method => :delete
+
+.nav_link_group
+  = link_to 'New Node', new_node_path

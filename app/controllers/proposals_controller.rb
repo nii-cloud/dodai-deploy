@@ -90,18 +90,30 @@ class ProposalsController < ApplicationController
   end
 
   def show
-    @proposal = Proposal.find(params[:id]) 
-
-     respond_to do |format|
-      format.html
-      format.json { render :json => JSON.pretty_generate(@proposal.as_json) }
-     end
+    @proposal = Proposal.find_by_id_and_user_id(params[:id], current_user.id)
+    if @proposal
+      respond_to do |format|
+        format.html
+        format.json { render :json => JSON.pretty_generate(@proposal.as_json) }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to(proposals_url) }
+        format.json { render :json => {:errors => "You don't have permission or the proposal does not exist."}.as_json }
+      end
+    end
   end
 
   def edit
-    @proposal = Proposal.find(params[:id])
-    if params.has_key? :software
-      @proposal.software = Software.find params[:software]
+    @proposal = Proposal.find_by_id_and_user_id(params[:id], current_user.id)
+    if @proposal
+      if params.has_key? :software
+        @proposal.software = Software.find params[:software]
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to(proposals_url) }
+      end
     end
   end
 
@@ -112,46 +124,59 @@ class ProposalsController < ApplicationController
 
     params[:proposal].delete "software_id"
 
-    @proposal = Proposal.find(params[:id])
-    node_config_ids = @proposal.node_configs.collect {|node_config| node_config.id}
-    new_node_config_ids = params[:proposal][:node_configs_attributes].values.collect {|value| value["id"].to_i}
+    @proposal = Proposal.find_by_id_and_user_id(params[:id], current_user.id)
+    if @proposal
+      node_config_ids = @proposal.node_configs.collect {|node_config| node_config.id}
+      new_node_config_ids = params[:proposal][:node_configs_attributes].values.collect {|value| value["id"].to_i}
 
-    node_config_ids.each do |node_config_id|
-      NodeConfig.find(node_config_id).destroy unless new_node_config_ids.include?(node_config_id)
-    end    
+      node_config_ids.each do |node_config_id|
+        NodeConfig.find(node_config_id).destroy unless new_node_config_ids.include?(node_config_id)
+      end    
 
-    _strip_contents_in_params
+      _strip_contents_in_params
 
-    if @proposal.update_attributes(params[:proposal])
-      @proposal.state = "init"
-      @proposal.save
-      respond_to do |format|
-        format.html { redirect_to(proposals_url) }
-        format.json { render :json => JSON.pretty_generate(@proposal.as_json) }
+      if @proposal.update_attributes(params[:proposal])
+        @proposal.state = "init"
+        @proposal.save
+        respond_to do |format|
+          format.html { redirect_to(proposals_url) }
+          format.json { render :json => JSON.pretty_generate(@proposal.as_json) }
+        end
+      else
+        respond_to do |format|
+          format.html { render :action => "new" }
+          format.json { render :json => {:errors => @proposal.errors}.as_json }
+        end
       end
     else
       respond_to do |format|
-        format.html { render :action => "new" }
-        format.json { render :json => {:errors => @proposal.errors}.as_json }
+        format.html { redirect_to(proposals_url) }
+        format.json { render :json => {:errors => "You don't have permission or the proposal does not exist."}.as_json }
       end
     end
-
   end
 
   def destroy
-    @proposal = Proposal.find(params[:id])
-    if ["installed", "tested", "test failed", "installing", "testing", "uninstalling", "waiting"].include?(@proposal.state)
-      respond_to do |format|
-        format.html { redirect_to(proposals_url) }
-        format.json { render :json => {:errors => "installed proposal can't be destroyed"}.as_json }
-      end
-    else
-      if @proposal.destroy
-        Utils.delete_template_from_puppet params[:id]
+    @proposal = Proposal.find_by_id_and_user_id(params[:id], current_user.id)
+    if @proposal
+      if ["installed", "tested", "test failed", "installing", "testing", "uninstalling", "waiting"].include?(@proposal.state)
         respond_to do |format|
           format.html { redirect_to(proposals_url) }
-          format.json { render :json => "".as_json }
+          format.json { render :json => {:errors => "installed proposal can't be destroyed"}.as_json }
         end
+      else
+        if @proposal.destroy
+          Utils.delete_template_from_puppet params[:id]
+          respond_to do |format|
+            format.html { redirect_to(proposals_url) }
+            format.json { render :json => "".as_json }
+          end
+        end
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to(proposals_url) }
+        format.json { render :json => {:errors => "You don't have permission or the proposal does not exist."}.as_json }
       end
     end
   end
@@ -257,23 +282,30 @@ class ProposalsController < ApplicationController
   def _process(operation)
     proposal_id = params[:id]
 
-    @proposal = Proposal.find proposal_id
-    @proposal.state = "waiting" unless @proposal.state =~ /ing$/
-    @proposal.save
+    @proposal = Proposal.find_by_id_and_user_id(proposal_id, current_user.id)
+    if @proposal
+      @proposal.state = "waiting" unless @proposal.state =~ /ing$/
+      @proposal.save
 
-    waiting_proposal = WaitingProposal.new
-    waiting_proposal.proposal = @proposal
-    waiting_proposal.operation = operation
-    waiting_proposal.save
+      waiting_proposal = WaitingProposal.new
+      waiting_proposal.proposal = @proposal
+      waiting_proposal.operation = operation
+      waiting_proposal.save
 
-    mq = MessageQueueClient.new
-    mq.publish({:operation => operation, 
-      :params => {:proposal_id => proposal_id, :auth_token => current_user.authentication_token }})
-    mq.close
+      mq = MessageQueueClient.new
+      mq.publish({:operation => operation, 
+        :params => {:proposal_id => proposal_id, :auth_token => current_user.authentication_token }})
+      mq.close
 
-    respond_to do |format|
-      format.html { redirect_to(proposals_url) }
-      format.json { render :json => "".as_json }
+      respond_to do |format|
+        format.html { redirect_to(proposals_url) }
+        format.json { render :json => "".as_json }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to(proposals_url) }
+        format.json { render :json => {:errors => "You don't have permission or the proposal does not exist."}.as_json }
+      end
     end
   end
 

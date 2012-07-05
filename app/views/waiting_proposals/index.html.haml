@@ -1,0 +1,13 @@
+%h1 Listing waiting proposals
+%table
+  %tr
+    %th Proposal
+    %th Operation
+    %th Updated At
+    %th Created At
+  - @waiting_proposals.each do |waiting_proposal|
+    %tr
+      %td= waiting_proposal.proposal.name
+      %td= waiting_proposal.operation
+      %td= waiting_proposal.updated_at
+      %td= waiting_proposal.created_at

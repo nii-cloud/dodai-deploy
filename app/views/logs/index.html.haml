@@ -1,0 +1,20 @@
+%h1 Listing logs
+%table
+  %tr
+    %th Proposal
+    %th Node name
+    %th Operation
+    %th Content
+    %th Updated At
+    %th Created At
+  - @logs.each do |log|
+    %tr
+      %td= log.proposal.name
+      %td= log.node.name
+      %td= log.operation
+      %td
+        - split_into_lines(log.content).each do |line|
+          = line
+          %br/
+      %td= log.updated_at
+      %td= log.created_at

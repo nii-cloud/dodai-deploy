@@ -18,6 +18,8 @@ gem 'mongrel'
 gem 'rest-client'
 gem 'devise'
 gem 'right_aws'
+gem 'haml-rails'
+gem 'erb2haml'
 
 # Use unicorn as the web server
 # gem 'unicorn'

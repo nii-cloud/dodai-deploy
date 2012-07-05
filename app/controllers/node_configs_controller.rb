@@ -15,15 +15,19 @@
 #    under the License.
 class NodeConfigsController < ApplicationController
   def index
+    @node_configs = nil
     if params.has_key? :node_id
-      node = Node.find(params[:node_id])
-      if node.user_id == current_user.id
-        @node_configs = node.node_configs
-      else
-        @node_configs = []
-      end
+      node = Node.find_by_id_and_user_id(params[:node_id], current_user.id)
+      @node_configs = node.node_configs if node
     else
       @node_configs = NodeConfig.joins(:node).where('nodes.user_id' => current_user.id)
+    end
+
+    unless @node_configs
+      respond_to do |format|
+        format.html { redirect_to(node_configs_url) }
+        format.json { render :json => {:errors => "You don't have permission or the node does not exist."}.as_json }
+      end
     end
   end
 

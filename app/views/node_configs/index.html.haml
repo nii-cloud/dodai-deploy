@@ -1,0 +1,20 @@
+%h1 Listing node configs
+%table
+  %tr
+    %th Proposal
+    %th Node
+    %th Software
+    %th Component
+    %th State
+    %th Updated At
+    %th Created At
+  - @node_configs.each do |node_config|
+    %tr
+      %td= node_config.proposal.name
+      %td= node_config.node.name
+      %td= node_config.component.software.desc
+      %td= node_config.component.name
+      %td= node_config.state
+      %td= node_config.updated_at
+      %td= node_config.created_at
+%br/
