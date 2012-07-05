@@ -25,7 +25,7 @@ module RestApisHelper
     <th rowspan=3>Request</th>
     <th>url</th>
     <td id="#{id}_url_td" width="70%">#{url}</td>
-    <td rowspan=3><input type="button" value="Execute" id="#{id}_btn"/><img src="/images/processing.gif" class="processing_img"/></td>
+    <td rowspan=3><input type="button" value="Execute" id="#{id}_btn"/><img src="/assets/processing.gif" class="processing_img"/></td>
   </tr>
   <tr>
     <th>method</th>

@@ -17,7 +17,7 @@ module ApplicationHelper
 
   def javascript_include_tag_if_exists(file_name)
     file_name = "devise" if file_name.index("devise")
-    path = Rails.root.join "app", "assets", "javascripts", "#{file_name}.js"
+    path = Rails.root.join "app", "assets", "javascripts", "#{file_name}.js.coffee"
     if File.exists? path
       javascript_include_tag file_name
     else

@@ -17,6 +17,7 @@ Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 Bundle 'scrooloose/nerdtree',
 Bundle 'tpope/vim-rails.git'
 Bundle 'rodjek/vim-puppet'
+Bundle 'kchmck/vim-coffee-script'
 
 " vim-scripts repos
 Bundle 'L9'
