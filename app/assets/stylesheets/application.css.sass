@@ -19,11 +19,12 @@ th
 
 
 table
-  border-collapse: collapse
+  border:
+    collapse: collapse
 
-  &.node_config_table
-    td, th
-      border: 0
+.node_config_table
+  td, th
+    border: 0
 
 
 .nav_link_group
@@ -70,8 +71,10 @@ h1, h2, h4
   background-color: $gray
   padding: 12px 10px
 
+
 .processing_img, .proposal_id_td
   display: none
+
 
 #accordion a:hover
   background-color: transparent
@@ -80,6 +83,7 @@ h1, h2, h4
   width: 100%
   table, textarea
     width: 100%
+
 
 #errorExplanation
   color: red
