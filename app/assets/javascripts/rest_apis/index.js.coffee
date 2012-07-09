@@ -76,6 +76,7 @@ do_click_exec_btn = (btn) ->
   url = $("#" + action + "_url_td").html()
   parameter_trs = $("#" + action + "_parameters_table").find("tr")
   return  unless validate_parameters(parameter_trs)
+
   $(":button").attr "disabled", true
   $(btn).next().show()
   data = {}

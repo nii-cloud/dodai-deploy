@@ -1,5 +1,6 @@
 :javascript
   var node_candidates = #{raw JSON.pretty_generate @node_candidates};
+
 = form_for(@node) do |node_form|
   - if @node.errors.any?
     #errorExplanation
