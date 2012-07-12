@@ -1,0 +1,28 @@
+= form_tag(:action => "create") do |ec2|
+  %h1 Add a node on EC2
+  %table
+    %tr
+      %th access-key
+      %td= text_field_tag :access_key, @form_values["access_key"]
+    %tr
+      %th secret-key
+      %td= text_field_tag :secret_key, @form_values["secret_key"]
+    %tr
+      %th key
+      %td= text_field_tag :key, @form_values["key"]
+    %tr
+      %th group
+      %td= text_field_tag :group, @form_values["group"]
+    %tr
+      %th image_id
+      %td= text_field_tag :image_id, @form_values["image_id"]
+    %tr
+      %th instance-type
+      %td= text_field_tag :instance_type, @form_values["instance_type"]
+    %tr
+      %th region
+      %td= text_field_tag :region, @form_values["region"]
+    %tr
+      %th user-data
+      %td= text_area_tag :user_data, @form_values["user_data"], :cols => "80", :rows => "#{line_number(@form_values["user_data"]) + 1}"
+  = submit_tag "add node"
