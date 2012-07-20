@@ -1,6 +1,12 @@
 = form_tag(:action => "create") do |ec2|
-  %h1 Add a node on EC2
+  %h1 Add nodes on EC2
+  - if @_errorMsg
+    #errorExplanation
+      %h3= @_errorMsg
   %table
+    %tr
+      %th instance-count
+      %td= text_field_tag :instance_count, @form_values["instance_count"]
     %tr
       %th access-key
       %td= text_field_tag :access_key, @form_values["access_key"]
