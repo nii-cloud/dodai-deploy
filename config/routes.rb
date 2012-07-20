@@ -15,6 +15,8 @@
 #    under the License.
 Deployment::Application.routes.draw do
   get "current_user/index"
+  get "node_on_ec2/index"
+  resources :node_on_ec2
 
   devise_for :users
 

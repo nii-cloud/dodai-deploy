@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120524021315) do
+ActiveRecord::Schema.define(:version => 20120712081122) do
 
   create_table "component_config_defaults", :force => true do |t|
     t.string   "path"
@@ -124,6 +124,14 @@ ActiveRecord::Schema.define(:version => 20120524021315) do
   create_table "test_components", :force => true do |t|
     t.integer  "software_id"
     t.integer  "component_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_data", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "key"
+    t.string   "value"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
