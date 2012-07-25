@@ -1,0 +1,45 @@
+= form_tag(:action => "create") do |ec2|
+  %h1 Add nodes on EC2
+  - if @_errorMsg
+    #errorExplanation
+      %h3= @_errorMsg
+  %table
+    %tr
+      %th instance_count
+      %td= text_field_tag :instance_count, @form_values["instance_count"]
+    %tr
+      %th access_key
+      %td= text_field_tag :access_key, @form_values["access_key"]
+    %tr
+      %th secret_key
+      %td= text_field_tag :secret_key, @form_values["secret_key"]
+    %tr
+      %th key
+      %td= text_field_tag :key, @form_values["key"]
+    %tr
+      %th group
+      %td= text_field_tag :group, @form_values["group"]
+    %tr
+      %th image_id
+      %td= text_field_tag :image_id, @form_values["image_id"]
+    %tr
+      %th instance_type
+      %td= text_field_tag :instance_type, @form_values["instance_type"]
+    %tr
+      %th region
+      %td= select_tag :region,
+        options_for_select([[@form_values["region"], @form_values["region"]],
+        ["us-east-1", "us-east-1"], ["us-west-2", "us-west-2"],
+        ["us-west-1", "us-west-1"], ["eu-west-1", "eu-west-1"],
+        ["ap-southeast-1", "ap-southeast-1"], ["ap-northeast-1", "ap-northeast-1"],
+        ["sa-east-1", "sa-east-1"], ["", ""]])
+    %tr
+      %th endpoint_url
+      %td= text_field_tag :endpoint_url, @form_values["endpoint_url"]
+    %tr
+      %th user_data
+      %td= text_area_tag :user_data, @form_values["user_data"], :cols => "80", :rows => "#{line_number(@form_values["user_data"]) + 1}"
+  = submit_tag "add nodes"
+
+.nav_link_group
+  = link_to 'Back', node_on_ec2_index_path

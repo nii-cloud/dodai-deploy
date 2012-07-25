@@ -1,7 +1,51 @@
 require 'timeout'
+require "thread"
 
 class NodeOnEc2Controller < ApplicationController
   def index
+    @user_datas = {}
+    @instances = nil
+    @_errorMsg = nil
+    UserData.find_all_by_user_id(current_user.id).each{|user_data| @user_datas[user_data.key] = user_data.value}
+
+    unless @user_datas.empty?
+      ec2 = _connect_ec2 @user_datas 
+
+      begin
+        @instances = ec2.describe_instances
+      rescue
+        @instances = nil
+        @_errorMsg = "can't connect to Amazon EC2"
+      end
+
+      if @instances
+        @instances.each{|instance|
+          if Node.find_by_user_id_and_name(current_user.id, instance[:private_dns_name])
+            instance[:node_state] = "available"
+          else 
+            case instance[:aws_state]
+            when "running"
+              if instance[:dns_name] == Settings.puppet.server || instance[:private_dns_name] == Settings.puppet.server
+                instance[:node_state] = "dodai-deploy server"
+              else
+                instance[:node_state] = "installing"
+              end
+            when "pending"
+              instance[:node_state] = "waiting"
+            when "shutting-down"
+              instance[:node_state] = "deleted"
+            end
+          end
+        }
+      end
+    end
+
+    if params[:error_msg]
+      @_errorMsg = params[:error_msg]
+    end
+  end
+
+  def new
     @form_values = {}
     UserData.find_all_by_user_id(current_user.id).each{|user_data| @form_values[user_data.key] = user_data.value}
 
@@ -9,9 +53,10 @@ class NodeOnEc2Controller < ApplicationController
       @form_values['instance_count'] = 1
       @form_values['user_data'] = _get_template
       @form_values['group'] = 'default'
-      @form_values['image_id'] = 'ami-7c90277d'
-      @form_values['instance_type'] = 'm1.large'
+      @form_values['image_id'] = 'ami-c641f2c7'
+      @form_values['instance_type'] = 'm1.small'
       @form_values['region'] = 'ap-northeast-1'
+      @form_values['endpoint_url'] = ''
     end
 
     if params[:error_msg]
@@ -20,44 +65,111 @@ class NodeOnEc2Controller < ApplicationController
   end
 
   def create
-    ec2 = RightAws::Ec2.new(params[:access_key], params[:secret_key], :region => params[:region])
-    result = ec2.run_instances(params[:image_id], params[:instance_count], params[:instance_count],
-                               params[:group], params[:key], params[:user_data], nil, params[:instance_type])
-    node_dns_names = []
+    @_errorMsg = nil
+    result = nil
 
+    ec2 = _connect_ec2 params 
+    
     begin
-      timeout(180){
-        node_dns_names = _get_dns_name(ec2, result)
-      }
-      timeout(180){
-        _add_nodes(node_dns_names)
-      }
-    rescue Timeout::Error
-      errorMsg = "Timeout occurred while adding nodes."
+      result = ec2.run_instances(params[:image_id], params[:instance_count], params[:instance_count],
+                                 params[:group], params[:key], params[:user_data], nil, params[:instance_type])
+    rescue Exception
+      result = nil
+      @_errorMsg = "can't connect to Amazon EC2"
     end
 
-    ["instance_count", "access_key", "secret_key", "region", "image_id", "group", "key", "user_data", "instance_type"].each{|key|
-      user_data = UserData.find_by_user_id_and_key(current_user.id, key)
-      unless user_data
-        user_data = UserData.new
-      end
-      user_data.user_id = current_user.id
-      user_data.key = key
-      user_data.value = params[key]
-      user_data.save
-    }
+    if result
+      node_dns_names = []
+      Thread.start{
+        begin
+          timeout(180){
+            node_dns_names = _get_dns_name(ec2, result)
+          }
+          timeout(300){
+            _add_nodes(node_dns_names)
+          }
+        rescue Timeout::Error
+          logger.debug "Timeout occurred while adding nodes."
+        end
+      }
+
+      ["instance_count", "access_key", "secret_key", "region", "image_id",
+        "group", "key", "user_data", "instance_type", "endpoint_url"].each{|key|
+
+        user_data = UserData.find_by_user_id_and_key(current_user.id, key)
+        unless user_data
+          user_data = UserData.new
+        end
+        user_data.user_id = current_user.id
+        user_data.key = key
+        user_data.value = params[key]
+        user_data.save
+      }
+    end
 
     respond_to do |format|
-      if errorMsg
-        format.html { redirect_to :action => "index", :error_msg => errorMsg}
+      if @_errorMsg
+        format.html { redirect_to :action => "new", :error_msg => @_errorMsg}
       else
-        format.html { redirect_to nodes_url}
+        format.html { redirect_to node_on_ec2_index_url}
       end
     end
   end
 
+  def terminate
+
+    @_errorMsg = nil
+    instance = nil
+
+    user_datas = {}
+    UserData.find_all_by_user_id(current_user.id).each{|user_data| user_datas[user_data.key] = user_data.value}
+    ec2 = _connect_ec2 user_datas
+
+    begin
+      instance = ec2.describe_instances params[:instance_id]
+    rescue
+      instance = nil
+      @_errorMsg = "can't connect to Amazon EC2"
+    end
+
+    if instance
+      node = Node.find_by_name(instance[0][:private_dns_name])
+
+      unless node
+        ec2.terminate_instances(params[:instance_id])
+      else
+        if node.user_id == current_user.id
+          if node.node_configs.find(:first)
+            errorMsg = "Added proposals must be destroyed first."
+          elsif node.destroy
+            `puppetca --clean #{current_user.authentication_token}_#{node.name}`
+            ec2.terminate_instances(params[:instance_id])
+          end
+        else
+          @_errorMsg = "You don't have permission or the node does not exist."
+        end
+      end
+    end
+
+    respond_to do |format|
+      if @_errorMsg
+        format.html { render :action => "index"}
+      else
+        format.html { redirect_to :action => "index"}
+      end
+    end
+
+  end
 
   private
+  def _connect_ec2(data)
+    if data["endpoint_url"] == ""
+      ec2 = RightAws::Ec2.new(data["access_key"], data["secret_key"], :region => data["region"])
+    else
+      ec2 = RightAws::Ec2.new(data["access_key"], data["secret_key"], :endpoint_url => data["endpoint_url"])
+    end
+  end
+
   def _get_template
     server_fqdn = Settings.puppet.server
     token = current_user.authentication_token

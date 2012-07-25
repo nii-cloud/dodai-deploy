@@ -15,8 +15,8 @@
 #    under the License.
 Deployment::Application.routes.draw do
   get "current_user/index"
-  get "node_on_ec2/index"
   resources :node_on_ec2
+  match "node_on_ec2/:instance_id/terminate" => "node_on_ec2#terminate", :as => :terminate_node_on_ec2, :via => :get, :constraints => {:instance_id => /[^\/]+/}
 
   devise_for :users
 
