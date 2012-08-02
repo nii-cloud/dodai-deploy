@@ -1,0 +1,59 @@
+description: eucalyptus3.1
+
+components:
+  - name: cloud_controller
+  - name: cluster_controller
+  - name: node_controller
+
+component_dependencies:
+  - source_component: cloud_controller
+    dest_component: cluster_controller
+  - source_component: cluster_controller
+    dest_component: node_controller
+
+config_item_defaults:
+  - name: cc_port
+    value: 8774
+  - name: nc_port
+    value: 8775
+  - name: vnet_mode
+    value: MANAGED
+  - name: cc_vnet_privinterface
+    value: eth1
+  - name: cc_vnet_pubinterface
+    value: eth0
+  - name: cc_vnet_publicips
+    value: "192.168.0.20-192.168.0.30"
+  - name: cc_vnet_subnet
+    value: "172.16.0.0"
+  - name: cc_vnet_netmask
+    value: "255.255.0.0"
+  - name: cc_vnet_addrspernet
+    value: 128
+  - name: cc_vnet_dns
+    value: "192.168.0.1"
+  - name: nc_use_virtio_root
+    value: 1
+  - name: nc_use_virtio_disk
+    value: 1
+  - name: nc_use_virtio_net
+    value: 0
+  - name: nc_vnet_pubinterface
+    value: eth1
+  - name: nc_vnet_bridge
+    value: br1
+  - name: nc_eth1_ips
+    value: "192.168.101.101"
+
+component_config_defaults:
+  - path: /etc/eucalyptus/eucalyptus_clc.conf
+    component: cloud_controller
+  - path: /etc/eucalyptus/eucalyptus_cc.conf
+    component: cluster_controller
+  - path: /etc/eucalyptus/eucalyptus_nc.conf
+    component: node_controller
+
+software_config_defaults:
+
+test_components:
+  - component: cloud_controller
