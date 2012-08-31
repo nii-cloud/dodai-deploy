@@ -19,7 +19,7 @@ function install_activemq_server {
   apt-get -y install openjdk-6-jre
 
   activemq="apache-activemq-5.4.3"
-  wget "http://ftp.riken.jp/net/apache//activemq/apache-activemq/5.4.3/$activemq-bin.tar.gz"
+  wget "http://www.us.apache.org/dist/activemq/apache-activemq/5.4.3/$activemq-bin.tar.gz"
   tar xzvf $activemq-bin.tar.gz > /dev/null
   rm $activemq-bin.tar.gz
   mv $activemq /opt/
