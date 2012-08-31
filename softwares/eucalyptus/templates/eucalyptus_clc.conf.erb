@@ -35,14 +35,14 @@ LOGLEVEL="DEBUG"
 
 # On a NC, this defines the TCP port on which the NC will listen.
 # On a CC, this defines the TCP port on which the CC will contact NCs.
-NC_PORT="8775"
+NC_PORT="<%= nc_port %>"
 
 ###########################################################################
 # CLUSTER CONTROLLER (CC) CONFIGURATION
 ###########################################################################
 
 # The TCP port on which the CC will listen.
-CC_PORT="8774"
+CC_PORT="<%= cc_port %>"
 
 # The scheduling policy that the CC uses to choose the NC on which to
 # run each new instance.  Valid settings include GREEDY and ROUNDROBIN.
@@ -154,13 +154,13 @@ INSTANCE_PATH="/var/lib/eucalyptus/instances"
 # The networking mode in which to run.  The same mode must be specified
 # on all CCs and NCs in the entire cloud.  Valid values include SYSTEM,
 # STATIC, MANAGED, and MANAGED-NOVLAN.
-VNET_MODE="SYSTEM"
+VNET_MODE="<%= vnet_mode %>"
 
 # The name of the network interface that is on the same network as
 # the NCs.  In Managed and Managed (No VLAN) modes this may need to be
 # a bridge.  The default is "eth0".
 # Networking modes: Static, Managed, Managed (No VLAN)
-VNET_PRIVINTERFACE="eth0"
+VNET_PRIVINTERFACE="<%= cc_vnet_privinterface %>"
 
 # On a CC, this is the name of the network interface that is connected
 # to the "public" network.  The default is "eth0".
@@ -171,7 +171,7 @@ VNET_PRIVINTERFACE="eth0"
 # configuration, this may be a bridge or a physical interface that is
 # attached to the bridge.  The default is "eth0".
 # Networking modes: Managed
-VNET_PUBINTERFACE="eth0"
+VNET_PUBINTERFACE="<%= cc_vnet_pubinterface %>"
 
 # On an NC, this is the name of the bridge interface to which instances'
 # network interfaces should attach.  A physical interface that can reach
@@ -188,22 +188,22 @@ VNET_BRIDGE="xenbr0"
 # A space-separated list of individual and/or hyphenated ranges of public
 # IP addresses to assign to instances.
 # Networking modes: Managed, Managed (No VLAN)
-#VNET_PUBLICIPS="your-free-public-ip-1 your-free-public-ip-2 ..."
+VNET_PUBLICIPS="<%= cc_vnet_publicips %>"
 
 # The address and network mask of the network the cloud should use for
 # instances' private IP addresses.
 # Networking modes: Static, Managed, Managed (No VLAN)
-#VNET_SUBNET="192.168.0.0"
-#VNET_NETMASK="255.255.0.0"
+VNET_SUBNET="<%= cc_vnet_subnet %>"
+VNET_NETMASK="<%= cc_vnet_netmask %>"
 
 # The number of IP addresses to allocate to each security group.
 # Specify a power of 2 between 16 and 2048.
 # Networking modes: Managed, Managed (No VLAN)
-#VNET_ADDRSPERNET="32"
+VNET_ADDRSPERNET="<%= cc_vnet_addrspernet %>"
 
 # The address of the DNS server to supply to instances in DHCP responses.
 # Networking modes: Static, Managed, Managed (No VLAN)
-#VNET_DNS="your-dns-server-ip"
+VNET_DNS="<%= cc_vnet_dns %>"
 
 # The network broadcast address and default gateway to supply to instances
 # in DHCP responses.

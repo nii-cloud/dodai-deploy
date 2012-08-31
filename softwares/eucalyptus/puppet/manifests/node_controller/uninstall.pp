@@ -16,7 +16,15 @@ class eucalyptus::node_controller::uninstall {
         "/tmp/nc-uninit.sh":
             require => File["nc-uninit.sh"];
 
-        "rm -rf {/etc,/usr/share,/var/log,/var/lib}/eucalyptus/*":
+        "ifdown $nc_vnet_bridge":
+            alias => "ifdown",
             require => Package[eucalyptus-nc];
+
+        "mv /etc/network/interfaces_org /etc/network/interfaces":
+            alias => "mv",
+            require => Exec["ifdown"];
+
+        "ifdown $nc_vnet_pubinterface; ifup $nc_vnet_pubinterface":
+            require => Exec["mv"];
     }
 }
