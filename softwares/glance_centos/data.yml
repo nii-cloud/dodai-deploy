@@ -1,0 +1,29 @@
+description: openstack essex glance centos
+
+components:
+  - name: glance
+
+component_dependencies:
+
+config_item_defaults:
+  - name: admin_tenant_name
+    value: admin
+  - name: admin_user
+    value: admin
+  - name: admin_password
+    value: admin 
+  - name: keystone 
+    value: localhost
+  - name: swift_proxy 
+    value: localhost
+
+component_config_defaults:
+
+software_config_defaults:
+  - path: /etc/glance/glance-api.conf
+  - path: /etc/glance/glance-registry.conf
+  - path: /etc/glance/glance-api-paste.ini
+  - path: /etc/glance/glance-registry-paste.ini
+
+test_components:
+  - component: glance
