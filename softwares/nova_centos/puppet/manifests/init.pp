@@ -1,1 +1,1 @@
-class nova_e {}
+class nova_centos {}

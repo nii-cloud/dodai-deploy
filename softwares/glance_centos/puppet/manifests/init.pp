@@ -1,1 +1,1 @@
-class glance_e{}
+class glance_centos{}
