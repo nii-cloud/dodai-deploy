@@ -19,8 +19,7 @@ function install_activemq_server {
   yum -y install java-1.6.0-openjdk wget
 
   activemq="apache-activemq-5.4.3"
-  #wget "http://ftp.riken.jp/net/apache//activemq/apache-activemq/5.4.3/$activemq-bin.tar.gz"
-  wget http://ftp.tsukuba.wide.ad.jp/software/apache/activemq/apache-activemq/5.4.3/apache-activemq-5.4.3-bin.tar.gz
+  wget "http://www.us.apache.org/dist/activemq/apache-activemq/5.4.3/$activemq-bin.tar.gz"
   tar xzvf $activemq-bin.tar.gz > /dev/null
   rm $activemq-bin.tar.gz
   mv $activemq /opt/
