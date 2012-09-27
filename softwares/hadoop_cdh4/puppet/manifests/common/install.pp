@@ -1,6 +1,7 @@
 class hadoop_cdh4::common::install {
     package { 
         [openjdk-6-jre, bigtop-utils]:
+            require => Exec["add-cdh4-repository"],
             ensure => present;
     }
 

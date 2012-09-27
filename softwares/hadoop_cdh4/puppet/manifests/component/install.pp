@@ -9,6 +9,7 @@ define hadoop_cdh4::component::install() {
 
     package {
         "$title":
-            require => [Package["openjdk-6-jre"], Exec["add-cdh4-repository"]]
+            require => [Package["openjdk-6-jre"], Exec["add-cdh4-repository"]],
+            before => File["bigtop-detect-javahome", "core-site", "hdfs-site", "mapred-site", "default-hadoop-0.20", "tmp_dir"]
     }
 }
