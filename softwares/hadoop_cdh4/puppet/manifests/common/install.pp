@@ -1,18 +1,17 @@
 class hadoop_cdh4::common::install {
     package { 
-        openjdk-6-jre:
+        [openjdk-6-jre, bigtop-utils]:
             ensure => present;
-
-        cdh4-repository:
-            ensure => present,
-            provider => dpkg,
-            source => "/tmp/cdh4-repository_1.0_all.deb"
     }
 
     file {
         "/tmp/cdh4-repository_1.0_all.deb":
             source => "puppet:///modules/hadoop_cdh4/cdh4-repository_1.0_all.deb",
             alias => repository;
+
+        "/tmp/add-cdh4-repository.sh":
+            source => "puppet:///modules/hadoop_cdh4/add-cdh4-repository.sh",
+            alias => "add-cdh4-repository";
 
         "/etc/default/hadoop-0.20":
             source => "puppet:///modules/hadoop_cdh4/default-hadoop-0.20",
@@ -36,6 +35,7 @@ class hadoop_cdh4::common::install {
 
         "/usr/lib/bigtop-utils/bigtop-detect-javahome":
             source => "puppet:///modules/hadoop_cdh4/bigtop-detect-javahome",
+            require => Package["bigtop-utils"],
             alias => "bigtop-detect-javahome";
 
         "$hadoop_tmp_dir":
@@ -44,12 +44,11 @@ class hadoop_cdh4::common::install {
             group => hdfs,
             mode => 644,
             alias => tmp_dir;
+    }
 
-        ["$hadoop_tmp_dir/mapred", "$hadoop_tmp_dir/mapred/local"]:
-            ensure => directory,
-            owner => mapred,
-            group => hadoop,
-            mode => 644,
-            require => File[tmp_dir];
+    exec {
+        "/tmp/add-cdh4-repository.sh":
+            alias => "add-cdh4-repository",
+            require => File["add-cdh4-repository", "repository"]
     }
 }
