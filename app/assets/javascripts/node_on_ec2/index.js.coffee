@@ -1,6 +1,6 @@
 start_polling = (state_span, instance_id) ->
   $("#processing_img_" + instance_id + "_" + state_span.html()).show()
-  $.timer 10000, (timer) ->
+  $.timer 30000, (timer) ->
     if state_span.html().match(/running|available|deleted|server/)
       timer.stop()
       $("#processing_img_" + instance_id + "_" + state_span.html()).hide()
