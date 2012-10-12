@@ -1,0 +1,95 @@
+description: openstack folsom compute
+
+components:
+  - name: nova_api
+  - name: nova_compute
+  - name: nova_network
+  - name: nova_scheduler
+  - name: nova_objectstore
+  - name: nova_cert
+  - name: rabbitmq
+  - name: mysql
+  - name: dashboard
+  - name: quantum_server
+  - name: cinder_api
+  - name: cinder_scheduler
+  - name: cinder_volume
+
+component_dependencies:
+  - source_component: nova_api
+    dest_component: mysql
+  - source_component: nova_api
+    dest_component: rabbitmq
+  - source_component: nova_scheduler
+    dest_component: nova_api
+  - source_component: nova_objectstore
+    dest_component: nova_api
+  - source_component: nova_network
+    dest_component: nova_api
+  - source_component: nova_compute
+    dest_component: nova_api
+  - source_component: nova_cert
+    dest_component: nova_api
+  - source_component: dashboard 
+    dest_component: nova_api
+  - source_component: nova_network
+    dest_component: nova_compute
+    operation: uninstall
+  - source_component: rabbitmq
+    dest_component: quantum_server
+    operation: uninstall
+  - source_component: nova_compute
+    dest_component: quantum_server
+    operation: uninstall
+  - source_component: mysql
+    dest_component: quantum_server
+    operation: uninstall
+  - source_component: cinder_volume
+    dest_component: nova_compute
+    operation: uninstall
+
+config_item_defaults:
+  - name: network_ip_range
+    value: "10.0.0.0/24"
+  - name: libvirt_type
+    value: qemu
+  - name: admin_tenant_name 
+    value: admin
+  - name: admin_user
+    value: admin
+  - name: admin_password
+    value: admin
+  - name: glance
+    value: localhost
+  - name: keystone
+    value: localhost
+
+component_config_defaults:
+  - path: /etc/nova/nova-compute.conf
+    component: nova_compute
+  - path: /etc/libvirt/qemu.conf
+    component: nova_compute
+  - path: /etc/apache2/conf.d/openstack-dashboard.conf
+    component: dashboard
+  - path: /etc/openstack-dashboard/local_settings.py
+    component: dashboard
+  - path: /etc/quantum/dhcp_agent.ini
+    component: nova_network
+  - path: /etc/quantum/l3_agent.ini
+    component: nova_network
+  - path: /etc/default/quantum-server
+    component: quantum_server
+  - path: /etc/tgt/conf.d/cinder_tgt.conf
+    component: cinder_volume
+
+software_config_defaults:
+  - path: /etc/nova/nova.conf
+  - path: /etc/nova/api-paste.ini
+  - path: /etc/quantum/quantum.conf
+  - path: /etc/quantum/plugins/linuxbridge/linuxbridge_conf.ini
+  - path: /etc/quantum/api-paste-quantum.ini
+  - path: /etc/cinder/cinder.conf
+  - path: /etc/cinder/api-paste-cinder.ini
+
+test_components:
+  - component: nova_api

@@ -1,0 +1,9 @@
+[DEFAULT]
+libvirt_type=<%= libvirt_type %>
+vncserver_proxyclient_address=<%= self_host %>
+vncserver_listen=<%= self_host %>
+
+libvirt_vif_type=ethernet
+libvirt_vif_driver=nova.virt.libvirt.vif.QuantumLinuxBridgeVIFDriver
+linuxnet_interface_driver=nova.network.linux_net.QuantumLinuxBridgeInterfaceDriver
+

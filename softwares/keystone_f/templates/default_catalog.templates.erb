@@ -1,0 +1,32 @@
+# config for TemplatedCatalog, using camelCase because I don't want to do
+# translations for keystone compat
+catalog.RegionOne.identity.publicURL = http://<%= keystone %>:$(public_port)s/v2.0
+catalog.RegionOne.identity.adminURL = http://<%= keystone %>:$(admin_port)s/v2.0
+catalog.RegionOne.identity.internalURL = http://<%= keystone %>:$(public_port)s/v2.0
+catalog.RegionOne.identity.name = Identity Service
+
+# fake compute service for now to help novaclient tests work
+catalog.RegionOne.compute.publicURL = http://<%= nova_api %>:$(compute_port)s/v1.1/$(tenant_id)s
+catalog.RegionOne.compute.adminURL = http://<%= nova_api %>:$(compute_port)s/v1.1/$(tenant_id)s
+catalog.RegionOne.compute.internalURL = http://<%= nova_api %>:$(compute_port)s/v1.1/$(tenant_id)s
+catalog.RegionOne.compute.name = Compute Service
+
+catalog.RegionOne.volume.publicURL = http://<%= nova_api %>:8776/v1/$(tenant_id)s
+catalog.RegionOne.volume.adminURL = http://<%= nova_api %>:8776/v1/$(tenant_id)s
+catalog.RegionOne.volume.internalURL = http://<%= nova_api %>:8776/v1/$(tenant_id)s
+catalog.RegionOne.volume.name = Volume Service
+
+catalog.RegionOne.ec2.publicURL = http://<%= nova_api %>:8773/services/Cloud
+catalog.RegionOne.ec2.adminURL = http://<%= nova_api %>:8773/services/Admin
+catalog.RegionOne.ec2.internalURL = http://<%= nova_api %>:8773/services/Cloud
+catalog.RegionOne.ec2.name = EC2 Service
+
+catalog.RegionOne.image.publicURL = http://<%= glance %>:9292/v1
+catalog.RegionOne.image.adminURL = http://<%= glance %>:9292/v1
+catalog.RegionOne.image.internalURL = http://<%= glance %>:9292/v1
+catalog.RegionOne.image.name = Image Service
+
+catalog.$Region.network.publicURL = http://<%= quantum %>:9696
+catalog.$Region.network.adminURL = http://<%= quantum %>:9696
+catalog.$Region.network.internalURL = http://<%= quantum %>:9696
+catalog.$Region.network.name = Network Service

@@ -1,0 +1,14 @@
+[DEFAULT]
+sql_connection = mysql://root:nova@<%= mysql %>/cinder
+rootwrap_config = /etc/cinder/rootwrap.conf
+api_paste_confg = /etc/cinder/api-paste.ini
+iscsi_helper = tgtadm
+volume_name_template = volume-%s
+volume_group = cinder-volumes
+verbose = True
+auth_strategy = keystone
+state_path = /var/lib/cinder
+
+rabbit_host = <%= rabbitmq %>
+rabbit_port = 5672
+glance_api_servers = <%= glance %>:9292
