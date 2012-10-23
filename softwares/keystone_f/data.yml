@@ -1,0 +1,35 @@
+description: openstack folsom keystone
+
+components:
+  - name: keystone
+
+component_dependencies:
+
+config_item_defaults:
+  - name: admin_token
+    value: ADMIN
+  - name: admin_tenant_name
+    value: admin
+  - name: admin_user
+    value: admin
+  - name: admin_password 
+    value: admin
+  - name: admin_email
+    value: admin@nii.ac.jp
+  - name: nova_api 
+    value: localhost
+  - name: glance
+    value: localhost
+  - name: quantum
+    value: localhost
+  - name: cinder
+    value: localhost
+
+component_config_defaults:
+
+software_config_defaults:
+  - path: /etc/keystone/keystone.conf
+  - path: /etc/keystone/default_catalog.templates
+
+test_components:
+  - component: keystone
