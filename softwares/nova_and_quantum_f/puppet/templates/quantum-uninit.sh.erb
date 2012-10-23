@@ -1,0 +1,17 @@
+#!/bin/bash
+
+export OS_TENANT_NAME="<%= admin_tenant_name %>"
+export OS_USERNAME="<%= admin_user %>"
+export OS_PASSWORD="<%= admin_password %>"
+export OS_AUTH_URL="http://<%= keystone %>:5000/v2.0/"
+
+for i in `quantum port-list | gawk '{print $2}' | grep -v '^id$' |grep -v '^$'`; do quantum port-delete $i; done
+
+for i in `quantum subnet-list | gawk '{print $2}' | grep -v '^id$' |grep -v '^$'`; do quantum subnet-delete $i; done
+
+for i in `quantum net-list | gawk '{print $2}' | grep -v '^id$' |grep -v '^$'`; do quantum net-delete $i; done
+
+quantum-netns-cleanup
+
+
+
