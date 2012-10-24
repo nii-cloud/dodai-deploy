@@ -1,4 +1,4 @@
-add_node_config = (add_btn) ->
+window.add_node_config = (add_btn) ->
   node_config_table = add_btn.parent().parent().find(".node_config_table")
   node_config_tr = node_config_table.find(".node_config_tr:last")
   node_config_number = node_config_table.find(".node_config_tr").size()
@@ -28,7 +28,7 @@ add_node_config = (add_btn) ->
   node_config_tr.parent().find(".node_config_tr:last").find("select").prop "selectedIndex", Math.min(selected_index + 1, node_size - 1)
 
 
-delete_node_config = (delete_btn) ->
+window.delete_node_config = (delete_btn) ->
   if delete_btn.parentsUntil("table").find(".node_config_tr").size() <= 1
     alert "At least one node should be left."
     return
@@ -36,7 +36,7 @@ delete_node_config = (delete_btn) ->
   delete_btn.parent().parent().remove()
 
 
-init_add_delete_buttons = ->
+window.init_add_delete_buttons = ->
   $(".add_btn").live "click", ->
     add_node_config $(this)
 
@@ -44,7 +44,7 @@ init_add_delete_buttons = ->
     delete_node_config $(this)
 
 
-max_node_config_index_number = ->
+window.max_node_config_index_number = ->
   max_index = 0
   $(".node_config_tr select").each ->
     item_index = parseInt(@id.split("_")[4])

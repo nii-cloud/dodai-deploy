@@ -32,6 +32,14 @@ component_dependencies:
     dest_component: nova_api
   - source_component: dashboard 
     dest_component: nova_api
+  - source_component: quantum_server
+    dest_component: mysql
+  - source_component: cinder_volume
+    dest_component: mysql 
+  - source_component: cinder_api
+    dest_component: mysql 
+  - source_component: cinder_scheduler
+    dest_component: mysql 
   - source_component: nova_network
     dest_component: nova_compute
     operation: uninstall
