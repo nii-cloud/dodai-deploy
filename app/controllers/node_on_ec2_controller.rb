@@ -11,11 +11,14 @@ class NodeOnEc2Controller < ApplicationController
     unless @user_datas.empty?
       ec2 = _connect_ec2 @user_datas 
 
+      instance_ids = NodeEc2.find_all_by_user_id(current_user.id).map(&:instance_id)
+      logger.debug instance_ids
+
       begin
-        @instances = ec2.describe_instances
+        @instances = ec2.describe_instances instance_ids if instance_ids.size != 0 
       rescue
         @instances = nil
-        @_errorMsg = "can't connect to Amazon EC2"
+        @_errorMsg = "Can't connect to Amazon EC2"
       end
 
       if @instances
@@ -25,14 +28,12 @@ class NodeOnEc2Controller < ApplicationController
           else 
             case instance[:aws_state]
             when "running"
-              if instance[:dns_name] == Settings.puppet.server || instance[:private_dns_name] == Settings.puppet.server
-                instance[:node_state] = "dodai-deploy server"
-              else
-                instance[:node_state] = "installing"
-              end
+              instance[:node_state] = "installing"
             when "pending"
               instance[:node_state] = "waiting"
             when "shutting-down"
+              instance[:node_state] = "deleted"
+            when "terminated"
               instance[:node_state] = "deleted"
             end
           end
@@ -43,6 +44,13 @@ class NodeOnEc2Controller < ApplicationController
     if params[:error_msg]
       @_errorMsg = params[:error_msg]
     end
+
+    respond_to do |format|
+      format.html
+      format.json do
+        render :json => @instances  
+      end
+    end 
   end
 
   def new
@@ -105,6 +113,13 @@ class NodeOnEc2Controller < ApplicationController
         user_data.value = params[key]
         user_data.save
       }
+
+      result.each{|instance|
+        node_ec2 = NodeEc2.new
+        node_ec2.instance_id = instance[:aws_instance_id]
+        node_ec2.user_id = current_user.id
+        node_ec2.save
+      }
     end
 
     respond_to do |format|
@@ -117,9 +132,11 @@ class NodeOnEc2Controller < ApplicationController
   end
 
   def terminate
-
     @_errorMsg = nil
     instance = nil
+
+    node_ec2 = NodeEc2.find_by_user_id_and_instance_id current_user.id, params[:instance_id]
+    node_ec2.destroy if node_ec2
 
     user_datas = {}
     UserData.find_all_by_user_id(current_user.id).each{|user_data| user_datas[user_data.key] = user_data.value}
@@ -129,7 +146,7 @@ class NodeOnEc2Controller < ApplicationController
       instance = ec2.describe_instances params[:instance_id]
     rescue
       instance = nil
-      @_errorMsg = "can't connect to Amazon EC2"
+      @_errorMsg = "Can't connect to Amazon EC2"
     end
 
     if instance

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120712081122) do
+ActiveRecord::Schema.define(:version => 20121024083902) do
 
   create_table "component_config_defaults", :force => true do |t|
     t.string   "path"
@@ -75,6 +75,13 @@ ActiveRecord::Schema.define(:version => 20120712081122) do
     t.integer  "node_id"
     t.integer  "component_id"
     t.string   "state"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "node_ec2s", :force => true do |t|
+    t.string   "instance_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

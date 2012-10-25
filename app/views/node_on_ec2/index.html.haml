@@ -15,16 +15,14 @@
       - if ["running", "pending", "shutting-down"].include?(instance[:aws_state])
         %tr
           %td.instance_id_td= instance[:aws_instance_id]
-          %td= instance[:private_dns_name]
-          %td= instance[:private_ip_address]
+          %td{:id => "name_" + instance[:aws_instance_id]}= instance[:private_dns_name]
+          %td{:id => "ip_" + instance[:aws_instance_id]}= instance[:private_ip_address]
           %td
-            %span.state_span>= instance[:aws_state]
-            \&nbsp;
-            %img.processing_img{:id => "processing_img_#{instance[:aws_instance_id]}_#{instance[:aws_state]}", :src => "/assets/processing.gif"}/
+            %span.instance_state_span{:id=> "instance_state_" + instance[:aws_instance_id]}= instance[:aws_state]
+            %img.processing_img{:id => "processing_img_instance_#{instance[:aws_instance_id]}", :src => "/assets/processing.gif"}/
           %td 
-            %span.state_span>= instance[:node_state]
-            \&nbsp;
-            %img.processing_img{:id => "processing_img_#{instance[:aws_instance_id]}_#{instance[:node_state]}", :src => "/assets/processing.gif"}/
+            %span.node_state_span{:id=> "node_state_" + instance[:aws_instance_id]}= instance[:node_state]
+            %img.processing_img{:id => "processing_img_node_#{instance[:aws_instance_id]}", :src => "/assets/processing.gif"}/
           %td= link_to_unless (["shutting-down"].include?(instance[:aws_state])||["dodai-deploy server"].include?(instance[:node_state])), 
             'Terminate', terminate_node_on_ec2_path(:instance_id => instance[:aws_instance_id]), :confirm => 'Are you sure?'
 
