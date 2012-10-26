@@ -4,7 +4,7 @@ require "thread"
 class NodeOnEc2Controller < ApplicationController
   def index
     @user_datas = {}
-    @instances = nil
+    @instances = [] 
     @_errorMsg = nil
     UserData.find_all_by_user_id(current_user.id).each{|user_data| @user_datas[user_data.key] = user_data.value}
 
@@ -17,28 +17,25 @@ class NodeOnEc2Controller < ApplicationController
       begin
         @instances = ec2.describe_instances instance_ids if instance_ids.size != 0 
       rescue
-        @instances = nil
         @_errorMsg = "Can't connect to Amazon EC2"
       end
 
-      if @instances
-        @instances.each{|instance|
-          if Node.find_by_user_id_and_name(current_user.id, instance[:private_dns_name])
-            instance[:node_state] = "available"
-          else 
-            case instance[:aws_state]
-            when "running"
-              instance[:node_state] = "installing"
-            when "pending"
-              instance[:node_state] = "waiting"
-            when "shutting-down"
-              instance[:node_state] = "deleted"
-            when "terminated"
-              instance[:node_state] = "deleted"
-            end
+      @instances.each{|instance|
+        if Node.find_by_user_id_and_name(current_user.id, instance[:private_dns_name])
+          instance[:node_state] = "available"
+        else 
+          case instance[:aws_state]
+          when "running"
+            instance[:node_state] = "installing"
+          when "pending"
+            instance[:node_state] = "waiting"
+          when "shutting-down"
+            instance[:node_state] = "deleted"
+          when "terminated"
+            instance[:node_state] = "deleted"
           end
-        }
-      end
+        end
+      }
     end
 
     if params[:error_msg]
@@ -54,18 +51,17 @@ class NodeOnEc2Controller < ApplicationController
   end
 
   def new
-    @form_values = {}
-    UserData.find_all_by_user_id(current_user.id).each{|user_data| @form_values[user_data.key] = user_data.value}
+    @form_values = {
+      "instance_count" => 1,
+      "user_data" => _get_template,
+      "group" => "default",
+      "image_id" => "ami-c641f2c7",
+      "instance_type" => "m1.small",
+      "region" => "ap-northeast-1",
+      "endpoint_url" => ""
+    }
 
-    if @form_values.empty?
-      @form_values['instance_count'] = 1
-      @form_values['user_data'] = _get_template
-      @form_values['group'] = 'default'
-      @form_values['image_id'] = 'ami-c641f2c7'
-      @form_values['instance_type'] = 'm1.small'
-      @form_values['region'] = 'ap-northeast-1'
-      @form_values['endpoint_url'] = ''
-    end
+    UserData.find_all_by_user_id(current_user.id).each{|user_data| @form_values[user_data.key] = user_data.value}
 
     if params[:error_msg]
       @_errorMsg = params[:error_msg]
@@ -83,7 +79,7 @@ class NodeOnEc2Controller < ApplicationController
                                  params[:group], params[:key], params[:user_data], nil, params[:instance_type])
     rescue Exception
       result = nil
-      @_errorMsg = "can't connect to Amazon EC2"
+      @_errorMsg = "Can't connect to Amazon EC2"
     end
 
     if result
@@ -91,7 +87,7 @@ class NodeOnEc2Controller < ApplicationController
       Thread.start{
         begin
           timeout(180){
-            node_dns_names = _get_dns_name(ec2, result)
+            node_dns_names = _get_dns_names(ec2, result)
           }
           timeout(300){
             _add_nodes(node_dns_names)
@@ -200,7 +196,7 @@ class NodeOnEc2Controller < ApplicationController
     template.result(binding)
   end
 
-  def _get_dns_name(ec2, result)
+  def _get_dns_names(ec2, result)
     instance_ids = result.collect{|i| i[:aws_instance_id]}
     loop do
       result = ec2.describe_instances instance_ids
