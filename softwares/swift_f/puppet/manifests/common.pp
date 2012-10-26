@@ -3,7 +3,7 @@ class swift_f::common {
 
     user {
         swift:
-            ensure => present
+            ensure => present,
             require => Exec[apt-get_update]  
     }
 
