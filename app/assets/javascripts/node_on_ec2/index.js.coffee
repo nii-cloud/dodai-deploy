@@ -1,5 +1,5 @@
 start_polling =  ->
-  $.timer 5000, (timer) ->
+  $.timer 10000, (timer) ->
     $.get window.location.href + ".json", (instances) ->
       processing = false
       $.each instances,  ->
