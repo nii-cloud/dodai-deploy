@@ -1,0 +1,36 @@
+description: hadoop CDH4 
+
+components:
+  - name: name_node
+  - name: job_tracker
+  - name: secondary_name_node
+  - name: data_node
+  - name: task_tracker
+
+component_dependencies:
+  - source_component: job_tracker
+    dest_component: name_node
+  - source_component: secondary_name_node
+    dest_component: name_node
+  - source_component: data_node
+    dest_component: name_node
+  - source_component: task_tracker
+    dest_component: name_node
+  - source_component: data_node
+    dest_component: job_tracker 
+  - source_component: task_tracker
+    dest_component: job_tracker
+
+config_item_defaults:
+  - name: hadoop_tmp_dir
+    value: "/tmp/hadoop"
+
+component_config_defaults:
+
+software_config_defaults:
+  - path: conf/core-site.xml
+  - path: conf/hdfs-site.xml
+  - path: conf/mapred-site.xml   
+
+test_components:
+  - component: name_node
