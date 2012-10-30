@@ -1,0 +1,23 @@
+#!/bin/sh
+
+count=0
+netstat -an | grep LISTEN | grep 8773
+while [ $? != 0 ]
+do
+  count=`expr $count + 1`
+  if [ $count -eq 40 ]; then
+    exit 1
+  fi
+  sleep 10
+  netstat -an | grep LISTEN | grep 8773
+done
+
+sleep 10
+
+euca_conf --register-walrus --partition walrus --host <%= cloud_controller %> --component walrus0
+
+euca_conf --register-cluster --partition jp-east-1a --host <%= cluster_controller %> --component cluster0
+
+euca_conf --register-sc --partition jp-east-1a --host <%= cluster_controller %> --component storage0
+
+ssh root@<%= cluster_controller %> "euca_conf --register-nodes='<%= nc_eth1_ips %>'"
