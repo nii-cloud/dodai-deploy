@@ -1,7 +1,16 @@
 #!/bin/bash
 
-HOME=`dirname $0`
+clean_up() {
+    euca-terminate-instances $instance_id
+    euca-deregister $image
+    euca-deregister $ramdisk
+    euca-deregister $kernel
+    euca-delete-keypair mykey
+    euca-revoke -P icmp -t -1:-1 default
+    euca-revoke -P tcp -p 22 default
+}
 
+HOME=`dirname $0`
 cd $HOME
 
 if [ "`which euca_conf`" = ""  ]; then
@@ -12,9 +21,7 @@ fi
 image_file="$1"
 
 euca_conf --get-credentials admin.zip
-
 unzip admin.zip
-
 source eucarc
 
 euca-authorize -P icmp -t -1:-1 default
@@ -28,15 +35,15 @@ echo "$HOME/$image_file"
 tar xzvf $image_file
 euca-bundle-image -i *-vmlinuz -p kernel --kernel true
 euca-upload-bundle -m /tmp/kernel.manifest.xml -b mybucket
-kernel=`euca-register mybucket/kernel.manifest.xml | gawk '{print $2}'`
+kernel=`euca-register --architecture x86_64 mybucket/kernel.manifest.xml | gawk '{print $2}'`
 
 euca-bundle-image -i *-loader -p ramdisk --ramdisk true
 euca-upload-bundle -m /tmp/ramdisk.manifest.xml -b mybucket
-ramdisk=`euca-register mybucket/ramdisk.manifest.xml | gawk '{print $2}'`
+ramdisk=`euca-register --architecture x86_64 mybucket/ramdisk.manifest.xml | gawk '{print $2}'`
 
 euca-bundle-image -i *img -p image --ramdisk $ramdisk --kernel $kernel
 euca-upload-bundle -m /tmp/image.manifest.xml -b mybucket
-image=`euca-register mybucket/image.manifest.xml | gawk '{print $2}'`
+image=`euca-register --architecture x86_64 mybucket/image.manifest.xml | gawk '{print $2}'`
 
 if [ $? != 0 ]; then
    echo $output
@@ -63,7 +70,7 @@ fi
 launching_time=12
 echo "instance: [$instance_id]"
 instance_status=`euca-describe-instances | gawk '{print $2 " "$6}' | grep "$instance_id" | gawk '{print $2}'`
-if [ $instance_status = "(IRT," ]; then
+if [ "$instance_status" = "(IRT," ]; then
     instance_status=`euca-describe-instances | gawk '{print $2 " "$4}' | grep "$instance_id" | gawk '{print $2}'`
 fi
 echo "Instance status: $instance_status"
@@ -71,6 +78,7 @@ while [ "$instance_status" != "running" ]
 do
     echo "Instance status: $instance_status"
     if [ "$instance_status" != "launching" ] && [ $launching_time -lt 0 ]; then
+	clean_up
         echo "Running instance failed because the instance status wasn't \"launching\" after 120 seconds."
         exit 1
     fi
@@ -85,4 +93,5 @@ do
     echo "Instance status: $instance_status"
 done
 
+clean_up
 echo "Test finished. It is OK."

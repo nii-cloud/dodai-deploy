@@ -15,9 +15,18 @@ done
 sleep 10
 
 euca_conf --register-walrus --partition walrus --host <%= cloud_controller %> --component walrus0
+if [ $? != 0 ]; then
+  exit 1
+fi
 
 euca_conf --register-cluster --partition jp-east-1a --host <%= cluster_controller %> --component cluster0
+if [ $? != 0 ]; then
+  exit 1
+fi
 
 euca_conf --register-sc --partition jp-east-1a --host <%= cluster_controller %> --component storage0
+if [ $? != 0 ]; then
+  exit 1
+fi
 
 ssh root@<%= cluster_controller %> "euca_conf --register-nodes='<%= nc_eth1_ips %>'"
