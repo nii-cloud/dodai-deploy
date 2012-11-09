@@ -1,6 +1,8 @@
 Welcome to the **dodai-deploy project**
 
 ## News 
+* [2012/11/02] Eucalyptus 3.1 can be installed on **ubuntu 12.04**.
+ * [Install eucalyptus 3.1 on ubuntu 12.04](/nii-cloud/dodai-deploy/wiki/Install-eucalyptus-3.1-on-ubuntu-12.04)
 * [2012/10/26] Openstack folsom can be installed on **ubuntu 12.04**.
 * [2012/05/16] hadoop can be installed on **ubuntu 12.04**.
 * [2012/04/13] Add supports for Openstack Essex. Please refer the following blog for how-to.
