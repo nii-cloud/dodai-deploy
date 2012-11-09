@@ -15,6 +15,7 @@
 #    under the License.
 class ProposalsController < ApplicationController
 
+
   def index
     @proposals = Proposal.all
 
@@ -63,6 +64,8 @@ class ProposalsController < ApplicationController
       software_config.content = software_config_default.content
       @proposal.software_configs << software_config 
     end
+
+    @os = @proposal.software.os
   end
 
   def create
@@ -97,9 +100,7 @@ class ProposalsController < ApplicationController
 
   def edit
     @proposal = Proposal.find(params[:id])
-    if params.has_key? :software
-      @proposal.software = Software.find params[:software]
-    end
+    @os = @proposal.software.os
   end
 
   def update

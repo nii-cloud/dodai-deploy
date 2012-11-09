@@ -1,4 +1,6 @@
-description: openstack essex glance centos
+description: openstack essex glance
+
+os: CentOS
 
 components:
   - name: glance

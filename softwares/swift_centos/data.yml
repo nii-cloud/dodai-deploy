@@ -1,4 +1,6 @@
-description: openstack essex swift centos
+description: openstack essex swift
+
+os: CentOS
 
 components:
   - name: swift_proxy

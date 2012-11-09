@@ -1,4 +1,6 @@
-description: openstack essex nova centos
+description: openstack essex nova
+
+os: CentOS
 
 components:
   - name: nova_api

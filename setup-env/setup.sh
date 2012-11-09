@@ -137,6 +137,11 @@ function install_mcollective_server {
   #add hostname fact
   echo "hostname: $hostname" >> /etc/mcollective/facts.yaml
 
+  os=`facter operatingsystem`
+  os_version=`facter operatingsystemrelease`
+  echo "os: $os" >> /etc/mcollective/facts.yaml
+  echo "os_version: $os_version" >> /etc/mcollective/facts.yaml
+
   service mcollective restart
 
   sysv-rc-conf mcollective on

@@ -18,9 +18,18 @@ class NodeCandidatesController < ApplicationController
     respond_to do |format| 
       format.json { 
         candidates = []
-        names = McUtils.find_hosts - Node.all.map(&:name)
-        names.each {|name|
-          candidates << {:name => name, :ip_address => IPSocket.getaddress(name)}
+        hosts = McUtils.find_hosts
+        
+        node_names = Node.all.map(&:name)
+        hosts.each {|host|
+          unless node_names.include? host["hostname"]
+            candidates << {
+              :name => host["hostname"], 
+              :ip_address => IPSocket.getaddress(host["hostname"]), 
+              :os => host["os"], 
+              :os_version => host["os_version"]
+            }
+          end
         }
         render :json => JSON.pretty_generate(candidates.as_json)  
       }

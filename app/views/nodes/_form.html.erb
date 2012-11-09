@@ -1,3 +1,7 @@
+<script>
+  var node_candidates = <%=raw JSON.pretty_generate @node_candidates %>;
+</script>
+
 <%= form_for(@node) do |node_form| %>
   <% if @node.errors.any? %>
   <div id="errorExplanation">
@@ -10,10 +14,20 @@
   </div>
   <% end %>
 
-  <table><tr>
-    <th><%= node_form.label :name %></th>
-    <td><%= node_form.select :name, @names.collect{|name| [name, name]}%></td>
-  </tr></table> 
+  <table>
+    <tr>
+      <th><%= node_form.label :name %></th>
+      <td><%= node_form.select :name, @names.collect{|name| [name, name]}%></td>
+    </tr>
+    <tr>
+      <th>OS</th>
+      <td><%= node_form.text_field :os, :readonly => true %></td>
+    </tr>
+    <tr>
+      <th>OS Version</th>
+      <td><%= node_form.text_field :os_version, :readonly => true %></td>
+    </tr>
+  </table> 
 
   <div class="actions">
     <%= node_form.submit %>

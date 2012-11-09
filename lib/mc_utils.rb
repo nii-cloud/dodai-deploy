@@ -20,9 +20,31 @@ class McUtils
 
   def self.find_hosts
     mc = rpcclient "rpcutil", :options => self._rpcoptions 
-    result = mc.discover
+
+    hosts = []
+    output = mc.inventory
+    output.each do |item|
+      hosts << item.results[:data][:facts]
+    end
+
     mc.disconnect
-    result
+    hosts
+  end
+
+  def self.get_host_facts(node_name)
+    options = self._rpcoptions
+    options[:filter]["fact"] = [{:fact => "hostname", :value => node_name, :operator => "=~"}]
+    options[:verbose] = true
+    options[:timeout] = Settings.mcollective.timeout 
+    options[:disctimeout] = Settings.mcollective.discovery_timeout
+
+    mc = rpcclient "rpcutil", :options => options
+    facts = []
+    output = mc.inventory
+    facts = output[0].results[:data][:facts] if output.size > 0
+    mc.disconnect
+
+    facts 
   end
   
   def self.puppetd_runonce(node_names)

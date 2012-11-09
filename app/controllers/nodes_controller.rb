@@ -27,11 +27,17 @@ class NodesController < ApplicationController
 
   def new
     @node = Node.new
-    @names = self._get_new_node_names
+    node_candidates = self._get_node_candidates
+    @names = node_candidates.keys
+    @node_candidates = node_candidates
   end
 
   def create
     @node = Node.new(params[:node])
+    facts = McUtils.get_host_facts @node.name
+    logger.debug facts
+    @node.os = facts["os"]
+    @node.os_version = facts["os_version"]
     @node.ip = IPSocket.getaddress(@node.name) if @node.name
     @node.state = "available"
     if @node.save
@@ -84,8 +90,14 @@ class NodesController < ApplicationController
     end
   end
 
-  def _get_new_node_names
-    McUtils.find_hosts - Node.all.map(&:name)
+  def _get_node_candidates
+    hosts = McUtils.find_hosts
+    node_candidates = {}
+    node_names = Node.all.map(&:name)
+    hosts.each{|host|
+      node_candidates[host["hostname"]] = host unless node_names.include? host["hostname"]
+    }
+    return node_candidates
   end
 end
 

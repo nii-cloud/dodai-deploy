@@ -15,7 +15,7 @@
     <td><%= proposal_form.text_field :name %></td>
   </tr><tr>
     <th><%= proposal_form.label :software %></th>
-    <td><%= proposal_form.collection_select :software_id, Software.all.sort{|a, b| a.desc <=> b.desc}, :id, :desc %></td>
+    <td><%= proposal_form.grouped_collection_select :software_id, get_software_groups, :softwares, :name, :id, :desc %></td>
   </tr></table>
 
   <% if proposal_form.object.config_items.size != 0 %>
@@ -49,7 +49,7 @@
         <tr class="node_config_tr"><td>
           <%= field.hidden_field :component_id, :value => field.object.component.id %>
           <%= field.hidden_field :state, :value => field.object.state %>
-          <%= field.collection_select :node_id, Node.all, :id, :name %>
+          <%= field.collection_select :node_id, Node.all.select{|n| n.os == @os}, :id, :name %>
           <input type="button" class="delete_btn" value="delete">
         </td></tr>
     <% prev_component_name = field.object.component.name%>

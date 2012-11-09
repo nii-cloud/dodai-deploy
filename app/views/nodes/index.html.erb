@@ -5,6 +5,8 @@
     <th>Name</th>
     <th>IP</th>
     <th>State</th>
+    <th>OS</th>
+    <th>OS Version</th>
     <th></th>
     <th></th>
   </tr>
@@ -14,6 +16,8 @@
     <td><%= node.name %></td>
     <td><%= node.ip %></td>
     <td><%= node.state %></td>
+    <td><%= node.os %></td>
+    <td><%= node.os_version %></td>
     <td><%= link_to 'Node configs', node_node_configs_path(node) %></td>
     <td><%= link_to 'Destroy', node, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>

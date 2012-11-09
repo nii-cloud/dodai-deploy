@@ -1,4 +1,6 @@
-description: openstack essex keystone centos
+description: openstack essex keystone
+
+os: CentOS
 
 components:
   - name: keystone

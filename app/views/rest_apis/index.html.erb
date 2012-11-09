@@ -45,7 +45,7 @@
 <h4>Creating a proposal</h4>
 <table><tr>
 <th>software</th>
-<td><%= select_tag "software_sel", options_from_collection_for_select(Software.all.sort{|a,b| a.desc <=> b.desc}, :id, :desc) %></td>
+<td><%= select_tag "software_sel", option_groups_from_collection_for_select(get_software_groups, :softwares, :name, :id, :desc) %></td>
 </tr></table><br/>
 <%= raw rest_api_table "create_proposal", "/proposals.json", "post", ["proposal[name]"] %>
 
