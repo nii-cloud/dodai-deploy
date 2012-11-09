@@ -40,14 +40,35 @@ class McUtils
   end
 
   def self.find_hosts(auth_token)
-    cmd = self.create_cmd "find", auth_token 
-    result = `#{cmd}`.strip.split "\n"
-    result.collect{|item|
-      ip, name = item.split ":"
-      {:ip => ip, :name => name}
-    }
+    cmd = self.create_cmd "rpc rpcutil inventory", auth_token
+    output = ""
+    PTY.spawn(cmd) do |r, w|
+      output = r.read
+    end
+    output = JSON.parse(output)
+
+    hosts = []
+    output.each do |item|
+      host = item.results[:data][:facts]
+      host["name"] = host["hostname"]
+      host.delete "hostname"
+      hosts << host 
+    end
   end
-  
+
+  def self.get_host_facts(node_name, auth_token)
+    cmd = self.create_cmd "rpc rpcutil inventory --wf 'hostname=~#{node_name}'", auth_token
+    output = ""
+    PTY.spawn(cmd) do |r, w|
+      output = r.read
+    end
+    output = JSON.parse(output)
+
+    facts = []
+    facts = output[0].results[:data][:facts] if output.size > 0
+    facts
+  end
+
   def self.puppetd_runonce(node_names, auth_token)
     output = ""
     node_names_str = node_names.join "|"

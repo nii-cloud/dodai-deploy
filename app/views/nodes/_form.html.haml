@@ -17,5 +17,11 @@
     %tr
       %th= node_form.label :ip
       %td= node_form.text_field :ip, :readonly => true
+    %tr
+      %th OS 
+      %td= node_form.text_field :os, :readonly => true
+    %tr
+      %th OS Version
+      %td= node_form.text_field :os_version, :readonly => true
   .actions
     = node_form.submit

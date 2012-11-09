@@ -19,6 +19,8 @@ class CreateNodes < ActiveRecord::Migration
       t.string :name
       t.string :ip
       t.string :state
+      t.string :os
+      t.string :os_version
 
       t.timestamps
     end

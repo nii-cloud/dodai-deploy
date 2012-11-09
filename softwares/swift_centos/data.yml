@@ -1,0 +1,40 @@
+description: openstack essex swift
+
+os: CentOS
+
+components:
+  - name: swift_proxy
+  - name: swift_storage
+
+component_dependencies:
+  - source_component: swift_storage
+    dest_component: swift_proxy
+
+config_item_defaults:
+  - name: storage_path
+    value: /srv/node
+  - name: storage_dev
+    value: sdb1
+  - name: ring_builder_replicas
+    value: 1
+  - name: super_admin_key
+    value: swauth
+
+component_config_defaults:
+  - path: /etc/swift/swift.conf
+    component: swift_proxy
+  - path: /etc/swift/proxy-server.conf
+    component: swift_proxy
+  - path: /etc/rsyncd.conf
+    component: swift_storage
+  - path: /etc/swift/account-server.conf
+    component: swift_storage
+  - path: /etc/swift/container-server.conf
+    component: swift_storage
+  - path: /etc/swift/object-server.conf
+    component: swift_storage
+
+software_config_defaults:
+
+test_components:
+  - component: swift_proxy

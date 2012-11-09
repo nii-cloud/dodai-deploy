@@ -33,6 +33,11 @@ class NodesController < ApplicationController
   def create
     @node = Node.new(params[:node])
     @node.state = "available"
+    facts = McUtils.get_host_facts @node.name
+    @node.ip = facts["ip"]
+    @node.os = facts["os"]
+    @node.os_version = facts["os_version"]
+
     @node.user_id = current_user.id
     if @node.save
       respond_to do |format|

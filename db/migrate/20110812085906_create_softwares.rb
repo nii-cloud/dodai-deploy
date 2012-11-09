@@ -18,6 +18,7 @@ class CreateSoftwares < ActiveRecord::Migration
     create_table :softwares do |t|
       t.string :name
       t.string :desc
+      t.string :os
 
       t.timestamps
     end

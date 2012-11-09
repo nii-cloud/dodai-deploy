@@ -39,7 +39,7 @@
     %table
       %tr
         %th software
-        %td= select_tag "software_sel", options_from_collection_for_select(Software.all.sort{|a,b| a.desc <=> b.desc}, :id, :desc)
+        %td= select_tag "software_sel", option_groups_from_collection_for_select(get_software_groups, :softwares, :name, :id, :desc)
     %br/
     = raw rest_api_table "create_proposal", "/proposals.json", "post", ["proposal[name]"]
     %h4 Updating a proposal

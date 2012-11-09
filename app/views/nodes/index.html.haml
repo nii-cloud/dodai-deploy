@@ -7,6 +7,8 @@
     %th Name
     %th IP
     %th State
+    %th OS
+    %th OS Version
     %th
     %th
   - @nodes.each do |node|
@@ -14,6 +16,8 @@
       %td= node.name
       %td= node.ip
       %td= node.state
+      %td= node.os
+      %td= node.os_version
       %td= link_to 'Node configs', node_node_configs_path(node)
       %td= link_to 'Destroy', node, :confirm => 'Are you sure?', :method => :delete
 

@@ -7,7 +7,11 @@ namespace :dodai do
       name = File.basename(File.dirname(path))
 
       desc = data["description"]
+      os = data.fetch "os", "Ubuntu"
+      desc += " - " + os
+
       data.delete "description"
+      data.delete "os"
 
       puts ""
       puts "---------------------------------------------"
@@ -15,7 +19,7 @@ namespace :dodai do
       puts "---------------------------------------------"
       puts "Add a record to softwares table."
 
-      software = Software.new(:name => name, :desc => desc)
+      software = Software.new(:name => name, :desc => desc, :os => os)
       check_save_result software.save, software
       software = Software.find_by_name name
 

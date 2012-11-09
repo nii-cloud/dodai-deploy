@@ -142,15 +142,11 @@ function install_mcollective_server {
 
   gem install stomp -v 1.1.10
 
-  if [ "$ip" = "" ]; then
-    ip=`ruby get_ip.rb`
-  fi
-
   fqdn=`hostname -f`
 
   cp mcollective/server.cfg /etc/mcollective/
   sed -i -e "s/HOST/$server/g" /etc/mcollective/server.cfg
-  sed -i -e "s/IDENTITY/$ip:$fqdn/g" /etc/mcollective/server.cfg
+  sed -i -e "s/IDENTITY/$fqdn/g" /etc/mcollective/server.cfg
   sed -i -e "s/TOKEN/$token/g" /etc/mcollective/server.cfg
 
   #add puppet agent
@@ -158,6 +154,16 @@ function install_mcollective_server {
 
   #add ip fact
   echo "hostname: $fqdn" >> /etc/mcollective/facts.yaml
+
+  if [ "$ip" = "" ]; then
+    ip=`ruby get_ip.rb`
+  fi
+  echo "ip: $ip" >> /etc/mcollective/facts.yaml
+
+  os=`facter operatingsystem`
+  os_version=`facter operatingsystemrelease`
+  echo "os: $os" >> /etc/mcollective/facts.yaml
+  echo "os_version: $os_version" >> /etc/mcollective/facts.yaml
 
   service mcollective restart
   sysv-rc-conf mcollective on

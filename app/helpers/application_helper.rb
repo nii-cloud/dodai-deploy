@@ -24,4 +24,14 @@ module ApplicationHelper
       ""
     end
   end
+
+  SoftwareGroup = Struct.new("SoftwareGroup", :name, :softwares)
+  def get_software_groups()
+    software_groups = {}
+    Software.all.sort{|a, b| a.desc <=> b.desc}.each {|software|
+      software_groups[software.os] = SoftwareGroup.new(software.os, []) unless software_groups.has_key? software.os
+      software_groups[software.os].softwares << software
+    }
+    software_groups.values
+  end
 end

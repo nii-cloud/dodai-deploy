@@ -1,0 +1,48 @@
+#!/bin/bash
+
+HOME="/tmp/glance"
+
+#check if glance-api is running
+service openstack-glance-api status | grep running
+if [ $? != 0 ]; then
+    echo "Service glance-api is not started."
+    exit 1
+fi
+
+yum install gawk -y
+
+pid1="`service openstack-glance-api status | awk '{print $4}'`"
+sleep 2
+pid2="`service openstack-glance-api status | awk '{print $4}'`"
+if [ $pid1 != $pid2 ]; then
+    echo "Service glance-api's pid is changing."
+    exit 1
+fi
+
+service openstack-glance-registry status | grep running
+if [ $? != 0 ]; then
+    echo "Service glance-registry is not started."
+    exit 1
+fi
+
+pid1="`service openstack-glance-registry status | awk '{print $4}'`"
+sleep 2
+pid2="`service openstack-glance-registry status | awk '{print $4}'`"
+if [ $pid1 != $pid2 ]; then
+    echo "Service glance-registry's pid is changing."
+    exit 1
+fi
+
+export OS_TENANT_NAME="<%= admin_tenant_name %>"
+export OS_USERNAME="<%= admin_user %>"
+export OS_PASSWORD="<%= admin_password %>"
+export OS_AUTH_URL="http://<%= keystone %>:5000/v2.0/"
+
+glance index
+if [ $? != 0 ]; then
+    echo "Image list can't be retrieved."
+    exit 1
+fi
+
+
+echo "Test finished. It is OK."

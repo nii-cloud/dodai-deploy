@@ -90,6 +90,8 @@ ActiveRecord::Schema.define(:version => 20121024083902) do
     t.string   "name"
     t.string   "ip"
     t.string   "state"
+    t.string   "os"
+    t.string   "os_version"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
@@ -124,6 +126,7 @@ ActiveRecord::Schema.define(:version => 20121024083902) do
   create_table "softwares", :force => true do |t|
     t.string   "name"
     t.string   "desc"
+    t.string   "os"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

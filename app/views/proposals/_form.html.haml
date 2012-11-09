@@ -13,7 +13,7 @@
       %td= proposal_form.text_field :name
     %tr
       %th= proposal_form.label :software
-      %td= proposal_form.collection_select :software_id, Software.all.sort{|a, b| a.desc <=> b.desc}, :id, :desc
+      %td= proposal_form.grouped_collection_select :software_id, get_software_groups, :softwares, :name, :id, :desc
 
   - if proposal_form.object.config_items.size != 0
     %h2 Config items
