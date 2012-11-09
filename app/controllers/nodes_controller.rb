@@ -27,13 +27,14 @@ class NodesController < ApplicationController
   def new
     @node = Node.new
     @node_candidates = self._get_new_node_candidates
-    logger.debug @node_candidates
+    logger.debug @node_candidates.size
   end
 
   def create
     @node = Node.new(params[:node])
     @node.state = "available"
-    facts = McUtils.get_host_facts @node.name
+
+    facts = McUtils.get_host_facts @node.name, current_user.authentication_token 
     @node.ip = facts["ip"]
     @node.os = facts["os"]
     @node.os_version = facts["os_version"]

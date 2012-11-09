@@ -49,11 +49,13 @@ class McUtils
 
     hosts = []
     output.each do |item|
-      host = item.results[:data][:facts]
+      host = item["data"]["facts"]
       host["name"] = host["hostname"]
       host.delete "hostname"
       hosts << host 
     end
+
+    hosts
   end
 
   def self.get_host_facts(node_name, auth_token)
@@ -64,8 +66,8 @@ class McUtils
     end
     output = JSON.parse(output)
 
-    facts = []
-    facts = output[0].results[:data][:facts] if output.size > 0
+    facts = {} 
+    facts = output[0]["data"]["facts"] if output.size > 0
     facts
   end
 
@@ -92,7 +94,7 @@ class McUtils
         message = item["statusmsg"]
       end
 
-      name = item["sender"].split(":")[1]
+      name = item["sender"]
       ret[name] = {:status_code => status_code, :message => message}
     end
 

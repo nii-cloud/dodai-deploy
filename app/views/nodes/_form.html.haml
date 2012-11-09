@@ -13,7 +13,7 @@
   %table
     %tr
       %th= node_form.label :name
-      %td= node_form.select :name, @node_candidates.collect{|node_candidate| [node_candidate[:name], node_candidate[:name]]}
+      %td= node_form.select :name, @node_candidates.collect{|node_candidate| [node_candidate["name"], node_candidate["name"]]}
     %tr
       %th= node_form.label :ip
       %td= node_form.text_field :ip, :readonly => true

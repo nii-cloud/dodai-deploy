@@ -160,6 +160,7 @@ function install_mcollective_server {
   fi
   echo "ip: $ip" >> /etc/mcollective/facts.yaml
 
+  apt-get install facter -y
   os=`facter operatingsystem`
   os_version=`facter operatingsystemrelease`
   echo "os: $os" >> /etc/mcollective/facts.yaml

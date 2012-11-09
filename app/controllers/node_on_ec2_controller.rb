@@ -216,13 +216,8 @@ class NodeOnEc2Controller < ApplicationController
       node.ip = dns_name.gsub("ip-","").gsub("\.#{params[:region]}.compute.internal", "").gsub("-", ".")
       node.state = "available"
       node.user_id = current_user.id
-      node_hash = {:ip => node.ip, :name => node.name}
       loop do
-        candidates = McUtils.find_hosts(current_user.authentication_token)
-        candidates.each{|hash| logger.debug "#{hash[:ip]}: #{hash[:name]}"}
-        if candidates.include? node_hash
-          break
-        end
+        break unless {} == McUtils.get_host_facts(node.name, current_user.authentication_token)
         sleep 30
       end
       node.save
