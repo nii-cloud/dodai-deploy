@@ -32,21 +32,31 @@ class McUtils
     return path
   end
 
-  def self.create_cmd(sub_cmd, auth_token)
+  def self.create_and_exec_cmd(sub_cmd, auth_token)
     config_file_path = self.prepare_config_file auth_token
     cmd = "/usr/bin/mco #{sub_cmd} -c #{config_file_path} --dt #{Settings.mcollective.discovery_timeout} --json"
     puts cmd
-    cmd
-  end
+    Rails.logger.debug cmd
 
-  def self.find_hosts(auth_token)
-    cmd = self.create_cmd "rpc rpcutil inventory", auth_token
     output = ""
     PTY.spawn(cmd) do |r, w|
       output = r.read
     end
-    output = JSON.parse(output)
 
+    obj = []
+    begin
+      obj = JSON.parse(output)
+    rescue
+    end
+
+    p obj
+    Rails.logger.debug obj
+
+    obj
+  end
+
+  def self.find_hosts(auth_token)
+    output = self.create_and_exec_cmd "rpc rpcutil inventory", auth_token
     hosts = []
     output.each do |item|
       host = item["data"]["facts"]
@@ -59,12 +69,7 @@ class McUtils
   end
 
   def self.get_host_facts(node_name, auth_token)
-    cmd = self.create_cmd "rpc rpcutil inventory --wf 'hostname=~#{node_name}'", auth_token
-    output = ""
-    PTY.spawn(cmd) do |r, w|
-      output = r.read
-    end
-    output = JSON.parse(output)
+    output = self.create_and_exec_cmd "rpc rpcutil inventory --wf 'hostname=~#{node_name}'", auth_token
 
     facts = {} 
     facts = output[0]["data"]["facts"] if output.size > 0
@@ -74,15 +79,9 @@ class McUtils
   def self.puppetd_runonce(node_names, auth_token)
     output = ""
     node_names_str = node_names.join "|"
-    cmd = self.create_cmd "rpc puppetd runonce server=#{Settings.puppet.server} auth_token=#{auth_token} -t #{Settings.mcollective.timeout} --wf 'hostname=~" + node_names_str + "'", auth_token
-    PTY.spawn(cmd) do |r, w|
-      output = r.read
-    end
-    puts output
-    output = JSON.parse(output)
+    output = self.create_and_exec_cmd "rpc puppetd runonce server=#{Settings.puppet.server} auth_token=#{auth_token} -t #{Settings.mcollective.timeout} --wf 'hostname=~" + node_names_str + "'", auth_token
  
     ret = {}
-    p output
     output.each do |item|
       puts item.to_yaml
 

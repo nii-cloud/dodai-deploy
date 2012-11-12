@@ -60,7 +60,17 @@ class NodeOnEc2Controller < ApplicationController
       "region" => "ap-northeast-1",
       "endpoint_url" => ""
     }
-
+    @regions = [ 
+       ["us-east-1", "us-east-1"],
+       ["us-west-2", "us-west-2"],
+       ["us-west-1", "us-west-1"],
+       ["eu-west-1", "eu-west-1"],
+       ["ap-southeast-1", "ap-southeast-1"],
+       ["ap-northeast-1", "ap-northeast-1"],
+       ["sa-east-1", "sa-east-1"],
+       ["", ""],
+     ]
+ 
     UserData.find_all_by_user_id(current_user.id).each{|user_data| @form_values[user_data.key] = user_data.value}
 
     if params[:error_msg]
@@ -211,15 +221,19 @@ class NodeOnEc2Controller < ApplicationController
 
   def _add_nodes(node_dns_names)
     node_dns_names.each{|dns_name|
+      facts = {}
+      loop do
+        facts = McUtils.get_host_facts(dns_name, current_user.authentication_token)
+        break unless {} == facts 
+        sleep 30
+      end
       node = Node.new
       node.name = dns_name
       node.ip = dns_name.gsub("ip-","").gsub("\.#{params[:region]}.compute.internal", "").gsub("-", ".")
       node.state = "available"
       node.user_id = current_user.id
-      loop do
-        break unless {} == McUtils.get_host_facts(node.name, current_user.authentication_token)
-        sleep 30
-      end
+      node.os = facts["os"]
+      node.os_version = facts["os_version"]
       node.save
     }
   end
