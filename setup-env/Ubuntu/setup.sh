@@ -79,8 +79,6 @@ function install_puppet_server {
 }
 
 function install_deploy_app {
-  cd ..
-
   gem_dir=`gem environment gemdir`
 
   lsb_release -r | grep 10.04
@@ -105,7 +103,7 @@ function install_deploy_app {
   cp $gem_dir/bin/rails /usr/bin/
   cp $gem_dir/bin/rake /usr/bin/
 
-  cp setup-env/settings.local.yml config/settings.local.yml
+  cp settings.local.yml ../../config/settings.local.yml
   if [ "$server" = "" ]; then
     host=`hostname -f`
   else
@@ -128,10 +126,8 @@ function install_deploy_app {
   #install puppet vim addon.
   mkdir -p ~/.vim/bundle
   git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
-  cp setup-env/vim/.vimrc ~/
+  cp vim/.vimrc ~/
   vim +BundleInstall +qall > /dev/null 2>&1
-
-  cd $home_path 
 }
 
 function install_mcollective_server {

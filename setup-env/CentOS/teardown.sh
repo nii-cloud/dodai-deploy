@@ -81,8 +81,6 @@ function uninstall_server {
 }
 
 function uninstall_node {
-  apt-get update
-
   soft="$1"
   if [ "$soft" != "" ]; then
     uninstall $soft
