@@ -110,7 +110,7 @@ class NodesController < ApplicationController
     logger.debug ips
     McUtils.find_hosts(current_user.authentication_token).select{|node_candidate|
       logger.debug node_candidate
-      not ips.include? node_candidate[:ip]
+      not ips.include? node_candidate["ip"]
     }
   end
 end
