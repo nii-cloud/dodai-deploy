@@ -126,6 +126,7 @@ function install_mcollective_server {
   cp mcollective/server.cfg /etc/mcollective/
   sed -i -e "s/HOST/$server/g" /etc/mcollective/server.cfg
   sed -i -e "s/IDENTITY/$hostname/g" /etc/mcollective/server.cfg
+  sed -i -e "s/TOKEN/$token/g" /etc/mcollective/server.cfg
 
   #add puppet agent
   cp mcollective/agent/* /usr/libexec/mcollective/mcollective/agent/
@@ -182,6 +183,7 @@ function install_server {
 }
 
 function install_node {
+  yum install wget -y
   wget http://download.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-5.noarch.rpm
   rpm -ivh epel*.rpm
   rm -f epel*.rpm
@@ -207,6 +209,9 @@ TYPE:
 OPTIONS:
   -s: The fqdn of deploy server. It should be specified if the TYPE is node.
   -p: The port number of the rails server on deploy server. It will be used only if the TYPE is server and SOFTWARE is puppet_server.
+  -x: The http proxy, such as http://proxy.domain:8080.
+  -t: The user token.
+  -i: The ip address of node. It is optional.
 
 SOFTWARE:
   The name of the software which will be installed.
@@ -228,12 +233,15 @@ For examples,
 server_softwares=(ruby_rubygems activemq_server mcollective_client puppet_server memcached deployment_app)
 node_softwares=(ruby_rubygems mcollective_server puppet_client openstack_repository sge_repository)
 
-while getopts "s:p:": opt
+while getopts "s:p:x:t:i:": opt
 do
   case $opt in
     \?) OPT_ERROR=1; break;;
     s) server="$OPTARG";;
     p) port="$OPTARG";;
+    x) proxy="$OPTARG";;
+    t) token="$OPTARG";;
+    i) ip="$OPTARG";;
   esac
 done
 
@@ -244,6 +252,7 @@ if [ $OPT_ERROR ]; then      # option error
 fi
 shift $(( $OPTIND - 1 ))
 
+
 type=$1
 if [ "$type" = "server" ]; then
   install_server "$2"
@@ -253,6 +262,12 @@ elif [ "$type" = "node" ]; then
     print_usage
     exit 1
   fi
+  if [ "$token" = "" ]; then
+    echo "Please specify the user token."
+    print_usage
+    exit 1
+  fi
+
   install_node "$2"
 else
   echo "Please specify the TYPE. It should be server or node."
