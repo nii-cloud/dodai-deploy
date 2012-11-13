@@ -134,6 +134,11 @@ function install_mcollective_server {
   #add hostname fact
   echo "hostname: $hostname" >> /etc/mcollective/facts.yaml
 
+  if [ "$ip" = "" ]; then
+    ip=`ruby get_ip.rb`
+  fi
+  echo "ip: $ip" >> /etc/mcollective/facts.yaml
+
   os=`facter operatingsystem`
   os_version=`facter operatingsystemrelease`
   echo "os: $os" >> /etc/mcollective/facts.yaml
