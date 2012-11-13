@@ -1,14 +1,7 @@
 #!/bin/bash
-if [ "`which apt-get`" != "" ]; then
-  apt-get update
-  apt-get install git -y
-elif [ "`which yum`" != ""  ]; then
-  yum install git -y
-else
-  echo "The application apt-get or yum doesn't exist. Please check your OS."
-  exit 1
-fi
 
+apt-get update
+apt-get install git -y
 git clone http://github.com/nii-cloud/dodai-deploy
 
 cd dodai-deploy/setup-env
