@@ -109,7 +109,7 @@ function install_deploy_app {
   else
     host=$server
   fi
-  sed -i -e "s/SERVER/$host/" config/settings.local.yml
+  sed -i -e "s/SERVER/$host/" ../../config/settings.local.yml
 
   RAILS_ENV=production rake db:drop
   RAILS_ENV=production rake db:migrate
