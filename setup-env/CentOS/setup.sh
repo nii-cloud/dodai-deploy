@@ -87,8 +87,6 @@ function install_puppet_server {
 }
 
 function install_deployment_app {
-  cd ..
-
   gem_dir=`gem environment gemdir`
 
   gem install bundler
@@ -118,8 +116,6 @@ function install_deployment_app {
   rake dodai:softwares:load_all 
   rake tmp:clear
   rake log:clear
-
-  cd $home_path 
 }
 
 function install_mcollective_server {
