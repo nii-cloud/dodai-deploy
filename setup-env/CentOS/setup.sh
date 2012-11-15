@@ -99,6 +99,14 @@ function install_deployment_app {
   cp $gem_dir/bin/rails /usr/bin/
   cp $gem_dir/bin/rake /usr/bin/
 
+  cp settings.local.yml ../../config/settings.local.yml
+  if [ "$server" = "" ]; then
+    host=`hostname -f`
+  else
+    host=$server
+  fi
+  sed -i -e "s/SERVER/$host/" ../../config/settings.local.yml
+
   RAILS_ENV=production rake db:drop
   RAILS_ENV=production rake db:migrate
   RAILS_ENV=production rake dodai:softwares:load_all 
