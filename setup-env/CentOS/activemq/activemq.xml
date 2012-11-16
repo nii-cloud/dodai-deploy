@@ -26,8 +26,7 @@
                 <authorizationEntries>
                   <authorizationEntry queue=">" write="admins" read="admins" admin="admins" />
                   <authorizationEntry topic=">" write="admins" read="admins" admin="admins" />
-                  <authorizationEntry topic="mcollective.>" write="mcollective" read="mcollective" admin="mcollective" />
-                  <authorizationEntry topic="mcollective.>" write="mcollective" read="mcollective" admin="mcollective" />
+                  <authorizationEntry topic="*.mcollective.>" write="mcollective" read="mcollective" admin="mcollective" />
                   <authorizationEntry topic="deploy.>" write="deploy" read="deploy" admin="deploy" />
                   <authorizationEntry topic="ActiveMQ.Advisory.>" read="everyone" write="everyone" admin="everyone"/>
                 </authorizationEntries>

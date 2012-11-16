@@ -5,4 +5,5 @@ coverage*
 test/fixtures/*.yml
 Gemfile.lock
 config/settings.local.yml
+config/mc_client.cfg
 .sass-cache/

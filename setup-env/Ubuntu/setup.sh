@@ -40,13 +40,7 @@ function install_mcollective_client {
   gem install stomp -v 1.1.10 
 
   cp mcollective/client.cfg /etc/mcollective/
-  if [ "$server" != "" ]; then
-    host=$server
-  else
-    host=`hostname -f`
-  fi
-  sed -i -e "s/HOST/$host/g" /etc/mcollective/client.cfg
-  sed -i -e "s/IDENTITY/$host/g" /etc/mcollective/client.cfg
+  cp mcollective/client.cfg ../../config/mc_client.cfg 
 }
 
 function install_puppet_server {

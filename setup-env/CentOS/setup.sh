@@ -39,9 +39,7 @@ function install_mcollective_client {
   rm -f mcollective*.rpm
 
   cp mcollective/client.cfg /etc/mcollective/
-  host=`hostname -f`
-  sed -i -e "s/HOST/$host/g" /etc/mcollective/client.cfg
-  sed -i -e "s/IDENTITY/$host/g" /etc/mcollective/client.cfg
+  cp mcollective/client.cfg ../../config/mc_client.cfg
 }
 
 function install_puppet_server {
