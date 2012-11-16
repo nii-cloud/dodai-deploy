@@ -160,6 +160,14 @@ function install_mcollective_server {
 }
 
 function install_puppet_client {
+  cat > /etc/yum.repos.d/puppetlabs.repo << "EOF"
+[puppetlabs]
+name=Puppet Labs Packages
+baseurl=http://yum.puppetlabs.com/
+gpgcheck=0
+enabled=1
+EOF
+
   yum -y install puppet
 
   #rm ec2 facter
