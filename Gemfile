@@ -33,6 +33,9 @@ gem 'erb2haml'
 gem 'execjs'
 gem 'therubyracer'
 
+# used by mcollective
+gem 'systemu'
+
 # Use unicorn as the web server
 # gem 'unicorn'
 
