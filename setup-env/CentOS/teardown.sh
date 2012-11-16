@@ -35,6 +35,7 @@ function uninstall_puppet_server {
   yum -y remove puppetmaster
   rm -rf /etc/puppet/*
   rm -rf /var/lib/puppet/*
+  rm /etc/yum.repos.d/puppetlabs.repo
 }
 
 function uninstall_deployment_app {
@@ -52,6 +53,7 @@ function uninstall_puppet_client {
   yum -y remove puppet
   rm -rf /etc/puppet/*
   rm -rf /var/lib/puppet/*
+  rm /etc/yum.repos.d/puppetlabs.repo
 }
 
 function uninstall_openstack_repository {
