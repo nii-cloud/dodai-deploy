@@ -3,6 +3,16 @@
 cd `dirname $0`
 home_path=`pwd`
 
+function add_puppet_repo {
+  cat > /etc/yum.repos.d/puppetlabs.repo << "EOF"
+[puppetlabs]
+name=Puppet Labs Packages
+baseurl=http://yum.puppetlabs.com/el/6/products/x86_64/
+gpgcheck=0
+enabled=1
+EOF
+}
+
 function install {
   target=$1
   echo "-----------------Begin to install $target-----------------------"
@@ -43,15 +53,8 @@ function install_mcollective_client {
 }
 
 function install_puppet_server {
-  cat > /etc/yum.repos.d/puppetlabs.repo << "EOF"
-[puppetlabs]
-name=Puppet Labs Packages
-baseurl=http://yum.puppetlabs.com/
-gpgcheck=0
-enabled=1
-EOF
-
-  yum -y install puppet-server
+  add_puppet_repo
+  yum -y install puppet-server-2.7*
 
   cp -r puppet/* /etc/puppet/
 
@@ -160,15 +163,8 @@ function install_mcollective_server {
 }
 
 function install_puppet_client {
-  cat > /etc/yum.repos.d/puppetlabs.repo << "EOF"
-[puppetlabs]
-name=Puppet Labs Packages
-baseurl=http://yum.puppetlabs.com/
-gpgcheck=0
-enabled=1
-EOF
-
-  yum -y install puppet
+  add_puppet_repo
+  yum -y install puppet-2.7*
 
   #rm ec2 facter
   rm -f /usr/lib/ruby/1.8/facter/ec2.rb
