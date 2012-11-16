@@ -43,6 +43,14 @@ function install_mcollective_client {
 }
 
 function install_puppet_server {
+  cat > /etc/yum.repos.d/puppetlabs.repo << "EOF"
+[puppetlabs]
+name=Puppet Labs Packages
+baseurl=http://yum.puppetlabs.com/
+gpgcheck=0
+enabled=1
+EOF
+
   yum -y install puppet-server
 
   cp -r puppet/* /etc/puppet/
