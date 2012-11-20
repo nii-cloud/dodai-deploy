@@ -1,6 +1,8 @@
 Welcome to the **dodai-deploy project**
 
 ## News 
+* [2012/11/20] Upgrade hadoop 0.20.2 to **hadoop 0.22.0**.
+ * hadoop 0.20.2 couldn't be downloaded from hadoop official site any more.
 * [2012/11/02] Eucalyptus 3.1 can be installed on **ubuntu 12.04**.
  * [Install eucalyptus 3.1 on ubuntu 12.04](/nii-cloud/dodai-deploy/wiki/Install-eucalyptus-3.1-on-ubuntu-12.04)
 * [2012/10/26] Openstack folsom can be installed on **ubuntu 12.04**.
@@ -15,7 +17,7 @@ The dodai-deploy is a software management tool. It supports the following softwa
 * OpenStack Folsom(Compute, Glance, Swift, Keystone)
 * OpenStack Essex(Nova, Glance, Swift, Keystone)
 * OpenStack Diablo(Nova, Glance, Swift) 
-* hadoop 0.20.2
+* hadoop 0.22.0
 * sun grid engine 6.2u5
 
 ## Features
@@ -58,7 +60,7 @@ The following OSes are supported.
        <td></td>
    </tr>
    <tr>
-       <td>hadoop 0.20.2</td>
+       <td>hadoop 0.22.0</td>
        <td>:)</td>
        <td>:)</td>
        <td>:)</td>
