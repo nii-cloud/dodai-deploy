@@ -1,4 +1,4 @@
-description: hadoop 0.20.2
+description: hadoop 0.22.0
 
 components:
   - name: name_node

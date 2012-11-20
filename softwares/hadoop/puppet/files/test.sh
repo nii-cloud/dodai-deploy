@@ -18,7 +18,7 @@ if [ $ret != 0 ]; then
 fi
 
 bin/hadoop fs -ls
-bin/hadoop jar hadoop-$version-examples.jar wordcount inputs outputs
+bin/hadoop jar hadoop-mapred-examples-$version.jar wordcount inputs outputs
 ret=$?
 
 #remove folders created
