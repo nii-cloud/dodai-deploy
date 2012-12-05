@@ -169,7 +169,10 @@ function install_puppet_client {
     apt-get update
     apt-get -y install puppet-common=2.6* puppet=2.6*
   else
-    apt-get -y install puppet
+    wget http://apt.puppetlabs.com/puppetlabs-release-precise.deb
+    dpkg -i puppetlabs-release-precise.deb
+    apt-get update
+    apt-get -y install puppet-common=2.7.* puppet=2.7.*
   fi
 
   #rm ec2 facter
