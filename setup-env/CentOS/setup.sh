@@ -125,6 +125,8 @@ function install_deployment_app {
   rake dodai:softwares:load_all 
   rake tmp:clear
   rake log:clear
+
+  yum -y install sendmail
 }
 
 function install_mcollective_server {

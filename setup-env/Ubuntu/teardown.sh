@@ -16,7 +16,7 @@ function uninstall_ruby_rubygems {
 }
 
 function uninstall_activemq_server {
-  activemq="apache-activemq-5.4.3"
+  activemq="apache-activemq-5.7.0"
 
   #stop activemq-server
   service activemq stop

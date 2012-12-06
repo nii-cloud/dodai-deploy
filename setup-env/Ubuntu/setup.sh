@@ -18,8 +18,8 @@ function install_ruby_rubygems {
 function install_activemq_server {
   apt-get -y install openjdk-6-jre
 
-  activemq="apache-activemq-5.4.3"
-  wget "http://ftp.riken.jp/net/apache/activemq/apache-activemq/5.4.3/$activemq-bin.tar.gz"
+  activemq="apache-activemq-5.7.0"
+  wget "http://ftp.riken.jp/net/apache/activemq/apache-activemq/5.7.0/$activemq-bin.tar.gz"
   tar xzvf $activemq-bin.tar.gz > /dev/null
   rm $activemq-bin.tar.gz
   mv $activemq /opt/
@@ -28,6 +28,8 @@ function install_activemq_server {
   ln -sf /opt/$activemq/bin/activemq /etc/init.d/
 
   service activemq start
+
+  apt-get install sysv-rc-conf -y
   sysv-rc-conf activemq on
 }
 
@@ -122,6 +124,8 @@ function install_deploy_app {
   git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
   cp vim/.vimrc ~/
   vim +BundleInstall +qall > /dev/null 2>&1
+
+  apt-get install sendmail -y
 }
 
 function install_mcollective_server {

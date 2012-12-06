@@ -1,4 +1,15 @@
 %p
-  Welcome #{@resource.email}!
-%p You can confirm your account through the link below:
-%p= link_to 'Confirm my account', confirmation_url(@resource, :confirmation_token => @resource.confirmation_token)
+  Hello #{@resource.email},
+
+%p
+  Welcome to NII InaaS(Install as as Service)!
+
+%p  
+  You can confirm your account through the link below:
+  %br
+  = link_to 'Confirm my account', confirmation_url(@resource, :confirmation_token => @resource.confirmation_token)
+
+%p
+  Sincerely,
+  %br
+  NII InaaS
