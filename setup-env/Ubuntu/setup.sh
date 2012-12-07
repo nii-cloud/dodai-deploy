@@ -175,6 +175,7 @@ function install_puppet_client {
   else
     wget http://apt.puppetlabs.com/puppetlabs-release-precise.deb
     dpkg -i puppetlabs-release-precise.deb
+    rm puppetlabs-release-precise.deb
     apt-get update
     apt-get -y install puppet-common=2.7.* puppet=2.7.*
   fi
