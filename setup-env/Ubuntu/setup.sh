@@ -31,6 +31,11 @@ function install_activemq_server {
 
   apt-get install sysv-rc-conf -y
   sysv-rc-conf activemq on
+
+  if [ "$http_proxy" != "" ]; then
+    apt-get install stone -y
+    cp stone/stone_server.conf /etc/init/
+  fi
 }
 
 function install_mcollective_client {
@@ -42,7 +47,7 @@ function install_mcollective_client {
   gem install stomp -v 1.1.10 
 
   cp mcollective/client.cfg /etc/mcollective/
-  cp mcollective/client.cfg ../../config/mc_client.cfg 
+  cp mcollective/client.cfg ../../config/mc_client.cfg
 }
 
 function install_puppet_server {
@@ -129,6 +134,13 @@ function install_deploy_app {
 }
 
 function install_mcollective_server {
+  if [ "$http_proxy" != "" ]; then
+    apt-get install stone -y
+    cp stone/stone_client.conf /etc/init/
+    sed -i -e "s/PROXY/$http_proxy/g" /etc/init/stone.conf
+    sed -i -e "s/ACTIVEMQ_SERVER_NAME/$server/g" /etc/init/stone.conf
+  fi
+
   wget "http://downloads.puppetlabs.com/mcollective/mcollective-common_1.3.1-19_all.deb"
   wget "http://downloads.puppetlabs.com/mcollective/mcollective_1.3.1-19_all.deb"
   dpkg -i mcollective*.deb
@@ -139,9 +151,16 @@ function install_mcollective_server {
   fqdn=`hostname -f`
 
   cp mcollective/server.cfg /etc/mcollective/
-  sed -i -e "s/HOST/$server/g" /etc/mcollective/server.cfg
   sed -i -e "s/IDENTITY/$fqdn/g" /etc/mcollective/server.cfg
   sed -i -e "s/TOKEN/$token/g" /etc/mcollective/server.cfg
+
+  if [ "$http_proxy" != "" ]; then
+    sed -i -e "s/HOST/localhost/g" /etc/mcollective/server.cfg
+    sed -i -e "s/PORT/10022/g" /etc/mcollective/server.cfg
+  else
+    sed -i -e "s/HOST/$server/g" /etc/mcollective/server.cfg
+    sed -i -e "s/PORT/6163/g" /etc/mcollective/server.cfg
+  fi
 
   #add puppet agent
   cp mcollective/agent/* /usr/share/mcollective/plugins/mcollective/agent/

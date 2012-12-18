@@ -3,6 +3,7 @@ shell_name=$1
 shift
 
 if [ "`which apt-get`" != "" ]; then
+  apt-get update
   apt-get install facter -y
 elif [ "`which yum`" != ""  ]; then
   yum install facter -y

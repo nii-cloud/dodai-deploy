@@ -2,7 +2,7 @@
 
 # install apache2
 apt-get install apache2 -y
-a2enmod headers proxy proxy_http proxy_balancer ssl
+a2enmod headers proxy proxy_http proxy_balancer ssl rewrite
 /etc/init.d/apache2 reload
 
 # change setting of puppetmaster

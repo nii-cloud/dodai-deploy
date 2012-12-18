@@ -6,5 +6,5 @@ mcollective:
 activemq:
   user: deploy
   password: deploy
-  host: localhost
-  port: 6163
+  host: 157.1.205.122 
+  port: 6163 
