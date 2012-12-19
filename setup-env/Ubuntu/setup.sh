@@ -203,6 +203,10 @@ function install_puppet_client {
 
   #rm ec2 facter
   rm -f /usr/lib/ruby/1.8/facter/ec2.rb
+
+  if [ "$http_proxy" != "" ]; then
+    ruby set_proxy_to_puppet_conf.rb $http_proxy
+  fi
 }
 
 function install_openstack_repository {
