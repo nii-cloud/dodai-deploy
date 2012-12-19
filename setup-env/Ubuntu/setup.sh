@@ -137,7 +137,8 @@ function install_mcollective_server {
   if [ "$http_proxy" != "" ]; then
     apt-get install stone -y
     cp stone/stone_client.conf /etc/init/
-    sed -i -e "s/PROXY/$http_proxy/g" /etc/init/stone.conf
+    proxy=`ruby -e "print \"$http_proxy\"[7, \"$http_proxy\".length - 7]"`
+    sed -i -e "s/PROXY/$proxy/g" /etc/init/stone.conf
     sed -i -e "s/ACTIVEMQ_SERVER_NAME/$server/g" /etc/init/stone.conf
   fi
 

@@ -45,9 +45,10 @@ module MCollective
 
             action "runonce" do
                 validate :server, String
+                validate :port, String
                 validate :auth_token, String
 
-                runonce request[:server], request[:auth_token]
+                runonce request[:server], request[:port], request[:auth_token]
             end
 
             action "status" do
@@ -87,12 +88,12 @@ module MCollective
                 reply[:output] += ", last run #{Time.now.to_i - reply[:lastrun]} seconds ago"
             end
 
-            def runonce(server, auth_token)
+            def runonce(server, port, auth_token)
                 if File.exists?(@lockfile)
                     reply.fail "Lock file exists, puppetd is already running or it's disabled"
                 else
                     fqdn = `hostname -f`
-                    cmd = [@puppetd, "--test --server #{server} --certname #{auth_token.downcase}_#{fqdn}"]
+                    cmd = [@puppetd, "--test --server #{server} --masterport #{port} --certname #{auth_token.downcase}_#{fqdn}"]
 
                     unless request[:forcerun]
                         if @splaytime > 0

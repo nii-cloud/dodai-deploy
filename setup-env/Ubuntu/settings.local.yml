@@ -1,2 +1,3 @@
 puppet:
   server: SERVER
+  server: 8140 
