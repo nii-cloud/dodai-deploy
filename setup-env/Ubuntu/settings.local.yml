@@ -1,3 +1,5 @@
 puppet:
   server: SERVER
-  server: 8140 
+  server: 8140
+activemq:
+  server: SERVER 

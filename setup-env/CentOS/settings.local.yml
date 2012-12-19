@@ -1,3 +1,5 @@
 puppet:
   server: SERVER
-  port: 8140
+  server: 8140
+activemq:
+  server: SERVER 

@@ -194,7 +194,7 @@ class NodeOnEc2Controller < ApplicationController
   end
 
   def _get_template
-    server_fqdn = Settings.puppet.server
+    server_fqdn = Settings.activemq.server
     token = current_user.authentication_token
 
     path = Rails.root.to_s + "/lib/tasks/templates/dodai_setup_node.sh.erb"
