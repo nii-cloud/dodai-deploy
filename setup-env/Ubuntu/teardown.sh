@@ -48,7 +48,10 @@ function uninstall_deployment_app {
 
 function uninstall_mcollective_server {
   service mcollective stop
-  dpkg -P mcollective 
+  dpkg -P mcollective
+
+  stop stone_client
+  rm /etc/init/stone_client.conf
 }
 
 function uninstall_puppet_client {

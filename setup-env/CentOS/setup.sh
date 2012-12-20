@@ -130,6 +130,15 @@ function install_deployment_app {
 }
 
 function install_mcollective_server {
+  if [ "$http_proxy" != "" ]; then
+    yum -y install stone
+    cp stone/stone_client.conf /etc/init/
+    proxy=`ruby -e "print \"$http_proxy\"[7, \"$http_proxy\".length - 7]"`
+    sed -i -e "s/PROXY/$proxy/g" /etc/init/stone_client.conf
+    sed -i -e "s/ACTIVEMQ_SERVER_NAME/$server/g" /etc/init/stone_client.conf
+    start stone_client
+  fi
+
   yum -y install rubygem-stomp
 
   rpm -ivh http://downloads.puppetlabs.com/mcollective/mcollective-common-1.3.2-1.el6.noarch.rpm
