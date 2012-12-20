@@ -131,12 +131,12 @@ function install_deployment_app {
 
 function install_mcollective_server {
   if [ "$http_proxy" != "" ]; then
-    yum -y install stone
-    cp stone/stone_client.conf /etc/init/
+    cp stone/stone /usr/bin/
+    cp stone/stone-client /etc/init.d/
     proxy=`ruby -e "print \"$http_proxy\"[7, \"$http_proxy\".length - 7]"`
-    sed -i -e "s/PROXY/$proxy/g" /etc/init/stone_client.conf
-    sed -i -e "s/ACTIVEMQ_SERVER_NAME/$server/g" /etc/init/stone_client.conf
-    start stone_client
+    sed -i -e "s/PROXY/$proxy/g" /etc/init.d/stone-client
+    sed -i -e "s/ACTIVEMQ_SERVER_NAME/$server/g" /etc/init.d/stone-client
+    service stone-client start
   fi
 
   yum -y install rubygem-stomp
@@ -148,9 +148,16 @@ function install_mcollective_server {
   hostname=`hostname -f`
 
   cp mcollective/server.cfg /etc/mcollective/
-  sed -i -e "s/HOST/$server/g" /etc/mcollective/server.cfg
   sed -i -e "s/IDENTITY/$hostname/g" /etc/mcollective/server.cfg
   sed -i -e "s/TOKEN/$token/g" /etc/mcollective/server.cfg
+
+  if [ "$http_proxy" != "" ]; then
+    sed -i -e "s/HOST/localhost/g" /etc/mcollective/server.cfg
+    sed -i -e "s/PORT/10022/g" /etc/mcollective/server.cfg
+  else
+    sed -i -e "s/HOST/$server/g" /etc/mcollective/server.cfg
+    sed -i -e "s/PORT/6163/g" /etc/mcollective/server.cfg
+  fi
 
   #add puppet agent
   cp mcollective/agent/* /usr/libexec/mcollective/mcollective/agent/
@@ -282,6 +289,11 @@ if [ $OPT_ERROR ]; then      # option error
 fi
 shift $(( $OPTIND - 1 ))
 
+if [ "$proxy" != "" ]; then
+  export http_proxy="$proxy"
+  export https_proxy="$proxy"
+  echo "proxy=$proxy" >> /etc/yum.conf
+fi
 
 type=$1
 if [ "$type" = "server" ]; then
