@@ -140,11 +140,10 @@ function install_mcollective_server {
   if [ "$http_proxy" != "" ]; then
     proxy=`ruby -e "print \"$http_proxy\"[7, \"$http_proxy\".length - 7]"`
     sed -i -e "s/PROXY/$proxy/g" /etc/init/stone_client.conf
-    sed -i -e "s/ACTIVEMQ_SERVER_NAME/$server/g" /etc/init/stone_client.conf
   else
     sed -i -e "s/PROXY/proxy 8080 -- localhost:8080/g" /etc/init/stone_client.conf
-    sed -i -e "s/ACTIVEMQ_SERVER_NAME/$server/g" /etc/init/stone_client.conf
   fi
+  sed -i -e "s/ACTIVEMQ_SERVER_NAME/$server/g" /etc/init/stone_client.conf
   start stone_client
 
   wget "http://downloads.puppetlabs.com/mcollective/mcollective-common_1.3.1-19_all.deb"

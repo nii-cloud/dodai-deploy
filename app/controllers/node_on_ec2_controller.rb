@@ -99,7 +99,7 @@ class NodeOnEc2Controller < ApplicationController
           timeout(180){
             node_dns_names = _get_dns_names(ec2, result)
           }
-          timeout(300){
+          timeout(600){
             _add_nodes(node_dns_names)
           }
         rescue Timeout::Error
