@@ -10,8 +10,19 @@
   %tr
     %th Set up command for dodai-deploy node
     %td
-      setup-env/setup.sh -s #{Settings.puppet.server} -t #{current_user.authentication_token} [-i IP] node
+      setup-env/setup.sh -s #{Settings.activemq.server} -t #{current_user.authentication_token} [-i IP] node
   %tr
     %th Set up command for dodai-deploy node via proxy
     %td
-      setup-env/setup.sh -x PROXY_SERVER -s #{Settings.puppet.server} -t #{current_user.authentication_token} [-i IP] node
+      setup-env/setup.sh -x PROXY_SERVER -s #{Settings.activemq.server} -t #{current_user.authentication_token} [-i IP] node
+
+%p
+  Before executing the set up command above, you should do,
+
+%p
+  %b
+    git clone http://github.com/nii-cloud/dodai-deploy
+    %br
+    cd dodai-deploy
+    %br
+    git checkout multi_users
