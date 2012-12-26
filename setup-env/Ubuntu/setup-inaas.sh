@@ -45,7 +45,7 @@ ServerName inaas.ecloud.nii.ac.jp
         BalancerMember http://127.0.0.1:18149
 </Proxy>
 
-<VirtualHost *:8140>
+<VirtualHost *:443>
         SSLEngine On
         SSLCipherSuite SSLv2:-LOW:-EXPORT:RC4+RSA
         SSLCertificateFile /var/lib/puppet/ssl/certs/CERT_NAME.pem
@@ -95,7 +95,7 @@ a2ensite puppetmaster
 
 # disable default ports
 sed -i -e "s/Include ports.conf/#Include ports.conf/g" /etc/apache2/apache2.conf
-/etc/init.d/apache2 reload
+/etc/init.d/apache2 restart
 
 chown -R puppet:puppet /var/lib/puppet
 chown -R puppet:puppet /etc/puppet
