@@ -1,4 +1,4 @@
-class keystone_centos_f::keystone::uninstall {
+class keystone_f_centos::keystone::uninstall {
     package {
         [openstack-keystone, python-keystoneclient]:
             ensure => purged;

@@ -1,3 +1,3 @@
-class nova_and_quantum_centos_f::cinder_volume::uninstall {
-    include nova_and_quantum_centos_f::cinder_common::uninstall
+class nova_and_quantum_f_centos::cinder_volume::uninstall {
+    include nova_and_quantum_f_centos::cinder_common::uninstall
 }

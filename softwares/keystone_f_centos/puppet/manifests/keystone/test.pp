@@ -1,8 +1,8 @@
-class keystone_centos_f::keystone::test {
+class keystone_f_centos::keystone::test {
     file {
         "/var/lib/keystone/test.sh":
             alias => "test.sh",
-            content => template("keystone_centos_f/test.sh.erb")
+            content => template("keystone_f_centos/test.sh.erb")
     }
 
     exec {

@@ -1,5 +1,5 @@
-class nova_and_quantum_centos_f::cinder_volume::install{
-    include nova_and_quantum_centos_f::cinder_common::install
+class nova_and_quantum_f_centos::cinder_volume::install{
+    include nova_and_quantum_f_centos::cinder_common::install
 
    file {
         "/etc/tgt/conf.d/cinder.conf":

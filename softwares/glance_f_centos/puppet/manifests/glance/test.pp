@@ -1,8 +1,8 @@
-class glance_centos_f::glance::test {
+class glance_f_centos::glance::test {
     file {
         "/var/lib/glance/test.sh":
             alias => "test.sh",
-            content => template("glance_centos_f/test.sh.erb")
+            content => template("glance_f_centos/test.sh.erb")
     }
 
     exec {

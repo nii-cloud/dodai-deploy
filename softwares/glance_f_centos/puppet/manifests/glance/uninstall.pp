@@ -1,4 +1,4 @@
-class glance_centos_f::glance::uninstall {
+class glance_f_centos::glance::uninstall {
     package {
         [openstack-glance, python-glance]:
             ensure => purged;

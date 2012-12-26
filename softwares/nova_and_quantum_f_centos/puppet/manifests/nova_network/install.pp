@@ -1,4 +1,4 @@
-class nova_and_quantum_centos_f::nova_network::install {
+class nova_and_quantum_f_centos::nova_network::install {
 #     service {
 #        openstack-nova-network:
 #            ensure => running,

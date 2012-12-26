@@ -1,4 +1,4 @@
-class nova_and_quantum_centos_f::quantum::install {
+class nova_and_quantum_f_centos::quantum::install {
     package {
         [openstack-quantum, openstack-quantum-linuxbridge, tunctl]:
     }
@@ -30,7 +30,7 @@ class nova_and_quantum_centos_f::quantum::install {
 
 
         "/var/lib/quantum/quantum-init.sh":
-            source => "puppet:///modules/nova_and_quantum_centos_f/quantum-init.sh",
+            source => "puppet:///modules/nova_and_quantum_f_centos/quantum-init.sh",
             alias => "quantum-init.sh",
             require => File["conf","paste","plugin","linuxbride_plugin"];
     }

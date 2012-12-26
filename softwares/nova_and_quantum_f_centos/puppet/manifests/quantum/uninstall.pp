@@ -1,4 +1,4 @@
-class nova_and_quantum_centos_f::quantum::uninstall {
+class nova_and_quantum_f_centos::quantum::uninstall {
     package {
 	[openstack-quantum, openstack-quantum-linuxbridge, python-quantum]:
             ensure => purged

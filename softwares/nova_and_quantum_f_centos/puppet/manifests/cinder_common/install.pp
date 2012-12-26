@@ -1,4 +1,4 @@
-class nova_and_quantum_centos_f::cinder_common::install {
+class nova_and_quantum_f_centos::cinder_common::install {
     package {
         openstack-cinder:
     }

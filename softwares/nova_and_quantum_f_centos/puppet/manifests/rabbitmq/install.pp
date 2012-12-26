@@ -1,4 +1,4 @@
-class nova_and_quantum_centos_f::rabbitmq::install {
+class nova_and_quantum_f_centos::rabbitmq::install {
     package { rabbitmq-server: }
 
     service {

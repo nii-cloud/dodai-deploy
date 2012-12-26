@@ -1,4 +1,4 @@
-class nova_and_quantum_centos_f::mysql::install {
+class nova_and_quantum_f_centos::mysql::install {
 
     package {
         [mysql, mysql-server, MySQL-python]:
@@ -13,7 +13,7 @@ class nova_and_quantum_centos_f::mysql::install {
      file {
         "/var/lib/mysql-init.sh":
             alias => "mysql-init.sh",
-            source => "puppet:///modules/nova_and_quantum_centos_f/mysql-init.sh";
+            source => "puppet:///modules/nova_and_quantum_f_centos/mysql-init.sh";
     }
 
     exec {

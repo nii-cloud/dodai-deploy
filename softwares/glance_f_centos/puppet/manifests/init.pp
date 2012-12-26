@@ -1,1 +1,1 @@
-class glance_centos_f{}
+class glance_f_centos{}

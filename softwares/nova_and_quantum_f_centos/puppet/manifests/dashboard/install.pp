@@ -1,4 +1,4 @@
-class nova_and_quantum_centos_f::dashboard::install {
+class nova_and_quantum_f_centos::dashboard::install {
     package {
         [mod_wsgi, openstack-dashboard]:
     }
@@ -6,7 +6,7 @@ class nova_and_quantum_centos_f::dashboard::install {
     file {
 
         "/var/lib/nova/dashboard-init.sh":
-            source => "puppet:///modules/nova_and_quantum_centos_f/dashboard-init.sh",
+            source => "puppet:///modules/nova_and_quantum_f_centos/dashboard-init.sh",
             alias => "dashboard-init.sh", 
             require => Package[openstack-dashboard];
 }

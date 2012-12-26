@@ -1,4 +1,4 @@
-class nova_and_quantum_centos_f::common::uninstall {
+class nova_and_quantum_f_centos::common::uninstall {
     package {
 	   [openstack-nova, openstack-nova-doc, python-nova, python-nova-adminclient, python-novaclient, python-novaclient-doc, qpid-cpp-server]:
              ensure => purged

@@ -1,4 +1,4 @@
-class glance_centos_f::glance::install {
+class glance_f_centos::glance::install {
     package {
         [openstack-utils, openstack-glance]:
     }

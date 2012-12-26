@@ -1,5 +1,5 @@
-class nova_and_quantum_centos_f::tgt::install {
-    include nova_and_quantum_centos_f::cinder_volume::install
+class nova_and_quantum_f_centos::tgt::install {
+    include nova_and_quantum_f_centos::cinder_volume::install
       
     exec{
         "service tgtd start":

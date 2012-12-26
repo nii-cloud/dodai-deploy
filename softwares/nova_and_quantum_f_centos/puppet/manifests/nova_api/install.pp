@@ -1,5 +1,5 @@
-class nova_and_quantum_centos_f::nova_api::install {
-    include nova_and_quantum_centos_f::common::install
+class nova_and_quantum_f_centos::nova_api::install {
+    include nova_and_quantum_f_centos::common::install
 
     package{
         euca2ools:

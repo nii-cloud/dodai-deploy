@@ -1,4 +1,4 @@
-class keystone_centos_f::keystone::install {
+class keystone_f_centos::keystone::install {
     package {
         [openstack-utils, openstack-keystone, python-keystoneclient]:
             require => Exec["rpm"];
@@ -6,7 +6,7 @@ class keystone_centos_f::keystone::install {
 
     file {
         "/tmp/epel-release-6-8.noarch.rpm":
-            source => "puppet:///modules/keystone_centos_f/epel-release-6-8.noarch.rpm",
+            source => "puppet:///modules/keystone_f_centos/epel-release-6-8.noarch.rpm",
             mode => 644;
 
         "/etc/keystone/keystone.conf":
@@ -22,7 +22,7 @@ class keystone_centos_f::keystone::install {
             require => Package[[openstack-utils, openstack-keystone, python-keystoneclient]];
             
         "/var/lib/keystone/keystone-init.sh":
-            content => template("keystone_centos_f/keystone-init.sh.erb"),
+            content => template("keystone_f_centos/keystone-init.sh.erb"),
             require => Exec["start_keystone"];
     }
 

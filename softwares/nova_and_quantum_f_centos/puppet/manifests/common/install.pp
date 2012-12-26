@@ -1,4 +1,4 @@
-class nova_and_quantum_centos_f::common::install {
+class nova_and_quantum_f_centos::common::install {
     package {
 	 openstack-nova:
 	    require => Package[openstack-utils,memcached,qpid-cpp-server];

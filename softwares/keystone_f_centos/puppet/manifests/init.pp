@@ -1,1 +1,1 @@
-class keystone_centos_f{}
+class keystone_f_centos{}

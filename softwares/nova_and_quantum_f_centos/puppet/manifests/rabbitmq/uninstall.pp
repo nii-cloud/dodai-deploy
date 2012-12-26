@@ -1,4 +1,4 @@
-class nova_and_quantum_centos_f::rabbitmq::uninstall {
+class nova_and_quantum_f_centos::rabbitmq::uninstall {
     service {
         rabbitmq-server:
             ensure => stopped;

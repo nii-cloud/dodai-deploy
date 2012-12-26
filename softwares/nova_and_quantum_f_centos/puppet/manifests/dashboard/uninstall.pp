@@ -1,4 +1,4 @@
-class nova_and_quantum_centos_f::dashboard::uninstall {
+class nova_and_quantum_f_centos::dashboard::uninstall {
     package {
         openstack-dashboard:
             ensure => purged;
