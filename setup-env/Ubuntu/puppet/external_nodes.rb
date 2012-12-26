@@ -10,7 +10,7 @@ require 'socket'
 token_hostname = ARGV[0]
 token, splitter, hostname = token_hostname.partition "_"
 
-path = "/etc/puppet/parameters_#{token}"
+path = "/etc/puppet/parameters/parameters_#{token}"
 parameters = YAML.load_file path
 
 url = "http://localhost:PORT/node_configs/#{hostname}/puppet.json?" + parameters.to_query

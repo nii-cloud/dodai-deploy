@@ -12,13 +12,27 @@ sed -i -e "s/PORT=8140/PORT=18140/g" /etc/default/puppetmaster
 
 # create puppetmaster site for apache2
 cat <<CONF > /etc/apache2/sites-available/puppetmaster
-Listen 8140
+Listen 443 
 
 ProxyRequests Off
 ProxyBadHeader Ignore
 
+ServerName inaas.ecloud.nii.ac.jp
 
 <Proxy balancer://puppetmaster>
+        BalancerMember http://127.0.0.1:18140
+        BalancerMember http://127.0.0.1:18141
+        BalancerMember http://127.0.0.1:18142
+        BalancerMember http://127.0.0.1:18143
+        BalancerMember http://127.0.0.1:18144
+        BalancerMember http://127.0.0.1:18145
+        BalancerMember http://127.0.0.1:18146
+        BalancerMember http://127.0.0.1:18147
+        BalancerMember http://127.0.0.1:18148
+        BalancerMember http://127.0.0.1:18149
+</Proxy>
+
+<Proxy balancer://puppet_ca>
         BalancerMember http://127.0.0.1:18140
         BalancerMember http://127.0.0.1:18141
         BalancerMember http://127.0.0.1:18142
@@ -58,6 +72,9 @@ ProxyBadHeader Ignore
         ProxyPassReverse / balancer://puppetmaster/
         ProxyPreserveHost On
 
+        ProxyPassMatch ^(/.*?)/(certificate.*?)/(.*)$ balancer://puppet_ca/
+        ProxyPassReverse ^(/.*?)/(certificate.*?)/(.*)$ balancer://puppet_ca/
+
         ErrorLog /var/log/apache2/error.log
         CustomLog /var/log/apache2/access.log combined
         CustomLog /var/log/apache2/balancer_ssl_requests.log "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
@@ -84,3 +101,13 @@ chown -R puppet:puppet /var/lib/puppet
 chown -R puppet:puppet /etc/puppet
 
 /etc/init.d/puppetmaster restart
+
+
+apt-get -y install nfs-kernel-server
+cat <<CONF >> /etc/exports
+/etc/puppet/parameters 192.168.6.0/24(rw,sync,no_root_squash,no_subtree_check)
+/etc/puppet/templates 192.168.6.0/24(rw,sync,no_root_squash,no_subtree_check)
+/etc/puppet/modules 192.168.6.0/24(rw,sync,no_root_squash,no_subtree_check)
+CONF
+
+/etc/init.d/nfs-kernel-server start

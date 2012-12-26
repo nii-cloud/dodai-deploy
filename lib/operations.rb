@@ -116,7 +116,7 @@ class Operations
   private
 
   def _save_puppet_parameters parameters
-    File.open(Settings.puppet.etc + "/parameters_" + @auth_token.downcase, "w") {|f| f.write parameters.to_yaml}
+    File.open(Settings.puppet.etc + "/parameters/parameters_" + @auth_token.downcase, "w") {|f| f.write parameters.to_yaml}
   end
 
   def _save_template_to_puppet(proposal_id, path, content)

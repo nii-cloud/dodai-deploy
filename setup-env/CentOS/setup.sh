@@ -57,12 +57,8 @@ function install_puppet_server {
   yum -y install puppet-server-2.7*
 
   cp -r puppet/* /etc/puppet/
-
-  for software in `ls ../softwares/`
-  do
-    mkdir -p /etc/puppet/modules/$software
-    cp -r ../softwares/$software/puppet/* /etc/puppet/modules/$software/
-  done
+  mkdir /etc/puppet/parameters
+  mkdir /etc/puppet/templates
 
   if [ "$port" = "" ]; then
     port=3000

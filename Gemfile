@@ -31,7 +31,7 @@ gem 'sass'
 gem 'erb2haml'
 
 gem 'execjs'
-gem 'therubyracer'
+gem 'therubyracer', '0.10'
 
 # used by mcollective
 gem 'systemu'

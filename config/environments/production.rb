@@ -44,7 +44,7 @@ Deployment::Application.configure do
 
   # Disable Rails's static asset server
   # In production, Apache or nginx will already do this
-  config.serve_static_assets = true 
+  # config.serve_static_assets = true
 
   # Enable serving of images, stylesheets, and javascripts from an asset server
   # config.action_controller.asset_host = "http://assets.example.com"
@@ -63,13 +63,13 @@ Deployment::Application.configure do
   config.active_support.deprecation = :notify
 
   # Compress JavaScript and CSS
-  config.assets.compress = true
+  config.assets.compress = false
    
   # Don't fallback to assets pipeline
-  config.assets.compile = false
+  # config.assets.compile = false 
    
   # Generate digests for assets URLs
-  config.assets.digest = true
+  # config.assets.digest = true
 
   config.action_mailer.delivery_method = :sendmail
   config.action_mailer.perform_deliveries = true

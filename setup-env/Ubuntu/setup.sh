@@ -63,6 +63,8 @@ function install_puppet_server {
   fi
 
   cp -r puppet/* /etc/puppet/
+  mkdir /etc/puppet/parameters
+  mkdir /etc/puppet/templates
 
   if [ "$port" = "" ]; then
     port=3000
@@ -125,6 +127,7 @@ function install_deploy_app {
   rake log:clear
 
   #install puppet vim addon.
+  apt-get install vim
   mkdir -p ~/.vim/bundle
   git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
   cp vim/.vimrc ~/
