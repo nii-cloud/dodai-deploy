@@ -105,9 +105,9 @@ chown -R puppet:puppet /etc/puppet
 
 apt-get -y install nfs-kernel-server
 cat <<CONF >> /etc/exports
-/etc/puppet/parameters 192.168.6.0/24(rw,sync,no_root_squash,no_subtree_check)
-/etc/puppet/templates 192.168.6.0/24(rw,sync,no_root_squash,no_subtree_check)
-/etc/puppet/modules 192.168.6.0/24(rw,sync,no_root_squash,no_subtree_check)
+/etc/puppet/parameters 192.168.5.0/24(rw,sync,no_root_squash,no_subtree_check)
+/etc/puppet/templates 192.168.5.0/24(rw,sync,no_root_squash,no_subtree_check)
+/etc/puppet/modules 192.168.5.0/24(rw,sync,no_root_squash,no_subtree_check)
 CONF
 
 /etc/init.d/nfs-kernel-server start
