@@ -1,0 +1,31 @@
+#!/bin/bash
+
+#check if keystone is running
+service openstack-keystone status | grep pid
+if [ $? != 0 ]; then
+    echo "Service kyestone is not started."
+    exit 1
+fi
+
+yum install gawk -y
+
+pid1="`service openstack-keystone status | awk '{print $4}'`"
+sleep 2
+pid2="`service openstack-keystone status | awk '{print $4}'`"
+if [ $pid1 != $pid2 ]; then
+    echo "Service keystone's pid is changing."
+    exit 1
+fi
+
+output=`keystone --token <%= admin_token %>  --endpoint http://127.0.0.1:35357/v2.0 user-list`
+
+for user in admin glance nova demo
+do
+  echo "$output" | grep $user
+  if [ $? != 0 ]; then
+    echo "User $user wasn't added."
+    exit 1
+  fi
+done
+
+echo "Test finished. It is OK."

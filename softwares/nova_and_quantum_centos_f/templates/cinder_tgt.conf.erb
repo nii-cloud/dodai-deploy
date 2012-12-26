@@ -1,0 +1,8 @@
+# Note this config mode is not supported by scsi-target-utils in RHEL <= 6.4
+# include /etc/cinder/volumes/
+# So instead please add the following line (without the leading comment char)
+# to the top of /etc/tgt/targets.conf
+# include /etc/cinder/volumes/*
+include /etc/cinder/volumes/*
+include /var/lib/cinder/volumes/*
+

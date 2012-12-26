@@ -1,0 +1,32 @@
+description: openstack folsom glance
+
+os: CentOS
+
+components:
+  - name: glance
+  - name: mysql
+
+component_dependencies:
+  - source_component: glance
+    dest_component: mysql
+
+config_item_defaults:
+  - name: admin_tenant_name
+    value: admin
+  - name: admin_user
+    value: admin
+  - name: admin_password
+    value: admin 
+  - name: keystone 
+    value: localhost
+  - name: swift_proxy 
+    value: localhost
+
+component_config_defaults:
+
+software_config_defaults:
+  - path: /etc/glance/glance-api.conf
+  - path: /etc/glance/glance-registry.conf
+
+test_components:
+  - component: glance

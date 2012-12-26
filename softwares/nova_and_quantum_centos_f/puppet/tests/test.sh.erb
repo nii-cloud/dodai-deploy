@@ -1,0 +1,143 @@
+#!/bin/bash
+
+#
+# Copyright 2011 National Institute of Informatics.
+#
+#
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
+
+HOME=`dirname $0`
+
+cd $HOME
+
+if [ "`which nova-manage`" = ""  ]; then
+    echo "Command nova-manage doesn't exist."
+    exit 1
+fi
+
+image_file="$1"
+
+export OS_TENANT_NAME="<%= admin_tenant_name %>"
+export OS_USERNAME="<%= admin_user %>"
+export OS_PASSWORD="<%= admin_password %>"
+export OS_AUTH_URL="http://<%= keystone %>:5000/v2.0/"
+export OS_NO_CACHE=1
+
+rm *.pem
+
+nova x509-create-cert
+nova x509-get-root-cert
+
+export EC2_URL=$(keystone catalog --service ec2 | awk '/ publicURL / { print $4 }')
+export CREDS=$(keystone ec2-credentials-create)
+export EC2_ACCESS_KEY=$(echo "$CREDS" | awk '/ access / { print $4 }')
+export EC2_SECRET_KEY=$(echo "$CREDS" | awk '/ secret / { print $4 }')
+export EC2_USER_ID=$(echo "$CREDS" | awk '/ user_id / { print $4 }')
+export EC2_CERT="$HOME/cert.pem"
+export EC2_PRIVATE_KEY="$HOME/pk.pem"
+export EUCALYPTUS_CERT="$HOME/cacert.pem"
+export S3_URL="http://<%= nova_objectstore %>:3333"
+
+rm novarc
+
+echo "export OS_TENANT_NAME=$OS_TENANT_NAME" >> novarc
+echo "export OS_USERNAME=$OS_USERNAME" >> novarc
+echo "export OS_PASSWORD=$OS_PASSWORD" >> novarc
+echo "export OS_AUTH_URL=$OS_AUTH_URL" >> novarc
+echo "export EC2_URL=$EC2_URL" >> novarc
+echo "export EC2_ACCESS_KEY=$EC2_ACCESS_KEY" >> novarc
+echo "export EC2_SECRET_KEY=$EC2_SECRET_KEY" >> novarc
+echo "export EC2_USER_ID=$EC2_USER_ID" >> novarc
+echo "export EC2_CERT=$EC2_CERT" >> novarc
+echo "export EC2_PRIVATE_KEY=$EC2_PRIVATE_KEY" >> novarc
+echo "export EUCALYPTUS_CERT=$EUCALYPTUS_CERT" >> novarc
+echo "export S3_URL=$S3_URL" >> novarc
+
+euca-authorize -P icmp -t -1:-1 default
+euca-authorize -P tcp -p 22 default
+
+apt-get install cloud-utils -y
+
+if [ ! -e "$HOME/$image_file" ]; then
+  image_file="image_kvm.tgz"
+fi
+echo "$HOME/$image_file"
+
+tar xzvf $image_file
+euca-bundle-image -i *-vmlinuz -p kernel --kernel true
+euca-upload-bundle -m /tmp/kernel.manifest.xml -b mybucket
+kernel=`euca-register mybucket/kernel.manifest.xml | gawk '{print $2}'`
+
+euca-bundle-image -i *-loader -p ramdisk --ramdisk true
+euca-upload-bundle -m /tmp/ramdisk.manifest.xml -b mybucket
+ramdisk=`euca-register mybucket/ramdisk.manifest.xml | gawk '{print $2}'`
+
+euca-bundle-image -i *img -p image --ramdisk $ramdisk --kernel $kernel
+euca-upload-bundle -m /tmp/image.manifest.xml -b mybucket
+image=`euca-register mybucket/image.manifest.xml | gawk '{print $2}'`
+
+if [ $? != 0 ]; then
+   echo $output
+   echo "Failed to add image."
+   exit 1
+fi
+
+sleep 60
+
+echo "image: [$image]"
+
+euca-delete-keypair mykey
+euca-add-keypair mykey > mykey.priv
+chmod 400 mykey.priv
+
+quantum net-delete net1
+echo "quantum net-create net1"
+quantum net-create net1
+echo "quantum subnet-create net1 $2"
+quantum subnet-create net1 $2
+subnet_id=`quantum net-list | grep net1 | gawk '{print $6}'`
+
+echo "euca-run-instances $image -k mykey -t m1.tiny -s $subnet_id" 
+instance_id=`euca-run-instances $image -k mykey -t m1.tiny -s $subnet_id | grep INSTANCE | gawk '{print $2}'`
+if [ $? -ne 0 ]; then
+    echo "Executing command euca-run-instances failed."
+    exit 1
+fi
+
+# if the status doesn't become lauching after 12 * 10 seconds, running instance will be failed.
+launching_time=12
+echo "instance: [$instance_id]"
+instance_status=`euca-describe-instances | gawk '{print $2 " "$6}' | grep "$instance_id" | gawk '{print $2}'`
+if [ $instance_status = "(IRT," ]; then
+    instance_status=`euca-describe-instances | gawk '{print $2 " "$4}' | grep "$instance_id" | gawk '{print $2}'`
+fi
+echo "Instance status: $instance_status"
+while [ "$instance_status" != "running" ]
+do
+    echo "Instance status: $instance_status"
+    if [ "$instance_status" != "launching" ] && [ $launching_time -lt 0 ]; then
+        echo "Running instance failed because the instance status wasn't \"launching\" after 120 seconds."
+        exit 1
+    fi
+
+    launching_time=`expr $launching_time - 1`
+    sleep 10
+
+    instance_status=`euca-describe-instances | gawk '{print $2 " "$6}' | grep "$instance_id" | gawk '{print $2}'`
+    if [ "$instance_status" = "(IRT," ]; then
+        instance_status=`euca-describe-instances | gawk '{print $2 " "$4}' | grep "$instance_id" | gawk '{print $2}'`
+    fi
+    echo "Instance status: $instance_status"
+done
+
+echo "Test finished. It is OK."
